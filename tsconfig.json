@@ -23,6 +23,7 @@
       "@services": ["_services"],
       "@components/*": ["_components/*"],
       "@constants": ["_constants"],
+      "@interfaces": ["_interfaces"],
       "@shared/*": ["_shared/*"]
     },
     "noUnusedLocals": true,

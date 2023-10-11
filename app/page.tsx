@@ -1,39 +1,34 @@
-"use client";
+import Avatar from "@mui/material/Avatar";
+import CssBaseline from "@mui/material/CssBaseline";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
 
-import { useState } from "react";
+import FormLogin from "@components/login/FormLogin";
+import Copyright from "@shared/components/Copyright";
 
-import { AuthService } from "@services";
-
-const LoginPage = () => {
-  const [email, setEmail] = useState("eduardo-266@hotmail.com");
-  const [password, setPassword] = useState("123");
-
-  const login = async () => {
-    AuthService.login({
-      email,
-      password,
-    }).then((res) => {
-      console.log(res);
-    });
-  };
-
+export default function SignIn() {
   return (
-    <>
-      <input
-        type="text"
-        placeholder="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={login}>Login</button>
-    </>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Cosmeticos Trujillo
+        </Typography>
+        <FormLogin />
+      </Box>
+      <Copyright sx={{ mt: 8, mb: 4 }} />
+    </Container>
   );
-};
-
-export default LoginPage;
+}

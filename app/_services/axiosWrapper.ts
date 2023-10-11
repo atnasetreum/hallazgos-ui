@@ -4,6 +4,8 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 
+import { notify } from "@shared/utils";
+
 const DEFAULT_ERROR_MESSAGE =
   "An error occurred while processing your request. Please try again later.";
 
@@ -23,6 +25,7 @@ const axiosWrapper = ({ baseURL }: IAxiosWrapperProps): AxiosInstance => {
   api.interceptors.request.use((config: InternalAxiosRequestConfig<any>) => {
     config.headers["Accept"] = "application/json";
     config.headers["Content-Type"] = "application/json";
+    config.headers["x-app-key"] = process.env.NEXT_PUBLIC_APP_KEY;
     return config;
   });
 
@@ -33,12 +36,12 @@ const axiosWrapper = ({ baseURL }: IAxiosWrapperProps): AxiosInstance => {
     (error: AxiosError<IErrorResponse>) => {
       if (error?.response?.status === 401) {
         if (window.location.pathname !== "/users/sign_in") {
-          alert("The session has expired, please log in again");
+          notify("The session has expired, please log in again");
         }
       } else {
         const message = error?.message || DEFAULT_ERROR_MESSAGE;
 
-        alert(message.toString());
+        notify(message.toString());
       }
 
       return Promise.reject(error);

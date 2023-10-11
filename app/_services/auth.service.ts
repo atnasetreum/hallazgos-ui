@@ -11,7 +11,7 @@ const login = async ({
   email: string;
   password: string;
 }) => {
-  const { data } = await api.post<string>(
+  const { data } = await api.post<{ message: string }>(
     "/login",
     {
       email,

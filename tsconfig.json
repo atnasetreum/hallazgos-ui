@@ -20,7 +20,10 @@
     ],
     "baseUrl": "./app",
     "paths": {
-      "@services": ["_services"]
+      "@services": ["_services"],
+      "@components/*": ["_components/*"],
+      "@constants": ["_constants"],
+      "@shared/*": ["_shared/*"]
     },
     "noUnusedLocals": true,
     "noUnusedParameters": true

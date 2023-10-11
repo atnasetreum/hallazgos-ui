@@ -18,10 +18,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 
 import Copyright from "@shared/components/Copyright";
-import {
-  MainListItems,
-  SecondaryListItems,
-} from "@shared/components/listItems";
+import { MainListItems, SecondaryListItems } from "@shared/components/menu";
 
 const drawerWidth: number = 240;
 
@@ -111,7 +108,7 @@ export default function MainLayout({
             noWrap
             sx={{ flexGrow: 1 }}
           >
-            Dashboard
+            Cosmeticos Trujillo
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">

@@ -14,6 +14,12 @@ const login = async (payload: PayloadLogin) => {
   return data;
 };
 
+const logout = async () => {
+  const { data } = await api.post<{ message: string }>("/logout");
+  return data;
+};
+
 export const AuthService = {
   login,
+  logout,
 };

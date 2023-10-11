@@ -14,6 +14,9 @@ import LayersIcon from "@mui/icons-material/Layers";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
+import { AuthService } from "@services";
+import { notify } from "@shared/utils";
+
 export const MainListItems = () => {
   return (
     <React.Fragment>
@@ -78,7 +81,14 @@ export const SecondaryListItems = () => {
         <ListItemText primary="Year-end sale" />
       </ListItemButton>
 
-      <ListItemButton onClick={() => router.push("/")}>
+      <ListItemButton
+        onClick={() => {
+          AuthService.logout().then(({ message }) => {
+            notify(message, true);
+            router.push("/");
+          });
+        }}
+      >
         <ListItemIcon>
           <ExitToAppIcon />
         </ListItemIcon>

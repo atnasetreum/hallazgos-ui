@@ -37,17 +37,14 @@ const axiosWrapper = ({ baseURL }: IAxiosWrapperProps): AxiosInstance => {
       return response;
     },
     (error: AxiosError<IErrorResponse>) => {
-      // if (error?.response?.status === 401) {
-      //   if (window.location.pathname !== "/users/sign_in") {
-      //     notify("The session has expired, please log in again");
-      //   }
-      // } else {
-      //   const message = error?.response?.data?.message || DEFAULT_ERROR_MESSAGE;
-
-      //   notify(message.toString());
-      // }
-
       const message = error?.response?.data?.message || DEFAULT_ERROR_MESSAGE;
+
+      if (error?.response?.status === 401) {
+        if (window.location.pathname !== "/") {
+          window.location.replace("/");
+          return notify(message);
+        }
+      }
 
       notify(message);
 

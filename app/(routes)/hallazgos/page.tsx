@@ -1,37 +1,30 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
+import NoteAddIcon from "@mui/icons-material/NoteAdd";
 
 export default function HallazgosPage() {
+  const router = useRouter();
+
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12} md={8} lg={9}>
-        <Paper
-          sx={{
-            p: 2,
-            display: "flex",
-            flexDirection: "column",
-            height: 240,
-          }}
-        >
-          Chart 1 hallazgos
+      <Grid item xs={12} sm={12} md={12}>
+        <Paper sx={{ p: 2 }}>
+          <Button
+            variant="contained"
+            startIcon={<NoteAddIcon />}
+            onClick={() => router.push("/hallazgos/form")}
+          >
+            Agregar
+          </Button>
         </Paper>
       </Grid>
-      <Grid item xs={12} md={4} lg={3}>
-        <Paper
-          sx={{
-            p: 2,
-            display: "flex",
-            flexDirection: "column",
-            height: 240,
-          }}
-        >
-          Chart 2
-        </Paper>
-      </Grid>
-      <Grid item xs={12}>
-        <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-          Chart 3
-        </Paper>
+      <Grid item xs={12} sm={12} md={12}>
+        <Paper sx={{ p: 2 }}>Chart 3</Paper>
       </Grid>
     </Grid>
   );

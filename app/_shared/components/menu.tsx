@@ -29,7 +29,7 @@ function CreateLink({
   return (
     <ListItemButton
       onClick={() => router.push(url)}
-      selected={pathname === url}
+      selected={pathname.startsWith(url)}
     >
       <ListItemIcon>{icon}</ListItemIcon>
       <ListItemText primary={title} />

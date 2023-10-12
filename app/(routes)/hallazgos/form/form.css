@@ -1,0 +1,11 @@
+.sigContainer {
+  margin: 0 auto;
+  height: 300px;
+}
+
+.sigCanvas {
+  border-style: solid;
+  border-color: #1976d2;
+  width: 100%;
+  height: 100%;
+}

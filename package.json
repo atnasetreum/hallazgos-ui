@@ -18,12 +18,16 @@
     "next": "^13.5.4",
     "react": "latest",
     "react-dom": "latest",
+    "react-html5-camera-photo": "^1.5.11",
+    "react-signature-canvas": "^1.0.6",
     "sonner": "^1.0.3"
   },
   "devDependencies": {
     "@types/node": "^20.8.4",
     "@types/react": "^18.2.28",
     "@types/react-dom": "^18.2.13",
+    "@types/react-html5-camera-photo": "^1.5.1",
+    "@types/react-signature-canvas": "^1.0.3",
     "eslint": "^8.51.0",
     "eslint-config-next": "^13.5.4",
     "typescript": "latest"

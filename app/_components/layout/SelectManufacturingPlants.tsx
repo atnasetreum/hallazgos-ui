@@ -1,4 +1,7 @@
+"use client";
+
 import * as React from "react";
+
 import { styled, alpha } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Menu, { MenuProps } from "@mui/material/Menu";
@@ -7,6 +10,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import BusinessIcon from "@mui/icons-material/Business";
 
 import { useUserSessionStore } from "@store";
+import { ManufacturingPlant } from "@interfaces";
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -53,19 +57,35 @@ const StyledMenu = styled((props: MenuProps) => (
 
 export default function SelectManufacturingPlants() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [domLoaded, setDomLoaded] = React.useState(false);
+
   const open = Boolean(anchorEl);
 
   const manufacturingPlants = useUserSessionStore(
     (state) => state.manufacturingPlants
   );
 
+  const manufacturingPlantCurrent = useUserSessionStore(
+    (state) => state.manufacturingPlantCurrent
+  );
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (plant?: ManufacturingPlant) => {
     setAnchorEl(null);
+
+    if (plant) {
+      useUserSessionStore.setState({
+        manufacturingPlantCurrent: plant,
+      });
+    }
   };
+
+  React.useEffect(() => {
+    setDomLoaded(true);
+  }, []);
 
   return (
     <div>
@@ -77,26 +97,32 @@ export default function SelectManufacturingPlants() {
         variant="contained"
         disableElevation
         onClick={handleClick}
-        endIcon={<KeyboardArrowDownIcon />}
+        endIcon={!!manufacturingPlants.length && <KeyboardArrowDownIcon />}
       >
-        Options
+        {domLoaded && manufacturingPlantCurrent.name}
       </Button>
-      <StyledMenu
-        id="demo-customized-menu"
-        MenuListProps={{
-          "aria-labelledby": "demo-customized-button",
-        }}
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-      >
-        {manufacturingPlants.map((plant) => (
-          <MenuItem key={plant.id} onClick={handleClose} disableRipple>
-            <BusinessIcon />
-            {plant.name}
-          </MenuItem>
-        ))}
-      </StyledMenu>
+      {!!manufacturingPlants.length && (
+        <StyledMenu
+          id="demo-customized-menu"
+          MenuListProps={{
+            "aria-labelledby": "demo-customized-button",
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={() => handleClose()}
+        >
+          {manufacturingPlants.map((plant) => (
+            <MenuItem
+              key={plant.id}
+              onClick={() => handleClose(plant)}
+              disableRipple
+            >
+              <BusinessIcon />
+              {plant.name}
+            </MenuItem>
+          ))}
+        </StyledMenu>
+      )}
     </div>
   );
 }

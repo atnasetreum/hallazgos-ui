@@ -117,8 +117,10 @@ export const SecondaryListItems = () => {
         onClick={() => {
           AuthService.logout().then(({ message }) => {
             notify(message, true);
-            resetSession();
             router.push("/");
+            setTimeout(() => {
+              resetSession();
+            }, 500);
           });
         }}
       >

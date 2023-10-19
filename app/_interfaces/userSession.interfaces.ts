@@ -1,3 +1,5 @@
+import { ManufacturingPlant, Zones } from "./users.interfaces";
+
 export interface UserSession {
   id: number;
   name: string;
@@ -8,20 +10,5 @@ export interface UserSession {
   updatedAt: Date;
   manufacturingPlants: ManufacturingPlant[];
   zones: Zones[];
-}
-
-interface ManufacturingPlant {
-  id: number;
-  name: string;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface Zones {
-  id: number;
-  name: string;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  manufacturingPlantCurrent: ManufacturingPlant;
 }

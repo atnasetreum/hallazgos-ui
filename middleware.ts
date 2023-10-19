@@ -13,14 +13,18 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
+  const headersDefault = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+    "x-app-key": `${process.env.NEXT_PUBLIC_APP_KEY}`,
+  };
+
   const data = await (
     await fetch(process.env.NEXT_PUBLIC_URL_API + "/auth/check-token", {
       method: "POST",
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-        "x-app-key": `${process.env.NEXT_PUBLIC_APP_KEY}`,
+        ...headersDefault,
       },
     })
   ).json();

@@ -10,15 +10,17 @@ export interface User {
   zones: Zones[];
 }
 
-interface ManufacturingPlant {
+export interface ManufacturingPlant {
   id: number;
   name: string;
+  link: string;
+  lat: number;
+  lng: number;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
-
-interface Zones {
+export interface Zones {
   id: number;
   name: string;
   isActive: boolean;

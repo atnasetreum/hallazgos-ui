@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
+
 import { styled } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
@@ -18,6 +19,8 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import Copyright from "@shared/components/Copyright";
 import { MainListItems, SecondaryListItems } from "@shared/components/menu";
 import SelectManufacturingPlants from "@components/layout/SelectManufacturingPlants";
+import { useUserSessionStore } from "@store";
+import { UsersService } from "@services";
 
 const drawerWidth: number = 240;
 
@@ -76,9 +79,23 @@ export default function MainLayout({
 }) {
   const [open, setOpen] = React.useState(true);
 
+  const { id: userId, setSession } = useUserSessionStore();
+
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  useEffect(() => {
+    if (!userId) {
+      UsersService.getInformationCurrentUser().then((user) => {
+        const { manufacturingPlants } = user;
+        setSession({
+          ...user,
+          manufacturingPlantCurrent: manufacturingPlants[0],
+        });
+      });
+    }
+  }, [userId, setSession]);
 
   return (
     <Box sx={{ display: "flex" }}>

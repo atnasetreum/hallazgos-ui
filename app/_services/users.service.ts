@@ -11,6 +11,12 @@ const findAll = async () => {
   return data;
 };
 
+const getInformationCurrentUser = async () => {
+  const { data } = await api.get<User>("/get-information-current-user");
+  return data;
+};
+
 export const UsersService = {
   findAll,
+  getInformationCurrentUser,
 };

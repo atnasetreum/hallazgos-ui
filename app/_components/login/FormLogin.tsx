@@ -8,9 +8,10 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 
-import { AuthService } from "@services";
+import { AuthService, UsersService } from "@services";
 import { constants } from "@constants";
 import { notify, isValidEmail } from "@shared/utils";
+import { useUserSessionStore } from "@store";
 
 const FormLogin = () => {
   const [email, setEmail] = useState(
@@ -21,6 +22,8 @@ const FormLogin = () => {
   const [password, setPassword] = useState(
     process.env.NODE_ENV === constants.environments.development ? "123" : ""
   );
+
+  const { setSession } = useUserSessionStore();
 
   const router = useRouter();
 
@@ -48,7 +51,10 @@ const FormLogin = () => {
       password,
     }).then(({ message }) => {
       notify(message, true);
-      router.push("/dashboard");
+      UsersService.getInformationCurrentUser().then((user) => {
+        setSession(user);
+        router.push("/dashboard");
+      });
     });
   };
 

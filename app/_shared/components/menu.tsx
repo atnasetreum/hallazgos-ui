@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 
 import { usePathname, useRouter } from "next/navigation";
@@ -10,9 +12,15 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
+import AssuredWorkloadIcon from "@mui/icons-material/AssuredWorkload";
+import BusinessIcon from "@mui/icons-material/Business";
+import FolderIcon from "@mui/icons-material/Folder";
+import FolderSharedIcon from "@mui/icons-material/FolderShared";
 
 import { AuthService } from "@services";
 import { notify } from "@shared/utils";
+import { useUserSessionStore } from "@store";
 
 function CreateLink({
   url,
@@ -38,6 +46,16 @@ function CreateLink({
 }
 
 export const MainListItems = () => {
+  const [isAdmin, setIsAdmin] = React.useState(false);
+
+  const role = useUserSessionStore((state) => state.role);
+
+  React.useEffect(() => {
+    if (role && role === "admin" && !isAdmin) {
+      setIsAdmin(true);
+    }
+  }, [role, isAdmin]);
+
   return (
     <React.Fragment>
       <CreateLink url="/dashboard" title="Dashboard" icon={<DashboardIcon />} />
@@ -46,12 +64,43 @@ export const MainListItems = () => {
         title="Hallazgos"
         icon={<AssignmentIcon />}
       />
+      {isAdmin && (
+        <React.Fragment>
+          <CreateLink
+            url="/usuarios"
+            title="Usuarios"
+            icon={<SupervisedUserCircleIcon />}
+          />
+          <CreateLink
+            url="/usuarios"
+            title="Tipos de evidencia"
+            icon={<FolderIcon />}
+          />
+          <CreateLink
+            url="/usuarios"
+            title="Zonas"
+            icon={<AssuredWorkloadIcon />}
+          />
+          <CreateLink
+            url="/usuarios"
+            title="Usuarios - Zonas"
+            icon={<FolderSharedIcon />}
+          />
+          <CreateLink url="/usuarios" title="Plantas" icon={<BusinessIcon />} />
+          <CreateLink
+            url="/usuarios"
+            title="Usuarios - Plantas"
+            icon={<FolderSharedIcon />}
+          />
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };
 
 export const SecondaryListItems = () => {
   const router = useRouter();
+  const { resetSession } = useUserSessionStore();
 
   return (
     <React.Fragment>
@@ -62,12 +111,13 @@ export const SecondaryListItems = () => {
         <ListItemIcon>
           <BarChartIcon />
         </ListItemIcon>
-        <ListItemText primary="Analisis" />
+        <ListItemText primary="BI" />
       </ListItemButton>
       <ListItemButton
         onClick={() => {
           AuthService.logout().then(({ message }) => {
             notify(message, true);
+            resetSession();
             router.push("/");
           });
         }}

@@ -32,6 +32,7 @@ export default function HallazgosFormPage() {
   const [zone, setZone] = React.useState("");
   const [types, setTypes] = React.useState<string[]>([]);
   const [imageURLSig, setImageURLSig] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const sigPad = React.useRef<SignatureCanvas | null>(null);
   const router = useRouter();
@@ -68,6 +69,33 @@ export default function HallazgosFormPage() {
     if (sigPad.current) {
       setImageURLSig(sigPad.current.getTrimmedCanvas().toDataURL("image/png"));
     }
+  };
+
+  const isValidForm = React.useMemo(() => {
+    return typeHallazgo && type && zone && image && imageURLSig;
+  }, [typeHallazgo, type, zone, image, imageURLSig]);
+
+  const saveEvidence = async () => {
+    setIsLoading(true);
+    const response = await fetch("/api/hallazgos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        typeHallazgo,
+        type,
+        zone,
+        image,
+        imageURLSig,
+      }),
+    });
+    if (response.ok) {
+      router.push("/hallazgos");
+    } else {
+      alert("Error al guardar hallazgo");
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -234,7 +262,8 @@ export default function HallazgosFormPage() {
             <Button
               fullWidth
               startIcon={<SaveIcon />}
-              onClick={() => alert("save")}
+              onClick={saveEvidence}
+              disabled={!isValidForm || isLoading}
             >
               Crear hallazgo
             </Button>

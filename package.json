@@ -20,7 +20,8 @@
     "react-dom": "latest",
     "react-html5-camera-photo": "^1.5.11",
     "react-signature-canvas": "^1.0.6",
-    "sonner": "^1.0.3"
+    "sonner": "^1.0.3",
+    "zustand": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^20.8.4",

@@ -24,6 +24,7 @@
       "@components/*": ["_components/*"],
       "@constants": ["_constants"],
       "@interfaces": ["_interfaces"],
+      "@store": ["_store"],
       "@shared/*": ["_shared/*"]
     },
     "noUnusedLocals": true,

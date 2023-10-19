@@ -10,7 +10,11 @@ export default function Copyright(props: any) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="https://cosmeticostrujillo.com/">
+      <Link
+        color="inherit"
+        href="https://cosmeticostrujillo.com/"
+        target="_blank"
+      >
         Cosmeticos Trujillo
       </Link>{" "}
       {new Date().getFullYear()}

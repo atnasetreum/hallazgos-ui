@@ -10,5 +10,5 @@ export interface UserSession {
   updatedAt: Date;
   manufacturingPlants: ManufacturingPlant[];
   zones: Zones[];
-  manufacturingPlantCurrent: ManufacturingPlant;
+  manufacturingPlantsCurrent: number[];
 }

@@ -13,16 +13,7 @@ const stateInitial = {
   updatedAt: new Date(),
   manufacturingPlants: [],
   zones: [],
-  manufacturingPlantCurrent: {
-    id: 0,
-    name: "",
-    link: "",
-    lat: 0,
-    lng: 0,
-    isActive: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
+  manufacturingPlantsCurrent: [],
 };
 
 type Actions = {

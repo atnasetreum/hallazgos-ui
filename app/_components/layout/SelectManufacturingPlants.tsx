@@ -1,16 +1,14 @@
-"use client";
-
 import * as React from "react";
 
 import { styled, alpha } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Menu, { MenuProps } from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import DomainIcon from "@mui/icons-material/Domain";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import BusinessIcon from "@mui/icons-material/Business";
+import DomainDisabledIcon from "@mui/icons-material/DomainDisabled";
 
 import { useUserSessionStore } from "@store";
-import { ManufacturingPlant } from "@interfaces";
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -55,37 +53,25 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
-export default function SelectManufacturingPlants() {
+export default function CustomizedMenus() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [domLoaded, setDomLoaded] = React.useState(false);
-
   const open = Boolean(anchorEl);
 
   const manufacturingPlants = useUserSessionStore(
     (state) => state.manufacturingPlants
   );
 
-  const manufacturingPlantCurrent = useUserSessionStore(
-    (state) => state.manufacturingPlantCurrent
+  const manufacturingPlantsCurrent = useUserSessionStore(
+    (state) => state.manufacturingPlantsCurrent
   );
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (plant?: ManufacturingPlant) => {
+  const handleClose = () => {
     setAnchorEl(null);
-
-    if (plant) {
-      useUserSessionStore.setState({
-        manufacturingPlantCurrent: plant,
-      });
-    }
   };
-
-  React.useEffect(() => {
-    setDomLoaded(true);
-  }, []);
 
   return (
     <div>
@@ -97,32 +83,57 @@ export default function SelectManufacturingPlants() {
         variant="contained"
         disableElevation
         onClick={handleClick}
-        endIcon={!!manufacturingPlants.length && <KeyboardArrowDownIcon />}
+        endIcon={<KeyboardArrowDownIcon />}
       >
-        {domLoaded && manufacturingPlantCurrent.name}
+        {!manufacturingPlantsCurrent.length
+          ? "Seleccionar planta"
+          : `Plantas (${manufacturingPlantsCurrent.length})`}
       </Button>
-      {!!manufacturingPlants.length && (
-        <StyledMenu
-          id="demo-customized-menu"
-          MenuListProps={{
-            "aria-labelledby": "demo-customized-button",
-          }}
-          anchorEl={anchorEl}
-          open={open}
-          onClose={() => handleClose()}
-        >
-          {manufacturingPlants.map((plant) => (
+      <StyledMenu
+        id="demo-customized-menu"
+        MenuListProps={{
+          "aria-labelledby": "demo-customized-button",
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+      >
+        {manufacturingPlants.map((plant) => {
+          const selected = manufacturingPlantsCurrent.includes(plant.id);
+          return (
             <MenuItem
               key={plant.id}
-              onClick={() => handleClose(plant)}
-              disableRipple
+              selected={selected}
+              onClick={
+                selected
+                  ? () => {
+                      useUserSessionStore.setState({
+                        manufacturingPlantsCurrent:
+                          manufacturingPlantsCurrent.filter(
+                            (e) => e !== plant.id
+                          ),
+                      });
+                    }
+                  : () => {
+                      useUserSessionStore.setState({
+                        manufacturingPlantsCurrent: [
+                          ...manufacturingPlantsCurrent,
+                          plant.id,
+                        ],
+                      });
+                    }
+              }
             >
-              <BusinessIcon />
+              {selected ? (
+                <DomainIcon style={{ fill: "green" }} />
+              ) : (
+                <DomainDisabledIcon />
+              )}
               {plant.name}
             </MenuItem>
-          ))}
-        </StyledMenu>
-      )}
+          );
+        })}
+      </StyledMenu>
     </div>
   );
 }

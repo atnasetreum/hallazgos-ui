@@ -91,7 +91,8 @@ export default function MainLayout({
         const { manufacturingPlants } = user;
         setSession({
           ...user,
-          manufacturingPlantCurrent: manufacturingPlants[0],
+          manufacturingPlantsCurrent:
+            manufacturingPlants.length === 1 ? [manufacturingPlants[0].id] : [],
         });
       });
     }

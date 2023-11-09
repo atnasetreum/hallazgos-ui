@@ -120,7 +120,7 @@ export const SecondaryListItems = () => {
             router.push("/");
             setTimeout(() => {
               resetSession();
-            }, 500);
+            }, 1000);
           });
         }}
       >

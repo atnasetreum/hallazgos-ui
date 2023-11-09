@@ -21,6 +21,17 @@ import SaveIcon from "@mui/icons-material/Save";
 import ClearIcon from "@mui/icons-material/Clear";
 import Camera from "react-html5-camera-photo";
 import SignatureCanvas from "react-signature-canvas";
+import { v4 as uuidv4 } from "uuid";
+
+import {
+  EvidencesService,
+  MainTypesService,
+  SecondaryTypesService,
+  ZonesService,
+} from "@services";
+import { MainType, SecondaryType, Zone } from "@interfaces";
+import { useUserSessionStore } from "@store";
+import { dataURLtoFile, notify } from "@shared/utils";
 
 import "react-html5-camera-photo/build/css/index.css";
 import "./form.css";
@@ -30,40 +41,47 @@ export default function HallazgosFormPage() {
   const [type, setType] = React.useState("");
   const [image, setImage] = React.useState("");
   const [zone, setZone] = React.useState("");
-  const [types, setTypes] = React.useState<string[]>([]);
+  const [manufacturingPlantId, setManufacturingPlantId] = React.useState("");
+
+  const [mainTypes, setMainTypes] = React.useState<MainType[]>([]);
+  const [types, setTypes] = React.useState<SecondaryType[]>([]);
+  const [zones, setZones] = React.useState<Zone[]>([]);
+
   const [imageURLSig, setImageURLSig] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
 
+  const manufacturingPlants = useUserSessionStore(
+    (state) => state.manufacturingPlants
+  );
+
+  const manufacturingPlantsCurrent = useUserSessionStore(
+    (state) => state.manufacturingPlantsCurrent
+  );
+
   const sigPad = React.useRef<SignatureCanvas | null>(null);
+
   const router = useRouter();
 
   React.useEffect(() => {
+    if (manufacturingPlantsCurrent.length === 1) {
+      setManufacturingPlantId(`${manufacturingPlantsCurrent[0]}`);
+    } else {
+      setManufacturingPlantId("");
+    }
+  }, [manufacturingPlantsCurrent]);
+
+  React.useEffect(() => {
     if (typeHallazgo) {
-      switch (typeHallazgo) {
-        case "comportamiento":
-          setTypes([
-            "Manipulación de máquina con sensores de seguridad activados",
-            "Uso de paro de emergencia",
-            "Uso adecuado de EPP",
-            "Uso de guardas de seguridad",
-            "Levantamiento de cargas no mayor a 25 kl (Hombre)",
-            "Levantamiento de cargas no mayor a 12.5 kl (Mujer)",
-          ]);
-          break;
-        case "condicion":
-          setTypes([
-            "Máquina sin guarda de seguridad",
-            "Sensor de seguridad sin funcionamiento",
-            "Escalera en mal estado",
-            "Fuga de aceite",
-            "Tubería sin aislamiento de calor",
-          ]);
-          break;
-        default:
-          setTypes([]);
-      }
+      SecondaryTypesService.findAllByManufacturingPlant(
+        Number(typeHallazgo)
+      ).then(setTypes);
     }
   }, [typeHallazgo]);
+
+  React.useEffect(() => {
+    MainTypesService.findAll().then(setMainTypes);
+    ZonesService.findAll().then(setZones);
+  }, []);
 
   const saveSig = () => {
     if (sigPad.current) {
@@ -71,36 +89,80 @@ export default function HallazgosFormPage() {
     }
   };
 
-  const isValidForm = React.useMemo(() => {
-    return typeHallazgo && type && zone && image && imageURLSig;
-  }, [typeHallazgo, type, zone, image, imageURLSig]);
+  const isValidForm = React.useMemo(
+    () =>
+      (manufacturingPlantId &&
+        typeHallazgo &&
+        type &&
+        zone &&
+        image &&
+        imageURLSig) ||
+      isLoading,
+    [
+      manufacturingPlantId,
+      typeHallazgo,
+      type,
+      zone,
+      image,
+      imageURLSig,
+      isLoading,
+    ]
+  );
 
   const saveEvidence = async () => {
+    const formData = new FormData();
+
+    formData.append("manufacturingPlantId", manufacturingPlantId);
+    formData.append("typeHallazgo", typeHallazgo);
+    formData.append("type", type);
+    formData.append("zone", zone);
+
+    const uuid = uuidv4();
+
+    formData.append("files", dataURLtoFile(image, `${uuid}-evidence.png`));
+
+    formData.append(
+      "files",
+      dataURLtoFile(imageURLSig, `${uuid}-signature.png`)
+    );
+
     setIsLoading(true);
-    const response = await fetch("/api/hallazgos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        typeHallazgo,
-        type,
-        zone,
-        image,
-        imageURLSig,
-      }),
-    });
-    if (response.ok) {
-      router.push("/hallazgos");
-    } else {
-      alert("Error al guardar hallazgo");
-    }
-    setIsLoading(false);
+    EvidencesService.create(formData)
+      .then(() => {
+        notify("Hallazgo creado correctamente", true);
+        router.push("/hallazgos");
+      })
+      .catch((err) => {
+        console.error(err);
+        notify("Ocurrió un error al crear el hallazgo");
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12} sm={4} md={4}>
+      <Grid item xs={12} sm={6} md={3}>
+        <Paper sx={{ p: 2 }}>
+          <FormControl fullWidth>
+            <InputLabel>Planta</InputLabel>
+            <Select
+              value={manufacturingPlantId}
+              onChange={(e) => {
+                setManufacturingPlantId(e.target.value);
+              }}
+              label="Planta"
+            >
+              {manufacturingPlants.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  {item.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Paper>
+      </Grid>
+
+      <Grid item xs={12} sm={6} md={3}>
         <Paper sx={{ p: 2 }}>
           <FormControl fullWidth>
             <InputLabel>Hallazgo</InputLabel>
@@ -112,15 +174,17 @@ export default function HallazgosFormPage() {
               }}
               label="Hallazgo"
             >
-              <MenuItem value={"comportamiento"}>
-                Comportamiento inseguro
-              </MenuItem>
-              <MenuItem value={"condicion"}>Condición insegura</MenuItem>
+              {mainTypes.map((mainType) => (
+                <MenuItem key={mainType.id} value={mainType.id}>
+                  {mainType.name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={4} md={4}>
+
+      <Grid item xs={12} sm={6} md={3}>
         <Paper sx={{ p: 2 }}>
           <FormControl fullWidth>
             <InputLabel>Tipo</InputLabel>
@@ -130,15 +194,16 @@ export default function HallazgosFormPage() {
               label="Tipo"
             >
               {types.map((type) => (
-                <MenuItem key={type} value={type}>
-                  {type}
+                <MenuItem key={type.id} value={type.id}>
+                  {type.name}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={4} md={4}>
+
+      <Grid item xs={12} sm={6} md={3}>
         <Paper sx={{ p: 2 }}>
           <FormControl fullWidth>
             <InputLabel>Zona</InputLabel>
@@ -147,16 +212,17 @@ export default function HallazgosFormPage() {
               onChange={(e) => setZone(e.target.value)}
               label="Zona"
             >
-              <MenuItem value={"PTAR"}>PTAR</MenuItem>
-              <MenuItem value={"SAPONIFICACION"}>SAPONIFICACION</MenuItem>
-              <MenuItem value={"SECADO"}>SECADO</MenuItem>
-              <MenuItem value={"MANTENIMIENTO"}>MANTENIMIENTO</MenuItem>
-              <MenuItem value={"LOGISTICA"}>LOGISTICA</MenuItem>
+              {zones.map((zone) => (
+                <MenuItem key={zone.id} value={zone.id}>
+                  {zone.name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Paper>
       </Grid>
-      {typeHallazgo && type && zone && (
+
+      {manufacturingPlantId && typeHallazgo && type && zone && (
         <>
           <Grid item xs={12} sm={6} md={6}>
             <Box display="flex" justifyContent="center" alignItems="center">

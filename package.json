@@ -14,6 +14,8 @@
     "@fontsource/roboto": "^5.0.8",
     "@mui/icons-material": "^5.14.13",
     "@mui/material": "^5.14.13",
+    "ag-grid-community": "^30.2.1",
+    "ag-grid-react": "^30.2.1",
     "axios": "^1.5.1",
     "next": "^13.5.4",
     "react": "latest",
@@ -21,6 +23,7 @@
     "react-html5-camera-photo": "^1.5.11",
     "react-signature-canvas": "^1.0.6",
     "sonner": "^1.0.3",
+    "uuid": "^9.0.1",
     "zustand": "^4.4.3"
   },
   "devDependencies": {
@@ -29,6 +32,7 @@
     "@types/react-dom": "^18.2.13",
     "@types/react-html5-camera-photo": "^1.5.1",
     "@types/react-signature-canvas": "^1.0.3",
+    "@types/uuid": "^9.0.7",
     "eslint": "^8.51.0",
     "eslint-config-next": "^13.5.4",
     "typescript": "latest"

@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 
 import { styled, alpha } from "@mui/material/styles";
@@ -7,6 +9,7 @@ import MenuItem from "@mui/material/MenuItem";
 import DomainIcon from "@mui/icons-material/Domain";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import DomainDisabledIcon from "@mui/icons-material/DomainDisabled";
+import Typography from "@mui/material/Typography";
 
 import { useUserSessionStore } from "@store";
 
@@ -53,8 +56,10 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
-export default function CustomizedMenus() {
+export default function SelectManufacturingPlants() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [isMounted, setIsMounted] = React.useState<boolean>(false);
+
   const open = Boolean(anchorEl);
 
   const manufacturingPlants = useUserSessionStore(
@@ -73,6 +78,21 @@ export default function CustomizedMenus() {
     setAnchorEl(null);
   };
 
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const titlePlantSelected = React.useMemo(() => {
+    if (!isMounted) return "Cargando...";
+    if (!manufacturingPlantsCurrent.length) return "Seleccionar planta";
+    if (manufacturingPlantsCurrent.length === 1)
+      return manufacturingPlants.find(
+        (e) => e.id === manufacturingPlantsCurrent[0]
+      )?.name;
+
+    return `Plantas (${manufacturingPlantsCurrent.length})`;
+  }, [isMounted, manufacturingPlantsCurrent, manufacturingPlants]);
+
   return (
     <div>
       <Button
@@ -85,9 +105,7 @@ export default function CustomizedMenus() {
         onClick={handleClick}
         endIcon={<KeyboardArrowDownIcon />}
       >
-        {!manufacturingPlantsCurrent.length
-          ? "Seleccionar planta"
-          : `Plantas (${manufacturingPlantsCurrent.length})`}
+        <Typography>{titlePlantSelected}</Typography>
       </Button>
       <StyledMenu
         id="demo-customized-menu"

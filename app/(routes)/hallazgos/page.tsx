@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { useRouter } from "next/navigation";
 
 import Grid from "@mui/material/Grid";
@@ -8,9 +10,21 @@ import Button from "@mui/material/Button";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
 
 import HallazgosTable from "./_components/table/table";
+import { EvidencesService } from "@services";
+import { Evidence } from "_interfaces/evicences.interfaces";
 
 export default function HallazgosPage() {
+  const [evidences, setEvidences] = useState<Evidence[]>([]);
+
   const router = useRouter();
+
+  useEffect(() => {
+    EvidencesService.findAll().then(setEvidences);
+  }, []);
+
+  useEffect(() => {
+    console.log(evidences);
+  }, [evidences]);
 
   return (
     <Grid container spacing={3}>
@@ -27,7 +41,7 @@ export default function HallazgosPage() {
       </Grid>
       <Grid item xs={12} sm={12} md={12}>
         <Paper sx={{ p: 2 }}>
-          <HallazgosTable />
+          <HallazgosTable rowData={evidences} />
         </Paper>
       </Grid>
     </Grid>

@@ -1,4 +1,3 @@
-import { ValueFormatterParams } from "ag-grid-community";
 import { toast } from "sonner";
 
 export const notify = (message: string, success?: boolean) => {
@@ -31,15 +30,4 @@ export const dataURLtoFile = (dataurl: string, filename: string) => {
   }
 
   return new File([u8arr], filename, { type: mime });
-};
-
-export const dateFormatterWithTimeForTable = (params: ValueFormatterParams) => {
-  const date = new Date(params.value);
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-
-  return `${day}/${month}/${year} ${hours}:${minutes}`;
 };

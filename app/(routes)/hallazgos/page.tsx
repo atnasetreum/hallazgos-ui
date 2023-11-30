@@ -40,9 +40,7 @@ export default function HallazgosPage() {
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12} md={12}>
-        <Paper sx={{ p: 2 }}>
-          <HallazgosTable rowData={evidences} />
-        </Paper>
+        <HallazgosTable rows={evidences} />
       </Grid>
     </Grid>
   );

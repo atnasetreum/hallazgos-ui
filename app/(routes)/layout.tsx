@@ -126,7 +126,7 @@ export default function MainLayout({
             noWrap
             sx={{ flexGrow: 1 }}
           >
-            Cosmeticos Trujillo
+            HADA
           </Typography>
           <SelectManufacturingPlants />
           {/* <IconButton color="inherit">

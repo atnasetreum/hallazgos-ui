@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 import { usePathname, useRouter } from "next/navigation";
 
@@ -29,7 +29,7 @@ function CreateLink({
 }: {
   url: string;
   title: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -46,18 +46,18 @@ function CreateLink({
 }
 
 export const MainListItems = () => {
-  const [isAdmin, setIsAdmin] = React.useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const role = useUserSessionStore((state) => state.role);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (role && role === "admin" && !isAdmin) {
       setIsAdmin(true);
     }
   }, [role, isAdmin]);
 
   return (
-    <React.Fragment>
+    <>
       <CreateLink url="/dashboard" title="Dashboard" icon={<DashboardIcon />} />
       <CreateLink
         url="/hallazgos"
@@ -65,7 +65,7 @@ export const MainListItems = () => {
         icon={<AssignmentIcon />}
       />
       {isAdmin && (
-        <React.Fragment>
+        <>
           <CreateLink
             url="/usuarios"
             title="Usuarios"
@@ -92,9 +92,9 @@ export const MainListItems = () => {
             title="Usuarios - Plantas"
             icon={<FolderSharedIcon />}
           />
-        </React.Fragment>
+        </>
       )}
-    </React.Fragment>
+    </>
   );
 };
 
@@ -103,7 +103,7 @@ export const SecondaryListItems = () => {
   const { resetSession } = useUserSessionStore();
 
   return (
-    <React.Fragment>
+    <>
       <ListSubheader component="div" inset>
         Reportes
       </ListSubheader>
@@ -129,6 +129,6 @@ export const SecondaryListItems = () => {
         </ListItemIcon>
         <ListItemText primary="Salir" />
       </ListItemButton>
-    </React.Fragment>
+    </>
   );
 };

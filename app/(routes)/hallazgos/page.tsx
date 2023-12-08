@@ -9,7 +9,7 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
 
-import HallazgosTable from "./_components/table/table";
+import HallazgosTable from "./_components/HallazgosTable";
 import { EvidencesService } from "@services";
 import { Evidence } from "_interfaces/evicences.interfaces";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -15,12 +15,9 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import PartyModeIcon from "@mui/icons-material/PartyMode";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import CleaningServicesIcon from "@mui/icons-material/CleaningServices";
-import CheckIcon from "@mui/icons-material/Check";
 import SaveIcon from "@mui/icons-material/Save";
 import ClearIcon from "@mui/icons-material/Clear";
 import Camera from "react-html5-camera-photo";
-import SignatureCanvas from "react-signature-canvas";
 import { v4 as uuidv4 } from "uuid";
 
 import {
@@ -37,18 +34,15 @@ import "react-html5-camera-photo/build/css/index.css";
 import "./form.css";
 
 export default function HallazgosFormPage() {
-  const [typeHallazgo, setTypeHallazgo] = React.useState("");
-  const [type, setType] = React.useState("");
-  const [image, setImage] = React.useState("");
-  const [zone, setZone] = React.useState("");
-  const [manufacturingPlantId, setManufacturingPlantId] = React.useState("");
-
-  const [mainTypes, setMainTypes] = React.useState<MainType[]>([]);
-  const [types, setTypes] = React.useState<SecondaryType[]>([]);
-  const [zones, setZones] = React.useState<Zone[]>([]);
-
-  const [imageURLSig, setImageURLSig] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [typeHallazgo, setTypeHallazgo] = useState("");
+  const [type, setType] = useState("");
+  const [image, setImage] = useState("");
+  const [zone, setZone] = useState("");
+  const [manufacturingPlantId, setManufacturingPlantId] = useState("");
+  const [mainTypes, setMainTypes] = useState<MainType[]>([]);
+  const [types, setTypes] = useState<SecondaryType[]>([]);
+  const [zones, setZones] = useState<Zone[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const manufacturingPlants = useUserSessionStore(
     (state) => state.manufacturingPlants
@@ -58,11 +52,9 @@ export default function HallazgosFormPage() {
     (state) => state.manufacturingPlantsCurrent
   );
 
-  const sigPad = React.useRef<SignatureCanvas | null>(null);
-
   const router = useRouter();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (manufacturingPlantsCurrent.length === 1) {
       setManufacturingPlantId(`${manufacturingPlantsCurrent[0]}`);
     } else {
@@ -70,7 +62,7 @@ export default function HallazgosFormPage() {
     }
   }, [manufacturingPlantsCurrent]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (typeHallazgo) {
       SecondaryTypesService.findAllByManufacturingPlant(
         Number(typeHallazgo)
@@ -78,35 +70,16 @@ export default function HallazgosFormPage() {
     }
   }, [typeHallazgo]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     MainTypesService.findAll().then(setMainTypes);
     ZonesService.findAll().then(setZones);
   }, []);
 
-  const saveSig = () => {
-    if (sigPad.current) {
-      setImageURLSig(sigPad.current.getTrimmedCanvas().toDataURL("image/png"));
-    }
-  };
-
-  const isValidForm = React.useMemo(
+  const isValidForm = useMemo(
     () =>
-      (manufacturingPlantId &&
-        typeHallazgo &&
-        type &&
-        zone &&
-        image &&
-        imageURLSig) ||
+      (manufacturingPlantId && typeHallazgo && type && zone && image) ||
       isLoading,
-    [
-      manufacturingPlantId,
-      typeHallazgo,
-      type,
-      zone,
-      image,
-      imageURLSig,
-      isLoading,
-    ]
+    [manufacturingPlantId, typeHallazgo, type, zone, image, isLoading]
   );
 
   const saveEvidence = async () => {
@@ -119,12 +92,7 @@ export default function HallazgosFormPage() {
 
     const uuid = uuidv4();
 
-    formData.append("files", dataURLtoFile(image, `${uuid}-evidence.png`));
-
-    formData.append(
-      "files",
-      dataURLtoFile(imageURLSig, `${uuid}-signature.png`)
-    );
+    formData.append("file", dataURLtoFile(image, `${uuid}-evidence.png`));
 
     setIsLoading(true);
     EvidencesService.create(formData)
@@ -224,7 +192,7 @@ export default function HallazgosFormPage() {
 
       {manufacturingPlantId && typeHallazgo && type && zone && (
         <>
-          <Grid item xs={12} sm={6} md={6}>
+          <Grid item xs={12} sm={12} md={12}>
             <Box display="flex" justifyContent="center" alignItems="center">
               <Paper sx={{ p: 2 }}>
                 {!image ? (
@@ -249,62 +217,6 @@ export default function HallazgosFormPage() {
                     </Button>
                   </>
                 )}
-              </Paper>
-            </Box>
-          </Grid>
-          <Grid item xs={12} sm={6} md={6}>
-            <Box display="flex" justifyContent="center" alignItems="center">
-              <Paper sx={{ p: 2 }}>
-                <h3>Firma digital</h3>
-                {!imageURLSig ? (
-                  <div className="sigContainer">
-                    <SignatureCanvas
-                      ref={(ref) => {
-                        sigPad.current = ref;
-                      }}
-                      canvasProps={{
-                        className: "sigCanvas",
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <Image
-                    src={imageURLSig}
-                    alt="Firma"
-                    width={0}
-                    height={0}
-                    sizes="100vw"
-                    style={{ width: "100%", height: "auto" }}
-                  />
-                )}
-                <ButtonGroup
-                  variant="contained"
-                  aria-label="outlined primary button group"
-                  fullWidth
-                  sx={{ mt: 2 }}
-                >
-                  <Button
-                    fullWidth
-                    startIcon={<CleaningServicesIcon />}
-                    onClick={() => {
-                      setImageURLSig("");
-                      if (sigPad.current) {
-                        sigPad.current.clear();
-                      }
-                    }}
-                  >
-                    Borrar firma
-                  </Button>
-                  {!imageURLSig && (
-                    <Button
-                      fullWidth
-                      startIcon={<CheckIcon />}
-                      onClick={saveSig}
-                    >
-                      Confirmar firma
-                    </Button>
-                  )}
-                </ButtonGroup>
               </Paper>
             </Box>
           </Grid>

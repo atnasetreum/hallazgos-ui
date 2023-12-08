@@ -1,7 +1,6 @@
 export interface Evidence {
   id: number;
   imgEvidence: string;
-  imgSignature: string;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

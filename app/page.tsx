@@ -24,7 +24,7 @@ export default function SignIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Cosmeticos Trujillo
+          HADA
         </Typography>
         <FormLogin />
       </Box>

@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { MouseEvent, useEffect, useMemo, useState } from "react";
 
 import { styled, alpha } from "@mui/material/styles";
 import Button from "@mui/material/Button";
@@ -57,8 +57,8 @@ const StyledMenu = styled((props: MenuProps) => (
 }));
 
 export default function SelectManufacturingPlants() {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [isMounted, setIsMounted] = React.useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
 
   const open = Boolean(anchorEl);
 
@@ -70,7 +70,7 @@ export default function SelectManufacturingPlants() {
     (state) => state.manufacturingPlantsCurrent
   );
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -78,11 +78,11 @@ export default function SelectManufacturingPlants() {
     setAnchorEl(null);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  const titlePlantSelected = React.useMemo(() => {
+  const titlePlantSelected = useMemo(() => {
     if (!isMounted) return "Cargando...";
     if (!manufacturingPlantsCurrent.length) return "Seleccionar planta";
     if (manufacturingPlantsCurrent.length === 1)

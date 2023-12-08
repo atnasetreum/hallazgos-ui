@@ -1,4 +1,6 @@
 import { toast } from "sonner";
+import moment from "moment";
+import "moment/locale/es";
 
 export const notify = (message: string, success?: boolean) => {
   if (success) {
@@ -31,3 +33,10 @@ export const dataURLtoFile = (dataurl: string, filename: string) => {
 
   return new File([u8arr], filename, { type: mime });
 };
+
+export const baseUrlImage = (image: string) => {
+  return `${process.env.NEXT_PUBLIC_URL_API_RAW}/static/images/evidences/${image}`;
+};
+
+export const stringToDateWithTime = (date: string | Date) =>
+  moment(date).format("LLL");

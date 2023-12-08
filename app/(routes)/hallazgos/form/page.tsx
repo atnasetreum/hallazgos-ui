@@ -25,6 +25,7 @@ import {
   MainTypesService,
   SecondaryTypesService,
   ZonesService,
+  handleErrorResponse,
 } from "@services";
 import { MainType, SecondaryType, Zone } from "@interfaces";
 import { useUserSessionStore } from "@store";
@@ -100,10 +101,7 @@ export default function HallazgosFormPage() {
         notify("Hallazgo creado correctamente", true);
         router.push("/hallazgos");
       })
-      .catch((err) => {
-        console.error(err);
-        notify("Ocurrió un error al crear el hallazgo");
-      })
+      .catch(handleErrorResponse)
       .finally(() => setIsLoading(false));
   };
 

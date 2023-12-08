@@ -17,7 +17,24 @@ interface IAxiosWrapperProps {
   baseURL: string;
 }
 
-const axiosWrapper = ({ baseURL }: IAxiosWrapperProps): AxiosInstance => {
+export const handleErrorResponse = (error: AxiosError<IErrorResponse>) => {
+  const message = error?.response?.data?.message || DEFAULT_ERROR_MESSAGE;
+
+  if (error?.response?.status === 401) {
+    if (window.location.pathname !== "/") {
+      window.location.replace("/");
+      return notify(message);
+    }
+  }
+
+  notify(message);
+
+  return Promise.reject(error);
+};
+
+export default function axiosWrapper({
+  baseURL,
+}: IAxiosWrapperProps): AxiosInstance {
   const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_URL_API + baseURL,
   });
@@ -32,27 +49,9 @@ const axiosWrapper = ({ baseURL }: IAxiosWrapperProps): AxiosInstance => {
     return config;
   });
 
-  api.interceptors.response.use(
-    (response) => {
-      return response;
-    },
-    (error: AxiosError<IErrorResponse>) => {
-      const message = error?.response?.data?.message || DEFAULT_ERROR_MESSAGE;
-
-      if (error?.response?.status === 401) {
-        if (window.location.pathname !== "/") {
-          window.location.replace("/");
-          return notify(message);
-        }
-      }
-
-      notify(message);
-
-      return Promise.reject(error);
-    }
-  );
+  api.interceptors.response.use((response) => {
+    return response;
+  }, handleErrorResponse);
 
   return api;
-};
-
-export default axiosWrapper;
+}

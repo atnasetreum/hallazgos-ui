@@ -32,11 +32,12 @@ export default function HallazgosTable({ rows }: Props) {
           "Grupo",
           "Tipo de evidencia",
           "Zona",
+          "Creado por",
           "Imagen",
           "Creación",
           "Ultima actualización",
         ]}
-        paintRows={(row) => (
+        paintRows={(row: Evidence) => (
           <StyledTableRow key={row.id}>
             <StyledTableCell component="th" scope="row">
               {row.id}
@@ -45,6 +46,9 @@ export default function HallazgosTable({ rows }: Props) {
             <StyledTableCell>{row.mainType.name}</StyledTableCell>
             <StyledTableCell>{row.secondaryType.name}</StyledTableCell>
             <StyledTableCell>{row.zone.name}</StyledTableCell>
+            <StyledTableCell>
+              {row.user.name} / {row.user.role}
+            </StyledTableCell>
             <StyledTableCell>
               <Image
                 src={baseUrlImage(row.imgEvidence)}

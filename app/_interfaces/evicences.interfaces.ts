@@ -8,6 +8,7 @@ export interface Evidence {
   mainType: GenericType;
   secondaryType: GenericType;
   zone: GenericType;
+  user: User;
 }
 
 interface GenericType {
@@ -24,6 +25,16 @@ interface ManufacturingPlant {
   link: string;
   lat: string;
   lng: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

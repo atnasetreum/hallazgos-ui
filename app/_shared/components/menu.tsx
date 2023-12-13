@@ -21,6 +21,7 @@ import FolderSharedIcon from "@mui/icons-material/FolderShared";
 import { AuthService } from "@services";
 import { notify } from "@shared/utils";
 import { useUserSessionStore } from "@store";
+import { ROLE_ADMINISTRADOR } from "@shared/constants";
 
 function CreateLink({
   url,
@@ -51,7 +52,7 @@ export const MainListItems = () => {
   const role = useUserSessionStore((state) => state.role);
 
   useEffect(() => {
-    if (role && role === "admin" && !isAdmin) {
+    if (role && role === ROLE_ADMINISTRADOR && !isAdmin) {
       setIsAdmin(true);
     }
   }, [role, isAdmin]);

@@ -35,15 +35,15 @@ import "react-html5-camera-photo/build/css/index.css";
 import "./form.css";
 
 export default function HallazgosFormPage() {
-  const [typeHallazgo, setTypeHallazgo] = useState("");
-  const [type, setType] = useState("");
-  const [image, setImage] = useState("");
-  const [zone, setZone] = useState("");
-  const [manufacturingPlantId, setManufacturingPlantId] = useState("");
+  const [typeHallazgo, setTypeHallazgo] = useState<string>("");
+  const [type, setType] = useState<string>("");
+  const [image, setImage] = useState<string>("");
+  const [zone, setZone] = useState<string>("");
+  const [manufacturingPlantId, setManufacturingPlantId] = useState<string>("");
   const [mainTypes, setMainTypes] = useState<MainType[]>([]);
   const [types, setTypes] = useState<SecondaryType[]>([]);
   const [zones, setZones] = useState<Zone[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const manufacturingPlants = useUserSessionStore(
     (state) => state.manufacturingPlants
@@ -210,6 +210,7 @@ export default function HallazgosFormPage() {
                       variant="contained"
                       startIcon={<PartyModeIcon />}
                       onClick={() => setImage("")}
+                      disabled={isLoading}
                     >
                       Volver a tomar evidencia
                     </Button>
@@ -232,6 +233,7 @@ export default function HallazgosFormPage() {
               startIcon={<ClearIcon />}
               onClick={() => router.push("/hallazgos")}
               color="error"
+              disabled={isLoading}
             >
               Cancelar
             </Button>

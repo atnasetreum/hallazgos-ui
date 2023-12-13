@@ -10,13 +10,28 @@ const api = axiosWrapper({
 });
 
 const findAll = async () => {
-  const { data } = await api.get("");
+  const { data } = await api.get<Evidence[]>("");
   return data;
 };
 
 const create = async (formData: FormData) => {
-  const { data } = await axios.post<Evidence[]>(
+  const { data } = await axios.post<Evidence>(
     `${process.env.NEXT_PUBLIC_URL_API}${baseURL}`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        ["x-app-key"]: process.env.NEXT_PUBLIC_APP_KEY,
+      },
+      withCredentials: true,
+    }
+  );
+  return data;
+};
+
+const solution = async (id: number, formData: FormData) => {
+  const { data } = await axios.post<Evidence>(
+    `${process.env.NEXT_PUBLIC_URL_API}${baseURL}/solution/${id}`,
     formData,
     {
       headers: {
@@ -32,4 +47,5 @@ const create = async (formData: FormData) => {
 export const EvidencesService = {
   findAll,
   create,
+  solution,
 };

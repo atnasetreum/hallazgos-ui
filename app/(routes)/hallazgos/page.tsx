@@ -57,7 +57,11 @@ export default function HallazgosPage() {
         </Toolbar>
       </Grid>
       <Grid item xs={12} sm={12} md={12}>
-        {isLoading ? <LoadingLinear /> : <HallazgosTable rows={evidences} />}
+        {isLoading ? (
+          <LoadingLinear />
+        ) : (
+          <HallazgosTable rows={evidences} getData={getData} />
+        )}
       </Grid>
     </Grid>
   );

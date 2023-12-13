@@ -1,42 +1,53 @@
 import { useState } from "react";
 
-import Image from "next/image";
+import Chip from "@mui/material/Chip";
+import InfoIcon from "@mui/icons-material/Info";
 
-import { baseUrlImage, stringToDateWithTime } from "@shared/utils";
+import { stringToDateWithTime } from "@shared/utils";
 import TableDefault, {
   StyledTableCell,
   StyledTableRow,
 } from "@shared/components/TableDefault";
-import ImagePreview from "./ImagePreview";
 import { Evidence } from "@interfaces";
+import { STATUS_CLOSED, STATUS_OPEN } from "@shared/constants";
+import EvidencePreview from "./EvidencePreview";
 
 interface Props {
   rows: Evidence[];
+  getData: () => void;
 }
 
-export default function HallazgosTable({ rows }: Props) {
+const columns = [
+  "ID",
+  "Planta",
+  "Grupo",
+  "Tipo de evidencia",
+  "Zona",
+  "Creado por",
+  "Supervisor",
+  "Estatus",
+  "Creación",
+  "Ultima actualización",
+  "Acciones",
+];
+
+export default function HallazgosTable({ rows, getData }: Props) {
   const [evidenceCurrent, setEvidenceCurrent] = useState<Evidence | null>(null);
 
   return (
     <>
-      <ImagePreview
-        isOpen={!!evidenceCurrent}
-        setIsOpen={() => setEvidenceCurrent(null)}
+      <EvidencePreview
         evidenceCurrent={evidenceCurrent}
+        handleClose={(refresh) => {
+          if (refresh) {
+            getData();
+          }
+          setEvidenceCurrent(null);
+        }}
       />
       <TableDefault
         rows={rows}
-        headers={[
-          "ID",
-          "Planta",
-          "Grupo",
-          "Tipo de evidencia",
-          "Zona",
-          "Creado por",
-          "Imagen",
-          "Creación",
-          "Ultima actualización",
-        ]}
+        columns={columns}
         paintRows={(row: Evidence) => (
           <StyledTableRow key={row.id}>
             <StyledTableCell component="th" scope="row">
@@ -46,19 +57,18 @@ export default function HallazgosTable({ rows }: Props) {
             <StyledTableCell>{row.mainType.name}</StyledTableCell>
             <StyledTableCell>{row.secondaryType.name}</StyledTableCell>
             <StyledTableCell>{row.zone.name}</StyledTableCell>
+            <StyledTableCell>{row.user.name}</StyledTableCell>
+            <StyledTableCell>{row.supervisor.name}</StyledTableCell>
             <StyledTableCell>
-              {row.user.name} / {row.user.role}
-            </StyledTableCell>
-            <StyledTableCell>
-              <Image
-                src={baseUrlImage(row.imgEvidence)}
-                alt="Evidencia de hallazgo"
-                width={100}
-                height={100}
-                style={{
-                  cursor: "pointer",
-                }}
-                onClick={() => setEvidenceCurrent(row)}
+              <Chip
+                label={row.status}
+                color={
+                  row.status === STATUS_OPEN
+                    ? "warning"
+                    : row.status === STATUS_CLOSED
+                    ? "success"
+                    : "error"
+                }
               />
             </StyledTableCell>
             <StyledTableCell>
@@ -66,6 +76,14 @@ export default function HallazgosTable({ rows }: Props) {
             </StyledTableCell>
             <StyledTableCell>
               {stringToDateWithTime(row.updatedAt)}
+            </StyledTableCell>
+            <StyledTableCell>
+              <Chip
+                icon={<InfoIcon />}
+                label="Detalles"
+                color="secondary"
+                onClick={() => setEvidenceCurrent(row)}
+              />
             </StyledTableCell>
           </StyledTableRow>
         )}

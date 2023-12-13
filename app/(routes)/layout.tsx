@@ -18,7 +18,6 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 import Copyright from "@shared/components/Copyright";
 import { MainListItems, SecondaryListItems } from "@shared/components/menu";
-import SelectManufacturingPlants from "@components/layout/SelectManufacturingPlants";
 import { useUserSessionStore } from "@store";
 import { UsersService } from "@services";
 
@@ -77,7 +76,7 @@ export default function MainLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
 
   const { id: userId, setSession } = useUserSessionStore();
 
@@ -128,7 +127,6 @@ export default function MainLayout({
           >
             HADA
           </Typography>
-          <SelectManufacturingPlants />
           {/* <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
               <NotificationsIcon />

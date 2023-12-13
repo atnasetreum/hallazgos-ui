@@ -33,13 +33,13 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
 interface Props {
   rows: any[];
   paintRows: (value: any, index: number, array: any[]) => ReactNode;
-  headers: string[];
+  columns: string[];
 }
 
-const TableDefault = ({ rows, paintRows, headers }: Props) => {
+const TableDefault = ({ rows, paintRows, columns }: Props) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [colSpan] = useState(headers.length);
+  const [colSpan] = useState(columns.length);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -63,8 +63,8 @@ const TableDefault = ({ rows, paintRows, headers }: Props) => {
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
-            {headers.map((header) => (
-              <StyledTableCell key={header}>{header}</StyledTableCell>
+            {columns.map((column) => (
+              <StyledTableCell key={column}>{column}</StyledTableCell>
             ))}
           </TableRow>
         </TableHead>

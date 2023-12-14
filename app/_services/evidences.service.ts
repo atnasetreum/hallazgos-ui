@@ -54,8 +54,14 @@ const solution = async (id: number, formData: FormData) => {
   return data;
 };
 
+const remove = async (id: number) => {
+  const { data } = await api.delete<Evidence>(`/${id}`);
+  return data;
+};
+
 export const EvidencesService = {
   findAll,
   create,
+  remove,
   solution,
 };

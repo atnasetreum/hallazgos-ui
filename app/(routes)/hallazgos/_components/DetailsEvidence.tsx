@@ -153,7 +153,7 @@ export default function DetailsTabs({ evidenceCurrent }: Props) {
         </List>
       </Grid>
       <Grid item xs={12} sm={8} md={8}>
-        <Grid container sx={{ p: 2 }}>
+        <Grid container spacing={3}>
           <Grid
             item
             xs={12}

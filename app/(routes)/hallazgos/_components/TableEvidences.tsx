@@ -2,8 +2,10 @@ import { useState } from "react";
 
 import Chip from "@mui/material/Chip";
 import InfoIcon from "@mui/icons-material/Info";
+import Stack from "@mui/material/Stack";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 
-import { stringToDateWithTime } from "@shared/utils";
+import { durantionToTime, stringToDateWithTime } from "@shared/utils";
 import TableDefault, {
   StyledTableCell,
   StyledTableRow,
@@ -11,6 +13,9 @@ import TableDefault, {
 import { Evidence } from "@interfaces";
 import { STATUS_CLOSED, STATUS_OPEN } from "@shared/constants";
 import EvidencePreview from "./EvidencePreview";
+import CloseEvidence from "./CloseEvidence";
+import { useUserSessionStore } from "@store";
+import { ROLE_SUPERVISOR } from "../../../_shared/constants/index";
 
 interface Props {
   rows: Evidence[];
@@ -28,22 +33,31 @@ const columns = [
   "Estatus",
   "Creación",
   "Ultima actualización",
+  "Fecha de cierre",
   "Acciones",
 ];
 
-export default function HallazgosTable({ rows, getData }: Props) {
+export default function TableEvidences({ rows, getData }: Props) {
   const [evidenceCurrent, setEvidenceCurrent] = useState<Evidence | null>(null);
+  const [idRow, setIdRow] = useState<number>(0);
+
+  const { role, zones } = useUserSessionStore();
 
   return (
     <>
       <EvidencePreview
         evidenceCurrent={evidenceCurrent}
+        handleClose={() => setEvidenceCurrent(null)}
+      />
+      <CloseEvidence
+        isOpen={!!idRow}
         handleClose={(refresh) => {
           if (refresh) {
             getData();
           }
-          setEvidenceCurrent(null);
+          setIdRow(0);
         }}
+        idRow={idRow}
       />
       <TableDefault
         rows={rows}
@@ -78,12 +92,31 @@ export default function HallazgosTable({ rows, getData }: Props) {
               {stringToDateWithTime(row.updatedAt)}
             </StyledTableCell>
             <StyledTableCell>
-              <Chip
-                icon={<InfoIcon />}
-                label="Detalles"
-                color="secondary"
-                onClick={() => setEvidenceCurrent(row)}
-              />
+              {row.solutionDate && stringToDateWithTime(row.solutionDate)}
+            </StyledTableCell>
+            <StyledTableCell>
+              <Stack direction="row" spacing={1}>
+                <Chip
+                  icon={<InfoIcon />}
+                  label={`Detalles ${
+                    row.status === STATUS_CLOSED
+                      ? durantionToTime(row.createdAt, row.solutionDate)
+                      : ""
+                  }`}
+                  color="secondary"
+                  onClick={() => setEvidenceCurrent(row)}
+                />
+                {row.status === STATUS_OPEN &&
+                  role === ROLE_SUPERVISOR &&
+                  zones.find((zone) => zone.id === row.zone.id) && (
+                    <Chip
+                      icon={<AddAPhotoIcon />}
+                      label="Cerrar hallazgo"
+                      color="warning"
+                      onClick={() => setIdRow(row.id)}
+                    />
+                  )}
+              </Stack>
             </StyledTableCell>
           </StyledTableRow>
         )}

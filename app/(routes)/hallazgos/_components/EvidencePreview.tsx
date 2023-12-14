@@ -10,7 +10,7 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 
 import { Evidence } from "@interfaces";
-import DetailsTabs from "./DetailsTabs";
+import DetailsEvidence from "./DetailsEvidence";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -23,7 +23,7 @@ const Transition = React.forwardRef(function Transition(
 
 interface Props {
   evidenceCurrent: Evidence | null;
-  handleClose: (refresh?: boolean) => void;
+  handleClose: () => void;
 }
 
 export default function EvidencePreview({
@@ -52,12 +52,7 @@ export default function EvidencePreview({
           </Typography>
         </Toolbar>
       </AppBar>
-      {evidenceCurrent && (
-        <DetailsTabs
-          evidenceCurrent={evidenceCurrent}
-          handleClose={handleClose}
-        />
-      )}
+      {evidenceCurrent && <DetailsEvidence evidenceCurrent={evidenceCurrent} />}
     </Dialog>
   );
 }

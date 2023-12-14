@@ -12,6 +12,12 @@ const findAllByManufacturingPlant = async (id: number) => {
   return data;
 };
 
+const findAll = async () => {
+  const { data } = await api.get<SecondaryType[]>("");
+  return data;
+};
+
 export const SecondaryTypesService = {
+  findAll,
   findAllByManufacturingPlant,
 };

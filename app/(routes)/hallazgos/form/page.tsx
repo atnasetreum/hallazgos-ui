@@ -7,10 +7,6 @@ import { useRouter } from "next/navigation";
 
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import PartyModeIcon from "@mui/icons-material/PartyMode";
@@ -20,30 +16,25 @@ import ClearIcon from "@mui/icons-material/Clear";
 import Camera from "react-html5-camera-photo";
 import { v4 as uuidv4 } from "uuid";
 
-import {
-  EvidencesService,
-  MainTypesService,
-  SecondaryTypesService,
-  ZonesService,
-  handleErrorResponse,
-} from "@services";
-import { MainType, SecondaryType, Zone } from "@interfaces";
-import { useUserSessionStore } from "@store";
+import { EvidencesService, handleErrorResponse } from "@services";
+import { SecondaryType } from "@interfaces";
+import { useCategoriesStore, useUserSessionStore } from "@store";
 import { dataURLtoFile, notify } from "@shared/utils";
+import SelectDefault from "@components/SelectDefault";
 
 import "react-html5-camera-photo/build/css/index.css";
 import "./form.css";
 
 export default function HallazgosFormPage() {
   const [typeHallazgo, setTypeHallazgo] = useState<string>("");
-  const [type, setType] = useState<string>("");
+  const [secondaryType, setSecondaryType] = useState<string>("");
   const [image, setImage] = useState<string>("");
   const [zone, setZone] = useState<string>("");
   const [manufacturingPlantId, setManufacturingPlantId] = useState<string>("");
-  const [mainTypes, setMainTypes] = useState<MainType[]>([]);
-  const [types, setTypes] = useState<SecondaryType[]>([]);
-  const [zones, setZones] = useState<Zone[]>([]);
+  const [secondaryTypes, setSecondaryTypes] = useState<SecondaryType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { mainTypes, zones } = useCategoriesStore();
 
   const manufacturingPlants = useUserSessionStore(
     (state) => state.manufacturingPlants
@@ -65,22 +56,22 @@ export default function HallazgosFormPage() {
 
   useEffect(() => {
     if (typeHallazgo) {
-      SecondaryTypesService.findAllByManufacturingPlant(
-        Number(typeHallazgo)
-      ).then(setTypes);
+      setSecondaryTypes(
+        mainTypes.find((data) => data.id === Number(typeHallazgo))
+          ?.secondaryTypes || []
+      );
     }
-  }, [typeHallazgo]);
-
-  useEffect(() => {
-    MainTypesService.findAll().then(setMainTypes);
-    ZonesService.findAll().then(setZones);
-  }, []);
+  }, [typeHallazgo, mainTypes]);
 
   const isValidForm = useMemo(
     () =>
-      (manufacturingPlantId && typeHallazgo && type && zone && image) ||
+      (manufacturingPlantId &&
+        typeHallazgo &&
+        secondaryType &&
+        zone &&
+        image) ||
       isLoading,
-    [manufacturingPlantId, typeHallazgo, type, zone, image, isLoading]
+    [manufacturingPlantId, typeHallazgo, secondaryType, zone, image, isLoading]
   );
 
   const saveEvidence = async () => {
@@ -88,7 +79,7 @@ export default function HallazgosFormPage() {
 
     formData.append("manufacturingPlantId", manufacturingPlantId);
     formData.append("typeHallazgo", typeHallazgo);
-    formData.append("type", type);
+    formData.append("type", secondaryType);
     formData.append("zone", zone);
 
     const uuid = uuidv4();
@@ -106,89 +97,48 @@ export default function HallazgosFormPage() {
   };
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={2}>
       <Grid item xs={12} sm={6} md={3}>
-        <Paper sx={{ p: 2 }}>
-          <FormControl fullWidth>
-            <InputLabel>Planta</InputLabel>
-            <Select
-              value={manufacturingPlantId}
-              onChange={(e) => {
-                setManufacturingPlantId(e.target.value);
-              }}
-              label="Planta"
-            >
-              {manufacturingPlants.map((item) => (
-                <MenuItem key={item.id} value={item.id}>
-                  {item.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Paper>
+        <SelectDefault
+          data={manufacturingPlants}
+          label="Planta"
+          value={manufacturingPlantId}
+          onChange={(e) => setManufacturingPlantId(e.target.value)}
+        />
       </Grid>
 
       <Grid item xs={12} sm={6} md={3}>
-        <Paper sx={{ p: 2 }}>
-          <FormControl fullWidth>
-            <InputLabel>Hallazgo</InputLabel>
-            <Select
-              value={typeHallazgo}
-              onChange={(e) => {
-                setTypeHallazgo(e.target.value);
-                setType("");
-              }}
-              label="Hallazgo"
-            >
-              {mainTypes.map((mainType) => (
-                <MenuItem key={mainType.id} value={mainType.id}>
-                  {mainType.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Paper>
+        <SelectDefault
+          data={mainTypes}
+          label="Hallazgo"
+          value={typeHallazgo}
+          onChange={(e) => {
+            setTypeHallazgo(e.target.value);
+            setSecondaryType("");
+          }}
+        />
       </Grid>
 
       <Grid item xs={12} sm={6} md={3}>
-        <Paper sx={{ p: 2 }}>
-          <FormControl fullWidth>
-            <InputLabel>Tipo</InputLabel>
-            <Select
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              label="Tipo"
-            >
-              {types.map((type) => (
-                <MenuItem key={type.id} value={type.id}>
-                  {type.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Paper>
+        <SelectDefault
+          data={secondaryTypes}
+          label="Tipo"
+          value={secondaryType}
+          onChange={(e) => setSecondaryType(e.target.value)}
+          helperText={!typeHallazgo ? "Seleccione un hallazgo" : ""}
+        />
       </Grid>
 
       <Grid item xs={12} sm={6} md={3}>
-        <Paper sx={{ p: 2 }}>
-          <FormControl fullWidth>
-            <InputLabel>Zona</InputLabel>
-            <Select
-              value={zone}
-              onChange={(e) => setZone(e.target.value)}
-              label="Zona"
-            >
-              {zones.map((zone) => (
-                <MenuItem key={zone.id} value={zone.id}>
-                  {zone.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Paper>
+        <SelectDefault
+          data={zones}
+          label="Zona"
+          value={zone}
+          onChange={(e) => setZone(e.target.value)}
+        />
       </Grid>
 
-      {manufacturingPlantId && typeHallazgo && type && zone && (
+      {manufacturingPlantId && typeHallazgo && secondaryType && zone && (
         <>
           <Grid item xs={12} sm={12} md={12}>
             <Box display="flex" justifyContent="center" alignItems="center">
@@ -197,14 +147,6 @@ export default function HallazgosFormPage() {
                   <Camera onTakePhoto={(dataUri) => setImage(dataUri)} />
                 ) : (
                   <>
-                    <Image
-                      src={image}
-                      alt="Evidencia de hallazgo"
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      style={{ width: "100%", height: "auto" }}
-                    />
                     <Button
                       fullWidth
                       variant="contained"
@@ -214,6 +156,14 @@ export default function HallazgosFormPage() {
                     >
                       Volver a tomar evidencia
                     </Button>
+                    <Image
+                      src={image}
+                      alt="Evidencia de hallazgo"
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      style={{ width: "100%", height: "auto" }}
+                    />
                   </>
                 )}
               </Paper>

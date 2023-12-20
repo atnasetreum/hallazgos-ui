@@ -97,11 +97,11 @@ export default function CloseEvidence({ isOpen, handleClose, idRow }: Props) {
                       onClick={() => setImage("")}
                       disabled={isLoading}
                     >
-                      Volver a tomar evidencia
+                      Volver a tomar hallazgo
                     </Button>
                     <Image
                       src={image}
-                      alt="Evidencia de hallazgo"
+                      alt="Hallazgo"
                       width={0}
                       height={0}
                       sizes="100vw"

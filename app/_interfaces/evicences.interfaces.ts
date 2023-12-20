@@ -13,6 +13,16 @@ export interface Evidence {
   status: string;
   imgSolution: string;
   solutionDate: Date;
+  comments: Comment[];
+}
+
+export interface Comment {
+  id: number;
+  comment: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  user: User;
 }
 
 interface GenericType {

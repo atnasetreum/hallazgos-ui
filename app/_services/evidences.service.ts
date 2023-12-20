@@ -59,9 +59,15 @@ const remove = async (id: number) => {
   return data;
 };
 
+const addComment = async (id: number, comment: string) => {
+  const { data } = await api.post<Evidence>(`/add/comment/${id}`, { comment });
+  return data;
+};
+
 export const EvidencesService = {
   findAll,
   create,
   remove,
   solution,
+  addComment,
 };

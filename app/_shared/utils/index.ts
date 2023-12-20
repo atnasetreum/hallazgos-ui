@@ -39,7 +39,7 @@ export const baseUrlImage = (image: string) => {
 };
 
 export const stringToDateWithTime = (date: string | Date) =>
-  moment(date).format("lll");
+  moment(date).format("DD/MM/YYYY h:mm a");
 
 export const durantionToTime = (startTime: Date, end: Date) => {
   const duration = moment.duration(moment(end).diff(moment(startTime)));

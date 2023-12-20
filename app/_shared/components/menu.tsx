@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 
 import { usePathname, useRouter } from "next/navigation";
 
@@ -18,9 +18,9 @@ import BusinessIcon from "@mui/icons-material/Business";
 import FolderIcon from "@mui/icons-material/Folder";
 import FolderSharedIcon from "@mui/icons-material/FolderShared";
 
-import { AuthService } from "@services";
+import { AuthService, MainTypesService, ZonesService } from "@services";
 import { notify } from "@shared/utils";
-import { useUserSessionStore } from "@store";
+import { useCategoriesStore, useUserSessionStore } from "@store";
 import { ROLE_ADMINISTRADOR } from "@shared/constants";
 
 function CreateLink({
@@ -51,6 +51,24 @@ export const MainListItems = () => {
 
   const role = useUserSessionStore((state) => state.role);
 
+  const { setCategories } = useCategoriesStore();
+
+  const initialCategories = useCallback(async () => {
+    const [mainTypes, zones] = await Promise.all([
+      MainTypesService.findAll(),
+      ZonesService.findAll(),
+    ]);
+
+    setCategories({
+      mainTypes,
+      zones,
+    });
+  }, [setCategories]);
+
+  useEffect(() => {
+    initialCategories();
+  }, [initialCategories]);
+
   useEffect(() => {
     if (role && role === ROLE_ADMINISTRADOR && !isAdmin) {
       setIsAdmin(true);
@@ -74,7 +92,7 @@ export const MainListItems = () => {
           />
           <CreateLink
             url="/usuarios"
-            title="Tipos de evidencia"
+            title="Tipos de hallazgos"
             icon={<FolderIcon />}
           />
           <CreateLink

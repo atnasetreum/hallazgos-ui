@@ -32,7 +32,7 @@ const columns = [
   "ID",
   "Planta",
   "Grupo",
-  "Tipo de evidencia",
+  "Tipo de hallazgo",
   "Zona",
   "Creado por",
   "Supervisor",
@@ -64,7 +64,12 @@ export default function TableEvidences({ rows, getData }: Props) {
     <>
       <EvidencePreview
         evidenceCurrent={evidenceCurrent}
-        handleClose={() => setEvidenceCurrent(null)}
+        handleClose={(refreshData) => {
+          if (refreshData) {
+            getData();
+          }
+          setEvidenceCurrent(null);
+        }}
       />
       <CloseEvidence
         isOpen={!!idRow}

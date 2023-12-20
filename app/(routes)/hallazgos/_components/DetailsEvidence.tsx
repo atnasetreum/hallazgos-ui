@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
@@ -9,19 +7,20 @@ import ListItemButton from "@mui/material/ListItemButton";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 
-import {
-  baseUrlImage,
-  durantionToTime,
-  stringToDateWithTime,
-} from "@shared/utils";
+import { durantionToTime, stringToDateWithTime } from "@shared/utils";
 import { Evidence } from "@interfaces";
 import { STATUS_CLOSED, STATUS_OPEN } from "@shared/constants";
+import TabsImageAndLogs from "./TabsImageAndLogs";
 
 interface Props {
   evidenceCurrent: Evidence;
+  setRefreshData: (refreshData: boolean) => void;
 }
 
-export default function DetailsTabs({ evidenceCurrent }: Props) {
+export default function DetailsTabs({
+  evidenceCurrent,
+  setRefreshData,
+}: Props) {
   const theme = useTheme();
 
   return (
@@ -153,41 +152,10 @@ export default function DetailsTabs({ evidenceCurrent }: Props) {
         </List>
       </Grid>
       <Grid item xs={12} sm={8} md={8}>
-        <Grid container spacing={3}>
-          <Grid
-            item
-            xs={12}
-            sm={evidenceCurrent.imgSolution ? 6 : 12}
-            md={evidenceCurrent.imgSolution ? 6 : 12}
-          >
-            <Typography variant="h6" gutterBottom>
-              Hallazgo
-            </Typography>
-            <Image
-              src={baseUrlImage(evidenceCurrent?.imgEvidence || "")}
-              alt="Imagen Hallazgo"
-              width={0}
-              height={0}
-              sizes="100vw"
-              style={{ width: "100%", height: "auto" }}
-            />
-          </Grid>
-          {evidenceCurrent.imgSolution && (
-            <Grid item xs={12} sm={6} md={6}>
-              <Typography variant="h6" gutterBottom>
-                Solución
-              </Typography>
-              <Image
-                src={baseUrlImage(evidenceCurrent?.imgSolution || "")}
-                alt="Imagen Solución"
-                width={0}
-                height={0}
-                sizes="100vw"
-                style={{ width: "100%", height: "auto" }}
-              />
-            </Grid>
-          )}
-        </Grid>
+        <TabsImageAndLogs
+          evidenceCurrent={evidenceCurrent}
+          setRefreshData={setRefreshData}
+        />
       </Grid>
     </Grid>
   );

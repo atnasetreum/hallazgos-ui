@@ -1,4 +1,4 @@
-import * as React from "react";
+import { ReactElement, Ref, forwardRef, useState } from "react";
 
 import Dialog from "@mui/material/Dialog";
 import AppBar from "@mui/material/AppBar";
@@ -12,29 +12,31 @@ import { TransitionProps } from "@mui/material/transitions";
 import { Evidence } from "@interfaces";
 import DetailsEvidence from "./DetailsEvidence";
 
-const Transition = React.forwardRef(function Transition(
+const Transition = forwardRef(function Transition(
   props: TransitionProps & {
-    children: React.ReactElement;
+    children: ReactElement;
   },
-  ref: React.Ref<unknown>
+  ref: Ref<unknown>
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 interface Props {
   evidenceCurrent: Evidence | null;
-  handleClose: () => void;
+  handleClose: (refreshData: boolean) => void;
 }
 
 export default function EvidencePreview({
   evidenceCurrent,
   handleClose,
 }: Props) {
+  const [refreshData, setRefreshData] = useState<boolean>(false);
+
   return (
     <Dialog
       fullScreen
       open={!!evidenceCurrent}
-      onClose={() => handleClose()}
+      onClose={() => handleClose(refreshData)}
       TransitionComponent={Transition}
     >
       <AppBar sx={{ position: "relative" }}>
@@ -42,7 +44,7 @@ export default function EvidencePreview({
           <IconButton
             edge="start"
             color="inherit"
-            onClick={() => handleClose()}
+            onClick={() => handleClose(refreshData)}
             aria-label="close"
           >
             <CloseIcon />
@@ -52,7 +54,12 @@ export default function EvidencePreview({
           </Typography>
         </Toolbar>
       </AppBar>
-      {evidenceCurrent && <DetailsEvidence evidenceCurrent={evidenceCurrent} />}
+      {evidenceCurrent && (
+        <DetailsEvidence
+          evidenceCurrent={evidenceCurrent}
+          setRefreshData={setRefreshData}
+        />
+      )}
     </Dialog>
   );
 }

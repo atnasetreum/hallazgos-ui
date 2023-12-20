@@ -13,7 +13,7 @@ export default function DashboardPage() {
             height: 350,
           }}
         >
-          aaa
+          a
         </Paper>
       </Grid>
       <Grid item xs={12} md={4} lg={3}>
@@ -25,13 +25,11 @@ export default function DashboardPage() {
             height: 350,
           }}
         >
-          aaa
+          b
         </Paper>
       </Grid>
       <Grid item xs={12}>
-        <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-          Chart 3
-        </Paper>
+        <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>c</Paper>
       </Grid>
     </Grid>
   );

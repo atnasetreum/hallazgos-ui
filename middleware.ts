@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
   const cookieStore = cookies();
   const token2 = cookieStore.get("token");
 
-  console.log({ token, token2, cookieStore });
+  console.log({ token, token2, cookieStore, coo: request.cookies });
 
   if (!token) {
     if (pathname === "/") {

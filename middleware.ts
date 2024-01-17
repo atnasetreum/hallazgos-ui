@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest) {
   const cookies = request.cookies;
   const token = cookies.get("token")?.value || "";
 
-  console.log({ token });
+  console.log({ token, request });
 
   if (!token) {
     if (pathname === "/") {

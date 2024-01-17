@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { cookies } from "next/headers";
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  const cookies = request.cookies;
-  const token = cookies.get("token")?.value || "";
+  const token = request.cookies.get("token")?.value || "";
 
-  console.log({ token, request });
+  const cookieStore = cookies();
+  const token2 = cookieStore.get("token");
+
+  console.log({ token, token2 });
 
   if (!token) {
     if (pathname === "/") {

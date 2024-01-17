@@ -48,7 +48,6 @@ const FormLogin = () => {
       password,
     }).then(({ message }) => {
       notify(message, true);
-      alert();
       router.push("/dashboard");
     });
   };

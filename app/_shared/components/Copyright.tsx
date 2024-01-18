@@ -15,7 +15,7 @@ export default function Copyright(props: any) {
         href="https://cosmeticostrujillo.com/"
         target="_blank"
       >
-        HADA
+        Cosmeticos trujillo
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}

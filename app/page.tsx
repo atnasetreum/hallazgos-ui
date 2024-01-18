@@ -1,7 +1,6 @@
 import Avatar from "@mui/material/Avatar";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
@@ -20,11 +19,13 @@ export default function SignIn() {
           alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LockOutlinedIcon />
-        </Avatar>
+        <Avatar
+          alt="Remy Sharp"
+          src="https://media.glassdoor.com/sql/2795097/cosm%C3%A9ticos-trujillo-squarelogo-1672380267723.png"
+          sx={{ height: "100px", width: "100px" }}
+        />
         <Typography component="h1" variant="h5">
-          HADA
+          Grupo Hada
         </Typography>
         <FormLogin />
       </Box>

@@ -13,7 +13,7 @@ import PartyModeIcon from "@mui/icons-material/PartyMode";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import SaveIcon from "@mui/icons-material/Save";
 import ClearIcon from "@mui/icons-material/Clear";
-import Camera from "react-html5-camera-photo";
+import Camera, { FACING_MODES } from "react-html5-camera-photo";
 import { v4 as uuidv4 } from "uuid";
 
 import { EvidencesService, handleErrorResponse } from "@services";
@@ -144,7 +144,10 @@ export default function HallazgosFormPage() {
             <Box display="flex" justifyContent="center" alignItems="center">
               <Paper sx={{ p: 2 }}>
                 {!image ? (
-                  <Camera onTakePhoto={(dataUri) => setImage(dataUri)} />
+                  <Camera
+                    onTakePhoto={(dataUri) => setImage(dataUri)}
+                    idealFacingMode={FACING_MODES.ENVIRONMENT}
+                  />
                 ) : (
                   <>
                     <Button

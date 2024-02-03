@@ -51,7 +51,9 @@ export default function HallazgosPage() {
         ["Tipo de hallazgo"]: evidence.secondaryType.name,
         ["Zona"]: evidence.zone.name,
         ["Creado por"]: evidence.user.name,
-        ["Supervisor"]: evidence.supervisor.name,
+        ["Supervisores"]: evidence.supervisors
+          .map((supervisor) => supervisor.name)
+          .join(" / "),
         ["Estatus"]: evidence.status,
         ["Fecha de creación"]: stringToDateWithTime(evidence.createdAt),
         ["Fecha de actualización"]: stringToDateWithTime(evidence.updatedAt),

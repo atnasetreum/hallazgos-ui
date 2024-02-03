@@ -131,10 +131,14 @@ export default function HallazgosFormPage() {
 
       <Grid item xs={12} sm={6} md={3}>
         <SelectDefault
-          data={zones}
+          data={zones.filter(
+            (data) =>
+              data.manufacturingPlant.id === Number(manufacturingPlantId)
+          )}
           label="Zona"
           value={zone}
           onChange={(e) => setZone(e.target.value)}
+          helperText={!manufacturingPlantId ? "Seleccione una planta" : ""}
         />
       </Grid>
 

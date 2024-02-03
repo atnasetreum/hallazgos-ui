@@ -95,7 +95,11 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
 
       <Grid item xs={12} sm={6} md={3}>
         <SelectDefault
-          data={zones}
+          data={zones.filter(
+            (data) =>
+              data.manufacturingPlant.id ===
+              Number(filters.manufacturingPlantId)
+          )}
           label="Zona"
           isFilter={true}
           value={filters.zone}
@@ -104,6 +108,9 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
               ...filters,
               zone: e.target.value,
             })
+          }
+          helperText={
+            !filters.manufacturingPlantId ? "Seleccione una planta" : ""
           }
         />
       </Grid>

@@ -108,8 +108,10 @@ export default function DetailsTabs({
           <ListItem>
             <ListItemButton>
               <ListItemText
-                primary={evidenceCurrent.supervisor.name}
-                secondary="Supervisor asignado"
+                primary={evidenceCurrent.supervisors
+                  .map((supervisor) => supervisor.name)
+                  .join(" / ")}
+                secondary="Supervisores asignados"
               />
             </ListItemButton>
           </ListItem>

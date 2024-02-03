@@ -35,7 +35,7 @@ const columns = [
   "Tipo de hallazgo",
   "Zona",
   "Creado por",
-  "Supervisor",
+  "Supervisores",
   "Estatus",
   "Creación",
   "Ultima actualización",
@@ -94,7 +94,9 @@ export default function TableEvidences({ rows, getData }: Props) {
             <StyledTableCell>{row.secondaryType.name}</StyledTableCell>
             <StyledTableCell>{row.zone.name}</StyledTableCell>
             <StyledTableCell>{row.user.name}</StyledTableCell>
-            <StyledTableCell>{row.supervisor.name}</StyledTableCell>
+            <StyledTableCell>
+              {row.supervisors.map((supervisor) => supervisor.name).join(", ")}
+            </StyledTableCell>
             <StyledTableCell>
               <Chip
                 label={row.status}

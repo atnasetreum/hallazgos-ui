@@ -9,7 +9,7 @@ export interface Evidence {
   secondaryType: GenericType;
   zone: GenericType;
   user: User;
-  supervisor: User;
+  supervisors: User[];
   status: string;
   imgSolution: string;
   solutionDate: Date;

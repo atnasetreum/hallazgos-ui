@@ -78,7 +78,7 @@ export default function MainLayout({
 }) {
   const [open, setOpen] = React.useState(false);
 
-  const { id: userId, setSession } = useUserSessionStore();
+  const { id: userId, name, setSession } = useUserSessionStore();
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -125,7 +125,7 @@ export default function MainLayout({
             noWrap
             sx={{ flexGrow: 1 }}
           >
-            HADA
+            {name}
           </Typography>
           {/* <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">

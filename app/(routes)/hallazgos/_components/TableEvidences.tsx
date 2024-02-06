@@ -48,7 +48,7 @@ export default function TableEvidences({ rows, getData }: Props) {
   const [idRow, setIdRow] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { role, zones } = useUserSessionStore();
+  const { id: userId, role } = useUserSessionStore();
 
   const removeEvicence = (id: number) => {
     setIsLoading(true);
@@ -59,6 +59,10 @@ export default function TableEvidences({ rows, getData }: Props) {
       })
       .finally(() => setIsLoading(false));
   };
+
+  console.log({
+    rows,
+  });
 
   return (
     <>
@@ -132,7 +136,9 @@ export default function TableEvidences({ rows, getData }: Props) {
                 />
                 {row.status === STATUS_OPEN &&
                   role === ROLE_SUPERVISOR &&
-                  zones.find((zone) => zone.id === row.zone.id) && (
+                  row.supervisors
+                    .map((supervisor) => supervisor.id)
+                    .includes(userId) && (
                     <Chip
                       icon={<AddAPhotoIcon />}
                       label="Cerrar hallazgo"

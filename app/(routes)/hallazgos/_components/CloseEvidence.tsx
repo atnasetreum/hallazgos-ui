@@ -14,7 +14,7 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import PartyModeIcon from "@mui/icons-material/PartyMode";
-import Camera from "react-html5-camera-photo";
+import Camera, { FACING_MODES } from "react-html5-camera-photo";
 import { v4 as uuidv4 } from "uuid";
 
 import { dataURLtoFile, notify } from "@shared/utils";
@@ -87,7 +87,10 @@ export default function CloseEvidence({ isOpen, handleClose, idRow }: Props) {
             <Box display="flex" justifyContent="center" alignItems="center">
               <Paper sx={{ p: 2 }}>
                 {!image && idRow ? (
-                  <Camera onTakePhoto={(dataUri) => setImage(dataUri)} />
+                  <Camera
+                    onTakePhoto={(dataUri) => setImage(dataUri)}
+                    idealFacingMode={FACING_MODES.ENVIRONMENT}
+                  />
                 ) : (
                   <>
                     <Button

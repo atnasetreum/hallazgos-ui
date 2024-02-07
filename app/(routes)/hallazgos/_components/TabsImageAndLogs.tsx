@@ -117,10 +117,10 @@ export default function TabsImageAndLogs({
               md={evidenceCurrent.imgSolution ? 6 : 12}
             >
               <Typography variant="h6" gutterBottom>
-                Hallazgo
+                Hallazgo {baseUrlImage(evidenceCurrent?.imgEvidence || "")}
               </Typography>
               <Image
-                src="https://api.comportarte.com/static/images/evidences/9b29e53a-0f96-40ef-9642-191d099ef507-evidence.png"
+                src={baseUrlImage(evidenceCurrent?.imgEvidence || "")}
                 alt={baseUrlImage(evidenceCurrent?.imgEvidence || "")}
                 width={0}
                 height={0}

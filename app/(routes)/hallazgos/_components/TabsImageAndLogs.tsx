@@ -121,7 +121,7 @@ export default function TabsImageAndLogs({
               </Typography>
               <Image
                 src={baseUrlImage(evidenceCurrent?.imgEvidence || "")}
-                alt="Imagen Hallazgo"
+                alt={baseUrlImage(evidenceCurrent?.imgEvidence || "")}
                 width={0}
                 height={0}
                 sizes="100vw"

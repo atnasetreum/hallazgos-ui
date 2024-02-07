@@ -2,11 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: [
-      "localhost",
-      "https://api.comportarte.com",
-      "api.comportarte.com",
-    ],
+    domains: ["localhost", "api.comportarte.com"],
   },
 };
 

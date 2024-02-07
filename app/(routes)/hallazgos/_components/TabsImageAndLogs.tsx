@@ -117,11 +117,11 @@ export default function TabsImageAndLogs({
               md={evidenceCurrent.imgSolution ? 6 : 12}
             >
               <Typography variant="h6" gutterBottom>
-                Hallazgo {baseUrlImage(evidenceCurrent?.imgEvidence || "")}
+                Hallazgo
               </Typography>
               <Image
                 src={baseUrlImage(evidenceCurrent?.imgEvidence || "")}
-                alt={baseUrlImage(evidenceCurrent?.imgEvidence || "")}
+                alt="Hallazgo imagen"
                 width={0}
                 height={0}
                 sizes="100vw"

@@ -106,7 +106,7 @@ import HighchartsReact from "highcharts-react-official";
 
 import { DashboardService } from "@services";
 
-const PieChartDafault = () => {
+const PieChartDafault3 = () => {
   const getData = () => {
     DashboardService.findAllStatus().then((data) => {
       console.log({ status: data });
@@ -125,109 +125,82 @@ const PieChartDafault = () => {
       highcharts={Highcharts}
       containerProps={{ style: { height: "100%" } }}
       options={{
+        chart: {
+          type: "bar",
+        },
         title: {
-          text: "U.S Solar Employment Growth",
+          text: "Historic World Population by Region",
           align: "left",
         },
-
         subtitle: {
-          text: 'By Job Category. Source: <a href="https://irecusa.org/programs/solar-jobs-census/" target="_blank">IREC</a>.',
+          text:
+            "Source: <a " +
+            'href="https://en.wikipedia.org/wiki/List_of_continents_and_continental_subregions_by_population"' +
+            'target="_blank">Wikipedia.org</a>',
           align: "left",
         },
-
-        yAxis: {
-          title: {
-            text: "Number of Employees",
-          },
-        },
-
         xAxis: {
-          accessibility: {
-            rangeDescription: "Range: 2010 to 2020",
+          categories: ["Africa", "America", "Asia", "Europe"],
+          title: {
+            text: null,
+          },
+          gridLineWidth: 1,
+          lineWidth: 0,
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: "Population (millions)",
+            align: "high",
+          },
+          labels: {
+            overflow: "justify",
+          },
+          gridLineWidth: 0,
+        },
+        tooltip: {
+          valueSuffix: " millions",
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: "50%",
+            dataLabels: {
+              enabled: true,
+            },
+            groupPadding: 0.1,
           },
         },
-
         legend: {
           layout: "vertical",
           align: "right",
-          verticalAlign: "middle",
-        },
+          verticalAlign: "top",
+          x: -40,
+          y: 80,
+          floating: true,
+          borderWidth: 1,
 
-        plotOptions: {
-          series: {
-            label: {
-              connectorAllowed: false,
-            },
-            pointStart: 2010,
-          },
+          shadow: true,
         },
-
+        credits: {
+          enabled: false,
+        },
         series: [
           {
-            name: "Installation & Developers",
-            data: [
-              43934, 48656, 65165, 81827, 112143, 142383, 171533, 165174,
-              155157, 161454, 154610,
-            ],
+            name: "Year 1990",
+            data: [631, 727, 3202, 721],
           },
           {
-            name: "Manufacturing",
-            data: [
-              24916, 37941, 29742, 29851, 32490, 30282, 38121, 36885, 33726,
-              34243, 31050,
-            ],
+            name: "Year 2000",
+            data: [814, 841, 3714, 726],
           },
           {
-            name: "Sales & Distribution",
-            data: [
-              11744, 30000, 16005, 19771, 20185, 24377, 32147, 30912, 29243,
-              29213, 25663,
-            ],
-          },
-          {
-            name: "Operations & Maintenance",
-            data: [
-              null,
-              null,
-              null,
-              null,
-              null,
-              null,
-              null,
-              null,
-              11164,
-              11218,
-              10077,
-            ],
-          },
-          {
-            name: "Other",
-            data: [
-              21908, 5548, 8105, 11248, 8989, 11816, 18274, 17300, 13053, 11906,
-              10073,
-            ],
+            name: "Year 2018",
+            data: [1276, 1007, 4561, 746],
           },
         ],
-
-        responsive: {
-          rules: [
-            {
-              condition: {
-                maxWidth: 500,
-              },
-              chartOptions: {
-                legend: {
-                  layout: "horizontal",
-                  align: "center",
-                  verticalAlign: "bottom",
-                },
-              },
-            },
-          ],
-        },
       }}
     />
   );
 };
 
-export default PieChartDafault;
+export default PieChartDafault3;

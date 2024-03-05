@@ -12,7 +12,7 @@ export default function Copyright(props: any) {
       {"Copyright © "}
       <Link
         color="inherit"
-        href="https://cosmeticostrujillo.com/"
+        href="https://cosmeticostrujillo.com"
         target="_blank"
       >
         Cosmeticos trujillo

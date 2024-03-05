@@ -1,6 +1,9 @@
 import { toast } from "sonner";
 import moment from "moment";
+
 import "moment/locale/es";
+
+export const nowDateWithTime = () => moment().format("DD/MM/YYYY h:mm a");
 
 export const notify = (message: string, success?: boolean) => {
   if (success) {

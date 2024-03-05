@@ -1,26 +1,16 @@
-export interface DashboardStatus {
-  series: DashboardStatusSeries[];
-  drilldown: Drilldown;
+export interface ResponseDashboardMultiNivel {
+  statusData: StatusDatum[];
+  statusSeries: StatusSery[];
 }
 
-interface Drilldown {
-  series: DrilldownSeries[];
+interface StatusDatum {
+  name: string;
+  y: number;
+  drilldown: string;
 }
 
-interface DrilldownSeries {
+interface StatusSery {
   name: string;
   id: string;
   data: Array<Array<number | string>>;
-}
-
-interface DashboardStatusSeries {
-  name: string;
-  colorByPoint: boolean;
-  data: DatumClass[];
-}
-
-interface DatumClass {
-  name: string;
-  y: number;
-  drilldown: null | string;
 }

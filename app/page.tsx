@@ -1,7 +1,7 @@
-import Avatar from "@mui/material/Avatar";
+import Image from "next/image";
+
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
 import FormLogin from "@components/login/FormLogin";
@@ -19,17 +19,21 @@ export default function SignIn() {
           alignItems: "center",
         }}
       >
-        <Avatar
-          alt="Remy Sharp"
-          src="https://media.glassdoor.com/sql/2795097/cosm%C3%A9ticos-trujillo-squarelogo-1672380267723.png"
-          sx={{ height: "100px", width: "100px" }}
+        <Image
+          src={`${process.env.NEXT_PUBLIC_URL_API_RAW}/static/images/login/logo-superior.png`}
+          alt=""
+          width="300"
+          height="200"
         />
-        <Typography component="h1" variant="h5">
-          Grupo Hada
-        </Typography>
         <FormLogin />
       </Box>
-      <Copyright sx={{ mt: 8, mb: 4 }} />
+      <Image
+        src={`${process.env.NEXT_PUBLIC_URL_API_RAW}/static/images/login/logo-inferior.png`}
+        alt=""
+        width="400"
+        height="100"
+      />
+      <Copyright sx={{ mb: 4 }} />
     </Container>
   );
 }

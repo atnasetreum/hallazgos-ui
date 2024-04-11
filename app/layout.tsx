@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 
 import { Toaster } from "sonner";
 import ThemeRegistry from "ThemeRegistry";
@@ -27,8 +28,11 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning={true}>
-        <ThemeRegistry options={{ key: "mui" }}>{children}</ThemeRegistry>
-        <Toaster position="top-right" expand={true} richColors closeButton />
+        <main>
+          <ThemeRegistry options={{ key: "mui" }}>{children}</ThemeRegistry>
+          <Toaster position="top-right" expand={true} richColors closeButton />
+        </main>
+        <Script src="/service-worker.js" />
       </body>
     </html>
   );

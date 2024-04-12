@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 
 import { Toaster } from "sonner";
 import ThemeRegistry from "ThemeRegistry";
 
 export const metadata: Metadata = {
   title: "HADA",
-  manifest: "/manifest.json",
+  description: "Hada ComportArte",
 };
 
 import "@fontsource/roboto/300.css";
@@ -32,7 +31,6 @@ export default function RootLayout({
           <ThemeRegistry options={{ key: "mui" }}>{children}</ThemeRegistry>
           <Toaster position="top-right" expand={true} richColors closeButton />
         </main>
-        <Script src="/service-worker.js" />
       </body>
     </html>
   );

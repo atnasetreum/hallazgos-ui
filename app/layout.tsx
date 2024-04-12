@@ -6,7 +6,6 @@ import ThemeRegistry from "ThemeRegistry";
 
 export const metadata: Metadata = {
   title: "HADA",
-  //description: "Hada ComportArte",
   manifest: "/manifest.json",
 };
 

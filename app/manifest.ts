@@ -2,14 +2,14 @@ import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    theme_color: "#71BF44",
-    background_color: "#F5F5F5",
+    theme_color: "#1976d2",
+    background_color: "#ffffff",
     display: "standalone",
     scope: "/",
     start_url: "/",
-    name: "ComportArte",
-    short_name: "CArte",
-    description: "Hada ComportArte",
+    name: "CRM",
+    short_name: "CRM",
+    description: "CRM Mario Gutierrez",
     icons: [
       {
         src: "/icon-192x192.png",

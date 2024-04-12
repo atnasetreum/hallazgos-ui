@@ -35,6 +35,7 @@ self.addEventListener("fetch", (event) => {
   );*/
 });
 
+/*
 self.addEventListener("push", (event) => {
   console.log("Push notification received");
 
@@ -150,3 +151,4 @@ self.addEventListener("sync", (event) => {
   console.log(event);
   console.log(event.tag);
 });
+*/

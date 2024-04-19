@@ -6,3 +6,4 @@ export * from "./zones.interfaces";
 export * from "./evicences.interfaces";
 export * from "./categories.interfaces";
 export * from "./dashboard.interfaces";
+export * from "./manufacturing-plants.interfaces";

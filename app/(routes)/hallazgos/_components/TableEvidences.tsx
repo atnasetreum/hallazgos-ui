@@ -60,10 +60,6 @@ export default function TableEvidences({ rows, getData }: Props) {
       .finally(() => setIsLoading(false));
   };
 
-  console.log({
-    rows,
-  });
-
   return (
     <>
       <EvidencePreview

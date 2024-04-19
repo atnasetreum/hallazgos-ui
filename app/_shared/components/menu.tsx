@@ -86,6 +86,11 @@ export const MainListItems = () => {
       {isAdmin && (
         <>
           <CreateLink
+            url="/manufacturing-plants"
+            title="Plantas"
+            icon={<BusinessIcon />}
+          />
+          {/*<CreateLink
             url="/usuarios"
             title="Usuarios"
             icon={<SupervisedUserCircleIcon />}
@@ -104,13 +109,12 @@ export const MainListItems = () => {
             url="/usuarios"
             title="Usuarios - Zonas"
             icon={<FolderSharedIcon />}
-          />
-          <CreateLink url="/usuarios" title="Plantas" icon={<BusinessIcon />} />
           <CreateLink
             url="/usuarios"
             title="Usuarios - Plantas"
             icon={<FolderSharedIcon />}
           />
+      />*/}
         </>
       )}
     </>

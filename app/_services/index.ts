@@ -6,3 +6,4 @@ export * from "./secondary-types.service";
 export * from "./zones.service";
 export * from "./evidences.service";
 export * from "./dashboard.serivce";
+export * from "./manufacturing-plants.service";

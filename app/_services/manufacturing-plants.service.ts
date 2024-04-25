@@ -5,7 +5,12 @@ const api = axiosWrapper({
   baseURL: "/manufacturing-plants",
 });
 
-const create = async (payload: ManufacturingPlant) => {
+const create = async (payload: {
+  name: string;
+  link: string;
+  lat: number;
+  lng: number;
+}) => {
   const { data } = await api.post<ManufacturingPlant>("", payload);
   return data;
 };

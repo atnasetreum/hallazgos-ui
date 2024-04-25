@@ -12,11 +12,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
-import AssuredWorkloadIcon from "@mui/icons-material/AssuredWorkload";
 import BusinessIcon from "@mui/icons-material/Business";
-import FolderIcon from "@mui/icons-material/Folder";
-import FolderSharedIcon from "@mui/icons-material/FolderShared";
 
 import { AuthService, MainTypesService, ZonesService } from "@services";
 import { notify } from "@shared/utils";

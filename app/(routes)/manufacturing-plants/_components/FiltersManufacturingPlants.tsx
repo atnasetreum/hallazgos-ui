@@ -29,6 +29,7 @@ const FiltersManufacturingPlants = ({ filters, setFilters, count }: Props) => {
             label="Nombre"
             variant="outlined"
             value={filters.name}
+            autoComplete="off"
             onChange={(e) => {
               setFilters({
                 ...filters,

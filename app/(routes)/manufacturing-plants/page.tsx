@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
@@ -11,6 +11,7 @@ import Button from "@mui/material/Button";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import Add from "@mui/icons-material/Add";
 import ButtonGroup from "@mui/material/ButtonGroup";
+import { useDebouncedCallback } from "use-debounce";
 
 import LoadingLinear from "@shared/components/LoadingLinear";
 import { ManufacturingPlantsService } from "@services";
@@ -29,16 +30,16 @@ const ManufacturingPlantsPage = () => {
 
   const router = useRouter();
 
-  const getData = useCallback(() => {
+  const getData = useDebouncedCallback(() => {
     setIsLoading(true);
     ManufacturingPlantsService.findAll(filters)
       .then(setData)
       .finally(() => setIsLoading(false));
-  }, [filters]);
+  }, 500);
 
   useEffect(() => {
     getData();
-  }, [getData]);
+  }, [getData, filters]);
 
   return (
     <Grid container>

@@ -1,4 +1,4 @@
-import { ManufacturingPlant } from "./users.interfaces";
+import { ManufacturingPlant } from "./manufacturing-plants.interfaces";
 
 export interface Zone {
   id: number;

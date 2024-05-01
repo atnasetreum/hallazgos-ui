@@ -14,14 +14,12 @@ import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "sonner";
 
-import { ZonesService } from "@services";
-import SelectManufacturingPlants from "@components/SelectManufacturingPlants";
+import { UsersService } from "@services";
 
-const ZonesFormPage = () => {
+const UsersFormPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [form, setForm] = useState({
     name: "",
-    manufacturingPlantId: "",
   });
   const [idCurrent, setIdCurrent] = useState<number>(0);
 
@@ -30,37 +28,29 @@ const ZonesFormPage = () => {
 
   const save = () => {
     const nameClean = form.name.trim();
-    const manufacturingPlantId = Number(form.manufacturingPlantId);
 
     if (!nameClean) {
       toast.error("El nombre es requerido");
       return;
     }
 
-    if (!manufacturingPlantId) {
-      toast.error("La planta es requerida");
-      return;
-    }
-
     setIsLoading(true);
 
     if (!idCurrent) {
-      ZonesService.create({
+      UsersService.create({
         name: nameClean,
-        manufacturingPlantId,
       })
         .then(() => {
-          toast.success("Zona creada correctamente");
+          toast.success("Usuario creado correctamente");
           cancel();
         })
         .finally(() => setIsLoading(false));
     } else {
-      ZonesService.update(idCurrent, {
+      UsersService.update(idCurrent, {
         name: nameClean,
-        manufacturingPlantId,
       })
         .then(() => {
-          toast.success("Zona actualizada correctamente");
+          toast.success("Usuario actualizado correctamente");
           cancel();
         })
         .finally(() => setIsLoading(false));
@@ -68,7 +58,7 @@ const ZonesFormPage = () => {
   };
 
   const cancel = () => {
-    router.push("/zones");
+    router.push("/users");
   };
 
   const isValidateForm = useMemo(() => !form.name?.trim(), [form]);
@@ -78,10 +68,9 @@ const ZonesFormPage = () => {
     if (!id) return;
 
     setIdCurrent(id);
-    ZonesService.findOne(id).then((data) => {
+    UsersService.findOne(id).then((data) => {
       setForm({
         name: data.name,
-        manufacturingPlantId: `${data.manufacturingPlant.id}`,
       });
     });
   }, [searchParams]);
@@ -100,19 +89,6 @@ const ZonesFormPage = () => {
               setForm({
                 ...form,
                 name: e.target.value,
-              })
-            }
-          />
-        </Paper>
-      </Grid>
-      <Grid item xs={12} sm={6} md={3}>
-        <Paper>
-          <SelectManufacturingPlants
-            value={form.manufacturingPlantId}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                manufacturingPlantId: e.target.value,
               })
             }
           />
@@ -147,4 +123,4 @@ const ZonesFormPage = () => {
   );
 };
 
-export default ZonesFormPage;
+export default UsersFormPage;

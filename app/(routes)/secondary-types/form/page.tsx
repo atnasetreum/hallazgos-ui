@@ -50,7 +50,7 @@ const SecondaryTypesFormPage = () => {
         mainTypeId,
       })
         .then(() => {
-          toast.success("Criterio creado correctamente");
+          toast.success("Tipo de criterio creado correctamente");
           cancel();
         })
         .finally(() => setIsLoading(false));
@@ -60,7 +60,7 @@ const SecondaryTypesFormPage = () => {
         mainTypeId,
       })
         .then(() => {
-          toast.success("Criterio actualizado correctamente");
+          toast.success("Tipo de criterio actualizado correctamente");
           cancel();
         })
         .finally(() => setIsLoading(false));

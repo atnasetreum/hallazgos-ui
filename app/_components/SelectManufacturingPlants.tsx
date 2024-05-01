@@ -19,12 +19,12 @@ const SelectManufacturingPlants = ({
   onChange,
   isFilter = false,
 }: Props) => {
-  const [manufacturingPlants, setmanufacturingPlants] = useState<
+  const [manufacturingPlants, setManufacturingPlants] = useState<
     ManufacturingPlant[]
   >([]);
 
   useEffect(() => {
-    ManufacturingPlantsService.findAll({}).then(setmanufacturingPlants);
+    ManufacturingPlantsService.findAll({}).then(setManufacturingPlants);
   }, []);
 
   return (

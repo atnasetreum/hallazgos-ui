@@ -17,6 +17,7 @@ import EngineeringIcon from "@mui/icons-material/Engineering";
 import DnsIcon from "@mui/icons-material/Dns";
 import HubIcon from "@mui/icons-material/Hub";
 import Tooltip from "@mui/material/Tooltip";
+import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 
 import { AuthService, MainTypesService, ZonesService } from "@services";
 import { notify } from "@shared/utils";
@@ -103,31 +104,11 @@ export const MainListItems = () => {
             icon={<DnsIcon />}
           />
           <CreateLink url="/zones" title="Zonas" icon={<HubIcon />} />
-          {/*<CreateLink
-            url="/usuarios"
+          <CreateLink
+            url="/users"
             title="Usuarios"
             icon={<SupervisedUserCircleIcon />}
           />
-          <CreateLink
-            url="/usuarios"
-            title="Tipos de hallazgos"
-            icon={<FolderIcon />}
-          />
-          <CreateLink
-            url="/usuarios"
-            title="Zonas"
-            icon={<AssuredWorkloadIcon />}
-          />
-          <CreateLink
-            url="/usuarios"
-            title="Usuarios - Zonas"
-            icon={<FolderSharedIcon />}
-          <CreateLink
-            url="/usuarios"
-            title="Usuarios - Plantas"
-            icon={<FolderSharedIcon />}
-          />
-      />*/}
         </>
       )}
     </>

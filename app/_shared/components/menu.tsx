@@ -15,6 +15,8 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import BusinessIcon from "@mui/icons-material/Business";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import DnsIcon from "@mui/icons-material/Dns";
+import HubIcon from "@mui/icons-material/Hub";
+import Tooltip from "@mui/material/Tooltip";
 
 import { AuthService, MainTypesService, ZonesService } from "@services";
 import { notify } from "@shared/utils";
@@ -34,13 +36,15 @@ function CreateLink({
   const pathname = usePathname();
 
   return (
-    <ListItemButton
-      onClick={() => router.push(url)}
-      selected={pathname.startsWith(url)}
-    >
-      <ListItemIcon>{icon}</ListItemIcon>
-      <ListItemText primary={title} />
-    </ListItemButton>
+    <Tooltip title={title} placement="right">
+      <ListItemButton
+        onClick={() => router.push(url)}
+        selected={pathname.startsWith(url)}
+      >
+        <ListItemIcon>{icon}</ListItemIcon>
+        <ListItemText primary={title} />
+      </ListItemButton>
+    </Tooltip>
   );
 }
 
@@ -54,7 +58,7 @@ export const MainListItems = () => {
   const initialCategories = useCallback(async () => {
     const [mainTypes, zones] = await Promise.all([
       MainTypesService.findAll({}),
-      ZonesService.findAll(),
+      ZonesService.findAll({}),
     ]);
 
     setCategories({
@@ -98,6 +102,7 @@ export const MainListItems = () => {
             title="Tipos de criterios"
             icon={<DnsIcon />}
           />
+          <CreateLink url="/zones" title="Zonas" icon={<HubIcon />} />
           {/*<CreateLink
             url="/usuarios"
             title="Usuarios"

@@ -17,7 +17,7 @@ const create = async (payload: Payload) => {
   return data;
 };
 
-const findAll = async (filters: { name: string }) => {
+const findAll = async (filters: { name?: string }) => {
   const { data } = await api.get<ManufacturingPlant[]>("", {
     params: {
       ...(filters?.name && {

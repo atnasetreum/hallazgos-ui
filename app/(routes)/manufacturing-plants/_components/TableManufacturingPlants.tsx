@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { useRouter } from "next/navigation";
+
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import EditIcon from "@mui/icons-material/Edit";
@@ -31,6 +33,8 @@ const columns = [
 
 export default function TableManufacturingPlants({ rows, getData }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const router = useRouter();
 
   const remove = (id: number) => {
     setIsLoading(true);
@@ -71,7 +75,9 @@ export default function TableManufacturingPlants({ rows, getData }: Props) {
                 icon={<EditIcon />}
                 label="Editar"
                 color="warning"
-                onClick={() => alert()}
+                onClick={() =>
+                  router.push("/manufacturing-plants/form?id=" + row.id)
+                }
               />
               <Chip
                 icon={<DeleteIcon />}

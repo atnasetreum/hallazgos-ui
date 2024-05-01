@@ -1,16 +1,18 @@
 import axiosWrapper from "./axiosWrapper";
 import { ManufacturingPlant } from "@interfaces";
 
-const api = axiosWrapper({
-  baseURL: "/manufacturing-plants",
-});
-
-const create = async (payload: {
+interface Payload {
   name: string;
   link: string;
   lat: number;
   lng: number;
-}) => {
+}
+
+const api = axiosWrapper({
+  baseURL: "/manufacturing-plants",
+});
+
+const create = async (payload: Payload) => {
   const { data } = await api.post<ManufacturingPlant>("", payload);
   return data;
 };
@@ -31,8 +33,8 @@ const findOne = async (id: number) => {
   return data;
 };
 
-const update = async (id: number, payload: ManufacturingPlant) => {
-  const { data } = await api.put<ManufacturingPlant>(`/${id}`, payload);
+const update = async (id: number, payload: Payload) => {
+  const { data } = await api.patch<ManufacturingPlant>(`/${id}`, payload);
   return data;
 };
 

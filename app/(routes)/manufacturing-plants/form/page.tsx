@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
@@ -23,8 +24,10 @@ const ManufacturingPlantsFormPage = () => {
     lat: "",
     lng: "",
   });
+  const [idCurrent, setIdCurrent] = useState<number>(0);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const save = () => {
     const nameClean = form.name.trim();
@@ -53,17 +56,32 @@ const ManufacturingPlantsFormPage = () => {
     }
 
     setIsLoading(true);
-    ManufacturingPlantsService.create({
-      name: nameClean,
-      link: linkClean,
-      lat: Number(latClean),
-      lng: Number(lngClean),
-    })
-      .then(() => {
-        toast.success("Planta creada correctamente");
-        cancel();
+
+    if (!idCurrent) {
+      ManufacturingPlantsService.create({
+        name: nameClean,
+        link: linkClean,
+        lat: Number(latClean),
+        lng: Number(lngClean),
       })
-      .finally(() => setIsLoading(false));
+        .then(() => {
+          toast.success("Planta creada correctamente");
+          cancel();
+        })
+        .finally(() => setIsLoading(false));
+    } else {
+      ManufacturingPlantsService.update(idCurrent, {
+        name: nameClean,
+        link: linkClean,
+        lat: Number(latClean),
+        lng: Number(lngClean),
+      })
+        .then(() => {
+          toast.success("Planta creada correctamente");
+          cancel();
+        })
+        .finally(() => setIsLoading(false));
+    }
   };
 
   const cancel = () => {
@@ -78,6 +96,21 @@ const ManufacturingPlantsFormPage = () => {
       !form.lng?.trim(),
     [form]
   );
+
+  useEffect(() => {
+    const id = Number(searchParams.get("id") || 0);
+    if (!id) return;
+
+    setIdCurrent(id);
+    ManufacturingPlantsService.findOne(id).then((data) => {
+      setForm({
+        name: data.name,
+        link: data.link,
+        lat: data.lat.toString(),
+        lng: data.lng.toString(),
+      });
+    });
+  }, [searchParams]);
 
   return (
     <Grid container spacing={2}>
@@ -173,7 +206,7 @@ const ManufacturingPlantsFormPage = () => {
           color="primary"
           fullWidth
           onClick={save}
-          disabled={isValidateForm}
+          disabled={isValidateForm || isLoading}
         >
           Guardar
         </LoadingButton>

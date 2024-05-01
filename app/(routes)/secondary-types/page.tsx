@@ -15,25 +15,26 @@ import { useDebouncedCallback } from "use-debounce";
 import Typography from "@mui/material/Typography";
 
 import LoadingLinear from "@shared/components/LoadingLinear";
-import { MainTypesService } from "@services";
-import { MainType } from "@interfaces";
-import TableMainTypes from "./_components/TableMainTypes";
-import FiltersMainTypes, {
-  IFiltersMainTypes,
-} from "./_components/FiltersMainTypes";
+import { SecondaryTypesService } from "@services";
+import { SecondaryType } from "@interfaces";
+import TableSecondaryTypes from "./_components/TableSecondaryTypes";
+import FiltersSecondaryTypes, {
+  IFiltersSecondaryTypes,
+} from "./_components/FiltersSecondaryTypes";
 
-const MainTypesPage = () => {
-  const [data, setData] = useState<MainType[]>([]);
+const SecondaryTypesPage = () => {
+  const [data, setData] = useState<SecondaryType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [filters, setFilters] = useState<IFiltersMainTypes>({
+  const [filters, setFilters] = useState<IFiltersSecondaryTypes>({
     name: "",
+    mainTypeId: "",
   });
 
   const router = useRouter();
 
   const getData = useDebouncedCallback(() => {
     setIsLoading(true);
-    MainTypesService.findAll(filters)
+    SecondaryTypesService.findAll(filters)
       .then(setData)
       .finally(() => setIsLoading(false));
   }, 500);
@@ -46,7 +47,7 @@ const MainTypesPage = () => {
     <Grid container>
       <Grid item xs={12} sm={12} md={12}>
         <Typography variant="h4" gutterBottom>
-          Criterios
+          Tipos de criterios
         </Typography>
       </Grid>
       <Grid item xs={12} sm={12} md={12}>
@@ -55,7 +56,7 @@ const MainTypesPage = () => {
             <Button
               variant="contained"
               startIcon={<Add />}
-              onClick={() => router.push("/main-types/form")}
+              onClick={() => router.push("/secondary-types/form")}
             >
               Crear
             </Button>
@@ -74,7 +75,7 @@ const MainTypesPage = () => {
         </Toolbar>
       </Grid>
       <Grid item xs={12} sm={12} md={12}>
-        <FiltersMainTypes
+        <FiltersSecondaryTypes
           filters={filters}
           setFilters={setFilters}
           count={data.length}
@@ -84,11 +85,11 @@ const MainTypesPage = () => {
         {isLoading ? (
           <LoadingLinear />
         ) : (
-          <TableMainTypes rows={data} getData={getData} />
+          <TableSecondaryTypes rows={data} getData={getData} />
         )}
       </Grid>
     </Grid>
   );
 };
 
-export default MainTypesPage;
+export default SecondaryTypesPage;

@@ -14,6 +14,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import BusinessIcon from "@mui/icons-material/Business";
 import EngineeringIcon from "@mui/icons-material/Engineering";
+import DnsIcon from "@mui/icons-material/Dns";
 
 import { AuthService, MainTypesService, ZonesService } from "@services";
 import { notify } from "@shared/utils";
@@ -89,8 +90,13 @@ export const MainListItems = () => {
           />
           <CreateLink
             url="/main-types"
-            title="Criterios de hallazgos"
+            title="Criterios"
             icon={<EngineeringIcon />}
+          />
+          <CreateLink
+            url="/secondary-types"
+            title="Tipos de criterios"
+            icon={<DnsIcon />}
           />
           {/*<CreateLink
             url="/usuarios"

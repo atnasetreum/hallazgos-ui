@@ -77,7 +77,7 @@ const ManufacturingPlantsFormPage = () => {
         lng: Number(lngClean),
       })
         .then(() => {
-          toast.success("Planta creada correctamente");
+          toast.success("Planta actualizada correctamente");
           cancel();
         })
         .finally(() => setIsLoading(false));

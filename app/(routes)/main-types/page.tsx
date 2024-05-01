@@ -15,17 +15,17 @@ import { useDebouncedCallback } from "use-debounce";
 import Typography from "@mui/material/Typography";
 
 import LoadingLinear from "@shared/components/LoadingLinear";
-import { ManufacturingPlantsService } from "@services";
-import { ManufacturingPlant } from "@interfaces";
-import TableManufacturingPlants from "./_components/TableManufacturingPlants";
-import FiltersManufacturingPlants, {
-  IFiltersManufacturingPlants,
-} from "./_components/FiltersManufacturingPlants";
+import { MainTypesService } from "@services";
+import { MainType } from "@interfaces";
+import TableMainTypes from "./_components/TableMainTypes";
+import FiltersMainTypes, {
+  IFiltersMainTypes,
+} from "./_components/FiltersMainTypes";
 
-const ManufacturingPlantsPage = () => {
-  const [data, setData] = useState<ManufacturingPlant[]>([]);
+const MainTypesPage = () => {
+  const [data, setData] = useState<MainType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [filters, setFilters] = useState<IFiltersManufacturingPlants>({
+  const [filters, setFilters] = useState<IFiltersMainTypes>({
     name: "",
   });
 
@@ -33,7 +33,7 @@ const ManufacturingPlantsPage = () => {
 
   const getData = useDebouncedCallback(() => {
     setIsLoading(true);
-    ManufacturingPlantsService.findAll(filters)
+    MainTypesService.findAll(filters)
       .then(setData)
       .finally(() => setIsLoading(false));
   }, 500);
@@ -46,7 +46,7 @@ const ManufacturingPlantsPage = () => {
     <Grid container>
       <Grid item xs={12} sm={12} md={12}>
         <Typography variant="h4" gutterBottom>
-          Plantas
+          Criterios de hallazgos
         </Typography>
       </Grid>
       <Grid item xs={12} sm={12} md={12}>
@@ -55,7 +55,7 @@ const ManufacturingPlantsPage = () => {
             <Button
               variant="contained"
               startIcon={<Add />}
-              onClick={() => router.push("/manufacturing-plants/form")}
+              onClick={() => router.push("/main-types/form")}
             >
               Crear
             </Button>
@@ -74,7 +74,7 @@ const ManufacturingPlantsPage = () => {
         </Toolbar>
       </Grid>
       <Grid item xs={12} sm={12} md={12}>
-        <FiltersManufacturingPlants
+        <FiltersMainTypes
           filters={filters}
           setFilters={setFilters}
           count={data.length}
@@ -84,11 +84,11 @@ const ManufacturingPlantsPage = () => {
         {isLoading ? (
           <LoadingLinear />
         ) : (
-          <TableManufacturingPlants rows={data} getData={getData} />
+          <TableMainTypes rows={data} getData={getData} />
         )}
       </Grid>
     </Grid>
   );
 };
 
-export default ManufacturingPlantsPage;
+export default MainTypesPage;

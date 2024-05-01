@@ -13,6 +13,7 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import BusinessIcon from "@mui/icons-material/Business";
+import EngineeringIcon from "@mui/icons-material/Engineering";
 
 import { AuthService, MainTypesService, ZonesService } from "@services";
 import { notify } from "@shared/utils";
@@ -51,7 +52,7 @@ export const MainListItems = () => {
 
   const initialCategories = useCallback(async () => {
     const [mainTypes, zones] = await Promise.all([
-      MainTypesService.findAll(),
+      MainTypesService.findAll({}),
       ZonesService.findAll(),
     ]);
 
@@ -85,6 +86,11 @@ export const MainListItems = () => {
             url="/manufacturing-plants"
             title="Plantas"
             icon={<BusinessIcon />}
+          />
+          <CreateLink
+            url="/main-types"
+            title="Criterios de hallazgos"
+            icon={<EngineeringIcon />}
           />
           {/*<CreateLink
             url="/usuarios"

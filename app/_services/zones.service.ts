@@ -18,6 +18,7 @@ const create = async (payload: Payload) => {
 const findAll = async (filters: {
   name?: string;
   manufacturingPlantId?: string;
+  manufacturingPlantNames?: string[];
 }) => {
   const { data } = await api.get<Zone[]>("", {
     params: {
@@ -26,6 +27,9 @@ const findAll = async (filters: {
       }),
       ...(filters?.manufacturingPlantId && {
         manufacturingPlantId: filters.manufacturingPlantId,
+      }),
+      ...(filters?.manufacturingPlantNames && {
+        manufacturingPlantNames: filters.manufacturingPlantNames,
       }),
     },
   });

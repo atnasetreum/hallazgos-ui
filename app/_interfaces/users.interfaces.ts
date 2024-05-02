@@ -1,4 +1,5 @@
 import { ManufacturingPlant } from "./manufacturing-plants.interfaces";
+import { Zone } from "./zones.interfaces";
 
 export interface User {
   id: number;
@@ -9,13 +10,5 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
   manufacturingPlants: ManufacturingPlant[];
-  zones: Zones[];
-}
-
-export interface Zones {
-  id: number;
-  name: string;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  zones: Zone[];
 }

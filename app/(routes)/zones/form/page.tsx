@@ -71,7 +71,10 @@ const ZonesFormPage = () => {
     router.push("/zones");
   };
 
-  const isValidateForm = useMemo(() => !form.name?.trim(), [form]);
+  const isValidateForm = useMemo(
+    () => !form.name?.trim() || !form.manufacturingPlantId,
+    [form]
+  );
 
   useEffect(() => {
     const id = Number(searchParams.get("id") || 0);

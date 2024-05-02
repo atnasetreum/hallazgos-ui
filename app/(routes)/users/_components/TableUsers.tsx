@@ -59,11 +59,16 @@ export default function TableUsers({ rows, getData }: Props) {
           <StyledTableCell>{row.name}</StyledTableCell>
           <StyledTableCell>{row.email}</StyledTableCell>
           <StyledTableCell>
-            {row.manufacturingPlants.map(({ name }) => name).join(",")}
+            {row.manufacturingPlants.map(({ name }) => name).join(", ")}
           </StyledTableCell>
           <StyledTableCell>{row.role}</StyledTableCell>
           <StyledTableCell>
-            {row.zones.map(({ name }) => name).join(",")}
+            {row.zones
+              .map(
+                ({ name, manufacturingPlant }) =>
+                  `${name} (${manufacturingPlant.name})`
+              )
+              .join(", ")}
           </StyledTableCell>
           <StyledTableCell>
             {stringToDateWithTime(row.createdAt)}

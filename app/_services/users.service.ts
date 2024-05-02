@@ -3,6 +3,11 @@ import { User } from "@interfaces";
 
 interface Payload {
   name: string;
+  email: string;
+  password: string;
+  rule: string;
+  manufacturingPlantNames: string[];
+  zoneNames: string[];
 }
 
 const api = axiosWrapper({

@@ -71,7 +71,10 @@ const SecondaryTypesFormPage = () => {
     router.push("/secondary-types");
   };
 
-  const isValidateForm = useMemo(() => !form.name?.trim(), [form]);
+  const isValidateForm = useMemo(
+    () => !form.name?.trim() || !form.mainTypeId,
+    [form]
+  );
 
   useEffect(() => {
     const id = Number(searchParams.get("id") || 0);

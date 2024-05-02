@@ -13,13 +13,32 @@ import SaveIcon from "@mui/icons-material/Save";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "sonner";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 import { UsersService } from "@services";
+import MultiSelectManufacturingPlants from "@components/MultiSelectManufacturingPlants";
+import MultiSelectZones from "@components/MultiSelectZones";
+import { isValidEmail } from "@shared/utils";
 
 const UsersFormPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<{
+    name: string;
+    email: string;
+    password: string;
+    rule: string;
+    manufacturingPlantNames: string[];
+    zoneNames: string[];
+  }>({
     name: "",
+    email: "",
+    password: "",
+    rule: "",
+    manufacturingPlantNames: [],
+    zoneNames: [],
   });
   const [idCurrent, setIdCurrent] = useState<number>(0);
 
@@ -28,9 +47,31 @@ const UsersFormPage = () => {
 
   const save = () => {
     const nameClean = form.name.trim();
+    const emailClean = form.email.trim();
+    const passwordClean = form.password.trim();
 
     if (!nameClean) {
       toast.error("El nombre es requerido");
+      return;
+    }
+
+    if (!emailClean) {
+      toast.error("El correo electrónico es requerido");
+      return;
+    }
+
+    if (!isValidEmail(emailClean)) {
+      toast.error("El correo electrónico no es válido");
+      return;
+    }
+
+    if (!idCurrent && !passwordClean) {
+      toast.error("La contraseña es requerida");
+      return;
+    }
+
+    if (!form.manufacturingPlantNames.length) {
+      toast.error("La planta de manufactura es requerida");
       return;
     }
 
@@ -39,6 +80,11 @@ const UsersFormPage = () => {
     if (!idCurrent) {
       UsersService.create({
         name: nameClean,
+        email: emailClean,
+        password: passwordClean,
+        rule: form.rule,
+        manufacturingPlantNames: form.manufacturingPlantNames,
+        zoneNames: form.rule === "Supervisor" ? form.zoneNames : [],
       })
         .then(() => {
           toast.success("Usuario creado correctamente");
@@ -48,6 +94,11 @@ const UsersFormPage = () => {
     } else {
       UsersService.update(idCurrent, {
         name: nameClean,
+        email: emailClean,
+        password: passwordClean,
+        rule: form.rule,
+        manufacturingPlantNames: form.manufacturingPlantNames,
+        zoneNames: form.rule === "Supervisor" ? form.zoneNames : [],
       })
         .then(() => {
           toast.success("Usuario actualizado correctamente");
@@ -61,7 +112,15 @@ const UsersFormPage = () => {
     router.push("/users");
   };
 
-  const isValidateForm = useMemo(() => !form.name?.trim(), [form]);
+  const isValidateForm = useMemo(
+    () =>
+      !form.name?.trim() ||
+      !form.email?.trim() ||
+      (!idCurrent && !form.password?.trim()) ||
+      !form.rule?.trim() ||
+      !form.manufacturingPlantNames?.length,
+    [form, idCurrent]
+  );
 
   useEffect(() => {
     const id = Number(searchParams.get("id") || 0);
@@ -69,8 +128,22 @@ const UsersFormPage = () => {
 
     setIdCurrent(id);
     UsersService.findOne(id).then((data) => {
+      const zoneNames =
+        data.role === "Supervisor"
+          ? data.zones.map(
+              (zone) => `${zone.manufacturingPlant.name} - ${zone.name}`
+            )
+          : [];
+
       setForm({
         name: data.name,
+        email: data.email,
+        password: "",
+        rule: data.role,
+        manufacturingPlantNames: data.manufacturingPlants.map(
+          (plant) => plant.name
+        ),
+        zoneNames,
       });
     });
   }, [searchParams]);
@@ -94,6 +167,94 @@ const UsersFormPage = () => {
           />
         </Paper>
       </Grid>
+      <Grid item xs={12} sm={6} md={3}>
+        <Paper>
+          <TextField
+            label="Correo electrónico"
+            variant="outlined"
+            fullWidth
+            autoComplete="off"
+            value={form.email}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                email: e.target.value,
+              })
+            }
+          />
+        </Paper>
+      </Grid>
+      <Grid item xs={12} sm={6} md={3}>
+        <Paper>
+          <TextField
+            label="Contraseña"
+            variant="outlined"
+            fullWidth
+            autoComplete="off"
+            value={form.password}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                password: e.target.value,
+              })
+            }
+          />
+        </Paper>
+      </Grid>
+      <Grid item xs={12} sm={6} md={3}>
+        <Paper>
+          <FormControl fullWidth>
+            <InputLabel id="rule-select-label">Rol</InputLabel>
+            <Select
+              labelId="rule-select-label"
+              id="rule-select"
+              value={form.rule}
+              label="Rol"
+              onChange={(e: SelectChangeEvent) =>
+                setForm({
+                  ...form,
+                  rule: e.target.value as string,
+                })
+              }
+            >
+              <MenuItem value="Administrador">Administrador</MenuItem>
+              <MenuItem value="General">General</MenuItem>
+              <MenuItem value="Supervisor">Supervisor</MenuItem>
+            </Select>
+          </FormControl>
+        </Paper>
+      </Grid>
+      {form.rule && (
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper>
+            <MultiSelectManufacturingPlants
+              values={form.manufacturingPlantNames}
+              onChange={(values) => {
+                setForm({
+                  ...form,
+                  manufacturingPlantNames: values,
+                });
+              }}
+            />
+          </Paper>
+        </Grid>
+      )}
+      {form.rule === "Supervisor" && !!form.manufacturingPlantNames.length && (
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper>
+            <MultiSelectZones
+              values={form.zoneNames}
+              onChange={(values) => {
+                setForm({
+                  ...form,
+                  zoneNames: values,
+                });
+              }}
+              manufacturingPlantNames={form.manufacturingPlantNames}
+            />
+          </Paper>
+        </Grid>
+      )}
       <Grid item xs={12} sm={3} md={3}>
         <Button
           variant="contained"

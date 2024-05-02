@@ -45,7 +45,7 @@ const FiltersUsers = ({ filters, setFilters, count }: Props) => {
           />
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={4} md={2}>
+      {/*<Grid item xs={12} sm={4} md={2}>
         <Paper>
           <SelectManufacturingPlants
             value={filters.manufacturingPlantId}
@@ -87,7 +87,7 @@ const FiltersUsers = ({ filters, setFilters, count }: Props) => {
             manufacturingPlantId={filters.manufacturingPlantId}
           />
         </Paper>
-      </Grid>
+          </Grid>*/}
     </Grid>
   );
 };

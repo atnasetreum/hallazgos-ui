@@ -3,9 +3,9 @@ import Typography from "@mui/material/Typography";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
-import SelectManufacturingPlants from "@components/SelectManufacturingPlants";
-import SelectRules from "@components/SelectRules";
-import SelectZones from "@components/SelectZones";
+// import SelectManufacturingPlants from "@components/SelectManufacturingPlants";
+// import SelectRules from "@components/SelectRules";
+// import SelectZones from "@components/SelectZones";
 
 export interface IFiltersUsers {
   name: string;

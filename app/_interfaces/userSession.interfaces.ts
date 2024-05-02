@@ -1,5 +1,5 @@
 import { ManufacturingPlant } from "./manufacturing-plants.interfaces";
-import { Zones } from "./users.interfaces";
+import { Zone } from "./zones.interfaces";
 
 export interface UserSession {
   id: number;
@@ -10,6 +10,6 @@ export interface UserSession {
   createdAt: Date;
   updatedAt: Date;
   manufacturingPlants: ManufacturingPlant[];
-  zones: Zones[];
+  zones: Zone[];
   manufacturingPlantsCurrent: number[];
 }

@@ -3,7 +3,7 @@ import Paper from "@mui/material/Paper";
 
 import { StatusChart } from "./_components/StatusChart";
 import { ZonesChart } from "./_components/ZonesChart";
-import { PyramidChart } from "./_components/PyramidChart";
+//import { PyramidChart } from "./_components/PyramidChart";
 
 export default function DashboardPage() {
   return (
@@ -28,17 +28,6 @@ export default function DashboardPage() {
           }}
         >
           <ZonesChart />
-        </Paper>
-      </Grid>
-      <Grid item xs={12} md={4} lg={3}>
-        <Paper
-          sx={{
-            p: 2,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <PyramidChart />
         </Paper>
       </Grid>
     </Grid>

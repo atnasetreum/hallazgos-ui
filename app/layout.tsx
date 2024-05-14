@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: "Hada ComportArte",
 };
 
+import { ApolloWrapper } from "@shared/libs/apollo-wrapper";
+
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -28,7 +30,9 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning={true}>
         <main>
-          <ThemeRegistry options={{ key: "mui" }}>{children}</ThemeRegistry>
+          <ThemeRegistry options={{ key: "mui" }}>
+            <ApolloWrapper>{children}</ApolloWrapper>
+          </ThemeRegistry>
           <Toaster position="top-right" expand={true} richColors closeButton />
         </main>
       </body>

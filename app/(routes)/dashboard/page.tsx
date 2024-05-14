@@ -33,3 +33,78 @@ export default function DashboardPage() {
     </Grid>
   );
 }
+
+/*import { gql } from "@apollo/client";
+
+import { getClient } from "@lib/apollo-client";
+
+async function loadData() {
+  const client = getClient();
+  const { data } = await client.query({
+    query: gql`
+      query {
+        characters(page: 1) {
+          results {
+            id
+            name
+            image
+          }
+        }
+      }
+    `,
+  });
+
+  console.log({ data: data.characters.results });
+}
+
+export default async function LoginPage() {
+  await loadData();
+  return <p>hola mundo</p>;
+}*/
+
+/*
+"use client";
+import { gql } from "@apollo/client";
+import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
+import { useEffect } from "react";
+
+const query = gql`
+  query {
+    characters(page: 1) {
+      results {
+        id
+        name
+        image
+      }
+    }
+  }
+`;
+
+export interface Results {
+  characters: Characters;
+}
+
+export interface Characters {
+  __typename: string;
+  results: Result[];
+}
+
+export interface Result {
+  __typename: string;
+  id: string;
+  name: string;
+  image: string;
+}
+
+export default function LoginPage() {
+  const { data } = useSuspenseQuery<Results>(query);
+
+  useEffect(() => {
+    console.log({
+      results: data.characters.results,
+      data,
+    });
+  }, []);
+
+  return <p>hola mundo</p>;
+}*/

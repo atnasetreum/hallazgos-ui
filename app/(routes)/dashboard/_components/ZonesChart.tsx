@@ -21,6 +21,8 @@ export const ZonesChart = () => {
     DashboardService.findAllZones().then(setData);
   }, []);
 
+  if (!Object.keys(data).length) return null;
+
   return (
     <HighchartsReact
       highcharts={Highcharts}

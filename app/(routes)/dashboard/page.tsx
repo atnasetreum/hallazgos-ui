@@ -3,12 +3,13 @@ import Paper from "@mui/material/Paper";
 
 import { StatusChart } from "./_components/StatusChart";
 import { ZonesChart } from "./_components/ZonesChart";
+import { MainTypesChart } from "./_components/MainTypesChart";
 //import { PyramidChart } from "./_components/PyramidChart";
 
 export default function DashboardPage() {
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12} md={4} lg={3}>
+      <Grid item xs={12} md={3} lg={3}>
         <Paper
           sx={{
             p: 2,
@@ -19,7 +20,18 @@ export default function DashboardPage() {
           <StatusChart />
         </Paper>
       </Grid>
-      <Grid item xs={12} md={4} lg={3}>
+      <Grid item xs={12} md={6} lg={6}>
+        <Paper
+          sx={{
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <MainTypesChart />
+        </Paper>
+      </Grid>
+      <Grid item xs={12} md={3} lg={3}>
         <Paper
           sx={{
             p: 2,

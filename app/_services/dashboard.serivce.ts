@@ -1,4 +1,7 @@
-import { ResponseDashboardMultiNivel } from "@interfaces";
+import {
+  ResponseDashboardMainTypes,
+  ResponseDashboardMultiNivel,
+} from "@interfaces";
 import axiosWrapper from "./axiosWrapper";
 
 const api = axiosWrapper({
@@ -15,7 +18,13 @@ const findAllZones = async () => {
   return data;
 };
 
+const findAllMainTypes = async () => {
+  const { data } = await api.get<ResponseDashboardMainTypes>("/main-types");
+  return data;
+};
+
 export const DashboardService = {
   findAllStatus,
   findAllZones,
+  findAllMainTypes,
 };

@@ -21,14 +21,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
         />
       </head>
-      <body suppressHydrationWarning={true}>
+      <body suppressHydrationWarning>
         <main>
           <ThemeRegistry options={{ key: "mui" }}>
             <ApolloWrapper>{children}</ApolloWrapper>

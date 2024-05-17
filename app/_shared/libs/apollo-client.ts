@@ -6,7 +6,7 @@ import { setContext } from "@apollo/client/link/context";
 
 export const { getClient } = registerApolloClient(() => {
   const httpLink = createHttpLink({
-    uri: "https://rickandmortyapi.com/graphql", //process.env.NEXT_PUBLIC_API_URL_GRAPHQL,
+    uri: process.env.NEXT_PUBLIC_API_URL_GRAPHQL,
     fetchOptions: { cache: "no-store" },
   });
 

@@ -11,7 +11,7 @@ import { ApolloLink, HttpLink } from "@apollo/client";
 
 function makeClient() {
   const httpLink = new HttpLink({
-    uri: "https://rickandmortyapi.com/graphql", //process.env.NEXT_PUBLIC_API_URL_GRAPHQL,
+    uri: process.env.NEXT_PUBLIC_API_URL_GRAPHQL,
     fetchOptions: { cache: "no-store" },
     credentials: "include",
   });

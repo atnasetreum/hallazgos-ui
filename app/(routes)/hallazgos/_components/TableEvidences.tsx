@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Chip from "@mui/material/Chip";
 import InfoIcon from "@mui/icons-material/Info";
 import Stack from "@mui/material/Stack";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { gql } from "@apollo/client";
+import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 
 import { durantionToTime, notify, stringToDateWithTime } from "@shared/utils";
 import TableDefault, {
@@ -23,9 +25,64 @@ import CloseEvidence from "./CloseEvidence";
 import { useUserSessionStore } from "@store";
 import { EvidencesService } from "@services";
 
-interface Props {
-  rows: Evidence[];
-  getData: () => void;
+const query = gql`
+  query Evidences($page: Int!, $limit: Int!) {
+    evidences(page: $page, limit: $limit) {
+      count
+      data {
+        id
+        status
+        createdAt
+        updatedAt
+        solutionDate
+        manufacturingPlant {
+          name
+        }
+        user {
+          name
+        }
+        mainType {
+          name
+        }
+        secondaryType {
+          name
+        }
+        supervisors {
+          name
+        }
+        zone {
+          name
+        }
+      }
+    }
+  }
+`;
+
+interface ResponseEvidences {
+  evidences: Evidences;
+}
+
+interface Evidences {
+  count: number;
+  data: Datum[];
+}
+
+interface Datum {
+  id: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+  solutionDate: null;
+  manufacturingPlant: OnlyName;
+  user: OnlyName;
+  OnlyName: OnlyName;
+  secondaryType: OnlyName;
+  supervisors: OnlyName[];
+  zone: OnlyName;
+}
+
+interface OnlyName {
+  name: string;
 }
 
 const columns = [
@@ -43,12 +100,26 @@ const columns = [
   "Acciones",
 ];
 
+interface Props {
+  rows: Evidence[];
+  getData: () => void;
+}
+
 export default function TableEvidences({ rows, getData }: Props) {
   const [evidenceCurrent, setEvidenceCurrent] = useState<Evidence | null>(null);
   const [idRow, setIdRow] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const { id: userId, role } = useUserSessionStore();
+  const { data } = useSuspenseQuery<ResponseEvidences>(query, {
+    variables: {
+      page: 1,
+      limit: 5,
+    },
+  });
+
+  useEffect(() => {
+    console.log(data.evidences.data);
+  }, [data]);
 
   const removeEvicence = (id: number) => {
     setIsLoading(true);

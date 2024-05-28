@@ -1,19 +1,16 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import Chip from "@mui/material/Chip";
 import InfoIcon from "@mui/icons-material/Info";
 import Stack from "@mui/material/Stack";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { gql } from "@apollo/client";
-import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 
 import { durantionToTime, notify, stringToDateWithTime } from "@shared/utils";
 import TableDefault, {
   StyledTableCell,
   StyledTableRow,
 } from "@shared/components/TableDefault";
-import { Evidence } from "@interfaces";
 import {
   ROLE_ADMINISTRADOR,
   STATUS_CLOSED,
@@ -24,66 +21,7 @@ import EvidencePreview from "./EvidencePreview";
 import CloseEvidence from "./CloseEvidence";
 import { useUserSessionStore } from "@store";
 import { EvidencesService } from "@services";
-
-const query = gql`
-  query Evidences($page: Int!, $limit: Int!) {
-    evidences(page: $page, limit: $limit) {
-      count
-      data {
-        id
-        status
-        createdAt
-        updatedAt
-        solutionDate
-        manufacturingPlant {
-          name
-        }
-        user {
-          name
-        }
-        mainType {
-          name
-        }
-        secondaryType {
-          name
-        }
-        supervisors {
-          name
-        }
-        zone {
-          name
-        }
-      }
-    }
-  }
-`;
-
-interface ResponseEvidences {
-  evidences: Evidences;
-}
-
-interface Evidences {
-  count: number;
-  data: Datum[];
-}
-
-interface Datum {
-  id: string;
-  status: string;
-  createdAt: Date;
-  updatedAt: Date;
-  solutionDate: null;
-  manufacturingPlant: OnlyName;
-  user: OnlyName;
-  OnlyName: OnlyName;
-  secondaryType: OnlyName;
-  supervisors: OnlyName[];
-  zone: OnlyName;
-}
-
-interface OnlyName {
-  name: string;
-}
+import { EvidenceGraphql } from "@hooks";
 
 const columns = [
   "ID",
@@ -101,25 +39,29 @@ const columns = [
 ];
 
 interface Props {
-  rows: Evidence[];
+  rows: EvidenceGraphql[];
   getData: () => void;
+  page: number;
+  setPage: Dispatch<SetStateAction<number>>;
+  rowsPerPage: number;
+  setRowsPerPage: Dispatch<SetStateAction<number>>;
+  countEvidence: number;
 }
 
-export default function TableEvidences({ rows, getData }: Props) {
-  const [evidenceCurrent, setEvidenceCurrent] = useState<Evidence | null>(null);
+export default function TableEvidences({
+  rows,
+  getData,
+  page,
+  setPage,
+  rowsPerPage,
+  setRowsPerPage,
+  countEvidence,
+}: Props) {
+  const [evidenceCurrent, setEvidenceCurrent] =
+    useState<EvidenceGraphql | null>(null);
   const [idRow, setIdRow] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { id: userId, role } = useUserSessionStore();
-  const { data } = useSuspenseQuery<ResponseEvidences>(query, {
-    variables: {
-      page: 1,
-      limit: 5,
-    },
-  });
-
-  useEffect(() => {
-    console.log(data.evidences.data);
-  }, [data]);
 
   const removeEvicence = (id: number) => {
     setIsLoading(true);
@@ -155,7 +97,7 @@ export default function TableEvidences({ rows, getData }: Props) {
       <TableDefault
         rows={rows}
         columns={columns}
-        paintRows={(row: Evidence) => (
+        paintRows={(row: EvidenceGraphql) => (
           <StyledTableRow key={row.id}>
             <StyledTableCell component="th" scope="row">
               {row.id}
@@ -194,7 +136,7 @@ export default function TableEvidences({ rows, getData }: Props) {
                 <Chip
                   icon={<InfoIcon />}
                   label={`Detalles ${
-                    row.status === STATUS_CLOSED
+                    row.status === STATUS_CLOSED && row?.solutionDate
                       ? durantionToTime(row.createdAt, row.solutionDate)
                       : ""
                   }`}
@@ -227,6 +169,11 @@ export default function TableEvidences({ rows, getData }: Props) {
             </StyledTableCell>
           </StyledTableRow>
         )}
+        page={page}
+        setPage={setPage}
+        rowsPerPage={rowsPerPage}
+        setRowsPerPage={setRowsPerPage}
+        count={countEvidence}
       />
     </>
   );

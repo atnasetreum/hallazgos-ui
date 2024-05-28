@@ -15,17 +15,14 @@ import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 import { utils, WorkBook, writeFileXLSX } from "xlsx";
 
 import TableEvidences from "./_components/TableEvidences";
-import { EvidencesService } from "@services";
-import { Evidence } from "_interfaces/evicences.interfaces";
 import LoadingLinear from "@shared/components/LoadingLinear";
 import FiltersEvidence, {
   FiltersEvidences,
 } from "./_components/FiltersEvidence";
 import { durantionToTime, stringToDateWithTime } from "@shared/utils";
+import { useEvidences } from "@hooks";
 
 export default function HallazgosPage() {
-  const [evidences, setEvidences] = useState<Evidence[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [filters, setFilters] = useState<FiltersEvidences>({
     manufacturingPlantId: "",
     mainTypeId: "",
@@ -33,14 +30,22 @@ export default function HallazgosPage() {
     zone: "",
   });
 
+  const {
+    findEvidences,
+    evidences,
+    isLoading,
+    countEvidence,
+    page,
+    setPage,
+    rowsPerPage,
+    setRowsPerPage,
+  } = useEvidences();
+
   const router = useRouter();
 
   const getData = useCallback(() => {
-    setIsLoading(true);
-    EvidencesService.findAll(filters)
-      .then(setEvidences)
-      .finally(() => setIsLoading(false));
-  }, [filters]);
+    findEvidences(filters);
+  }, [filters, page, rowsPerPage]);
 
   const createExcel = () => {
     if (evidences) {
@@ -112,14 +117,22 @@ export default function HallazgosPage() {
         <FiltersEvidence
           filters={filters}
           setFilters={setFilters}
-          count={evidences.length}
+          count={countEvidence}
         />
       </Grid>
       <Grid item xs={12} sm={12} md={12}>
         {isLoading ? (
           <LoadingLinear />
         ) : (
-          <TableEvidences rows={evidences} getData={getData} />
+          <TableEvidences
+            rows={evidences}
+            getData={getData}
+            page={page}
+            setPage={setPage}
+            rowsPerPage={rowsPerPage}
+            setRowsPerPage={setRowsPerPage}
+            countEvidence={countEvidence}
+          />
         )}
       </Grid>
     </Grid>

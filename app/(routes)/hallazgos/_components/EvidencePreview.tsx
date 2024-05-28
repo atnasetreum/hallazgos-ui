@@ -9,7 +9,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 
-import { Evidence } from "@interfaces";
+import { EvidenceGraphql } from "@hooks";
 import DetailsEvidence from "./DetailsEvidence";
 
 const Transition = forwardRef(function Transition(
@@ -22,7 +22,7 @@ const Transition = forwardRef(function Transition(
 });
 
 interface Props {
-  evidenceCurrent: Evidence | null;
+  evidenceCurrent: EvidenceGraphql | null;
   handleClose: (refreshData: boolean) => void;
 }
 

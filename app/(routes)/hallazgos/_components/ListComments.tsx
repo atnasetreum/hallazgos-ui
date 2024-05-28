@@ -6,11 +6,11 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 
-import { Comment } from "@interfaces";
 import { stringToDateWithTime } from "@shared/utils";
+import { CommentEvidenceGraphql } from "@hooks";
 
 interface Props {
-  comments: Comment[];
+  comments: CommentEvidenceGraphql[];
 }
 
 export default function ListComments({ comments }: Props) {

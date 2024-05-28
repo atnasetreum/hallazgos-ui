@@ -25,7 +25,9 @@
       "@constants": ["_constants"],
       "@interfaces": ["_interfaces"],
       "@store": ["_store"],
-      "@shared/*": ["_shared/*"]
+      "@shared/*": ["_shared/*"],
+      "@hooks": ["_hooks"],
+      "@routes/*": ["(routes)/*"]
     },
     "noUnusedLocals": true,
     "noUnusedParameters": true

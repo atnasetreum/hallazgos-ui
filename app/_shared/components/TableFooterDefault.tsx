@@ -18,6 +18,7 @@ interface Props {
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   colSpan: number;
+  count?: number;
 }
 
 const TableFooterDefault = ({
@@ -27,6 +28,7 @@ const TableFooterDefault = ({
   handleChangePage,
   handleChangeRowsPerPage,
   colSpan,
+  count,
 }: Props) => {
   return (
     <TableFooter>
@@ -34,7 +36,7 @@ const TableFooterDefault = ({
         <TablePagination
           rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
           colSpan={colSpan}
-          count={rows.length}
+          count={count ?? rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

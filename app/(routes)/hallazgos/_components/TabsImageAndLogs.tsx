@@ -15,9 +15,9 @@ import Button from "@mui/material/Button";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 
 import { baseUrlImage, notify } from "@shared/utils";
-import { Comment, Evidence } from "@interfaces";
 import { EvidencesService } from "@services";
 import ListComments from "./ListComments";
+import { CommentEvidenceGraphql, EvidenceGraphql } from "@hooks";
 
 interface TabPanelProps {
   children?: ReactNode;
@@ -54,7 +54,7 @@ function a11yProps(index: number) {
 }
 
 interface Props {
-  evidenceCurrent: Evidence;
+  evidenceCurrent: EvidenceGraphql;
   setRefreshData: (refreshData: boolean) => void;
 }
 
@@ -65,7 +65,9 @@ export default function TabsImageAndLogs({
   const theme = useTheme();
   const [value, setValue] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
-  const [comments, setComments] = useState<Comment[]>(evidenceCurrent.comments);
+  const [comments, setComments] = useState<CommentEvidenceGraphql[]>(
+    evidenceCurrent.comments
+  );
 
   const handleChange = (_: SyntheticEvent, newValue: number) => {
     setValue(newValue);

@@ -1,4 +1,12 @@
-import { ChangeEvent, MouseEvent, ReactNode, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  MouseEvent,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -8,6 +16,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+
 import TableFooterDefault from "./TableFooterDefault";
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -34,15 +43,38 @@ interface Props {
   rows: any[];
   paintRows: (value: any, index: number, array: any[]) => ReactNode;
   columns: string[];
+  page?: number;
+  setPage?: Dispatch<SetStateAction<number>>;
+  rowsPerPage?: number;
+  setRowsPerPage?: Dispatch<SetStateAction<number>>;
+  count?: number;
 }
 
-const TableDefault = ({ rows, paintRows, columns }: Props) => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+const TableDefault = ({
+  rows,
+  paintRows,
+  columns,
+  page: pageCtrl,
+  setPage: setPageCtrl,
+  rowsPerPage: rowsPerPageCtrl,
+  setRowsPerPage: setRowsPerPageCtrl,
+  count,
+}: Props) => {
+  const [page, setPage] = useState(pageCtrl || 0);
+  const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageCtrl || 5);
   const [colSpan] = useState(columns.length);
 
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  useEffect(() => {
+    if (setPageCtrl) {
+      setPageCtrl(page);
+    }
+  }, [page, setPageCtrl]);
+
+  useEffect(() => {
+    if (setRowsPerPageCtrl) {
+      setRowsPerPageCtrl(rowsPerPage);
+    }
+  }, [rowsPerPage, setRowsPerPageCtrl]);
 
   const handleChangePage = (
     _: MouseEvent<HTMLButtonElement> | null,
@@ -68,17 +100,7 @@ const TableDefault = ({ rows, paintRows, columns }: Props) => {
             ))}
           </TableRow>
         </TableHead>
-        <TableBody>
-          {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map(paintRows)}
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={colSpan} />
-            </TableRow>
-          )}
-        </TableBody>
+        <TableBody>{rows.map(paintRows)}</TableBody>
         <TableFooterDefault
           rows={rows}
           page={page}
@@ -86,6 +108,7 @@ const TableDefault = ({ rows, paintRows, columns }: Props) => {
           handleChangePage={handleChangePage}
           handleChangeRowsPerPage={handleChangeRowsPerPage}
           colSpan={colSpan}
+          count={count}
         />
       </Table>
     </TableContainer>

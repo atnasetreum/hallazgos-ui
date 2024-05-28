@@ -8,12 +8,12 @@ import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 
 import { durantionToTime, stringToDateWithTime } from "@shared/utils";
-import { Evidence } from "@interfaces";
 import { STATUS_CLOSED, STATUS_OPEN } from "@shared/constants";
 import TabsImageAndLogs from "./TabsImageAndLogs";
+import { EvidenceGraphql } from "@hooks";
 
 interface Props {
-  evidenceCurrent: Evidence;
+  evidenceCurrent: EvidenceGraphql;
   setRefreshData: (refreshData: boolean) => void;
 }
 

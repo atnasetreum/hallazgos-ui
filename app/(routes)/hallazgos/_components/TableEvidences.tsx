@@ -73,6 +73,16 @@ export default function TableEvidences({
       .finally(() => setIsLoading(false));
   };
 
+  const validateSupervisor = (row: EvidenceGraphql) => {
+    return (
+      row.status === STATUS_OPEN &&
+      role === ROLE_SUPERVISOR &&
+      row.supervisors
+        .map((supervisor) => Number(supervisor.id))
+        .includes(userId)
+    );
+  };
+
   return (
     <>
       <EvidencePreview
@@ -143,18 +153,14 @@ export default function TableEvidences({
                   color="secondary"
                   onClick={() => setEvidenceCurrent(row)}
                 />
-                {row.status === STATUS_OPEN &&
-                  role === ROLE_SUPERVISOR &&
-                  row.supervisors
-                    .map((supervisor) => supervisor.id)
-                    .includes(userId) && (
-                    <Chip
-                      icon={<AddAPhotoIcon />}
-                      label="Cerrar hallazgo"
-                      color="warning"
-                      onClick={() => setIdRow(row.id)}
-                    />
-                  )}
+                {validateSupervisor(row) && (
+                  <Chip
+                    icon={<AddAPhotoIcon />}
+                    label="Cerrar hallazgo"
+                    color="warning"
+                    onClick={() => setIdRow(row.id)}
+                  />
+                )}
 
                 {row.status === STATUS_OPEN && role === ROLE_ADMINISTRADOR && (
                   <Chip

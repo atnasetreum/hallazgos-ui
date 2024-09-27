@@ -78,7 +78,7 @@ const FormLogin = () => {
         sx={{ mt: 3, mb: 2 }}
         onClick={login}
       >
-        Iniciar Sesión
+        Iniciar
       </Button>
     </Box>
   );

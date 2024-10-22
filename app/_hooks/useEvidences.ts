@@ -12,6 +12,7 @@ const query = gql`
     $mainTypeId: Float
     $secondaryTypeId: Float
     $zoneId: Float
+    $status: String
   ) {
     evidences(
       page: $page
@@ -20,6 +21,7 @@ const query = gql`
       mainTypeId: $mainTypeId
       secondaryTypeId: $secondaryTypeId
       zoneId: $zoneId
+      status: $status
     ) {
       count
       data {
@@ -123,6 +125,7 @@ export const useEvidences = () => {
         secondaryTypeId: filters.secondaryType,
       }),
       ...(filters.zone && { zoneId: filters.zone }),
+      ...(filters.state && { status: filters.state }),
     };
 
     return findEvidences({

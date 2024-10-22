@@ -13,6 +13,7 @@ export interface FiltersEvidences {
   mainTypeId: string;
   secondaryType: string;
   zone: string;
+  state: string;
 }
 
 interface Props {
@@ -46,7 +47,7 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
           <FilterListIcon sx={{ pt: 1 }} /> Filters ({count})
         </Typography>
       </Grid>
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid item xs={12} sm={3} md={2}>
         <SelectDefault
           data={manufacturingPlants}
           label="Planta"
@@ -61,7 +62,7 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
         />
       </Grid>
 
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid item xs={12} sm={3} md={2}>
         <SelectDefault
           data={mainTypes}
           label="Hallazgo"
@@ -77,7 +78,7 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
         />
       </Grid>
 
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid item xs={12} sm={3} md={2}>
         <SelectDefault
           data={secondaryTypes}
           label="Tipo"
@@ -93,7 +94,7 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
         />
       </Grid>
 
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid item xs={12} sm={3} md={2}>
         <SelectDefault
           data={zones.filter(
             (data) =>
@@ -111,6 +112,25 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
           }
           helperText={
             !filters.manufacturingPlantId ? "Seleccione una planta" : ""
+          }
+        />
+      </Grid>
+
+      <Grid item xs={12} sm={3} md={2}>
+        <SelectDefault
+          data={[
+            { id: "Abierto", name: "Abierto" },
+            { id: "Cerrado", name: "Cerrado" },
+            { id: "Cancelado", name: "Cancelado" },
+          ]}
+          label="Estatus"
+          isFilter={true}
+          value={filters.state}
+          onChange={(e) =>
+            setFilters({
+              ...filters,
+              state: e.target.value,
+            })
           }
         />
       </Grid>

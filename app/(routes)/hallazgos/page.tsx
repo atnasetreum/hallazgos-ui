@@ -28,6 +28,7 @@ export default function HallazgosPage() {
     mainTypeId: "",
     secondaryType: "",
     zone: "",
+    state: "",
   });
 
   const {

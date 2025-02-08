@@ -4,11 +4,12 @@ import Paper from "@mui/material/Paper";
 import { StatusChart } from "./_components/StatusChart";
 import { ZonesChart } from "./_components/ZonesChart";
 import { MainTypesChart } from "./_components/MainTypesChart";
+import { EvidencePerMonthChart } from "./_components/EvidencePerMonthChart";
 //import { PyramidChart } from "./_components/PyramidChart";
 
 export default function DashboardPage() {
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={2}>
       <Grid item xs={12} md={3} lg={3}>
         <Paper
           sx={{
@@ -40,6 +41,28 @@ export default function DashboardPage() {
           }}
         >
           <ZonesChart />
+        </Paper>
+      </Grid>
+      <Grid item xs={12} md={6} lg={6}>
+        <Paper
+          sx={{
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <EvidencePerMonthChart year={2024} />
+        </Paper>
+      </Grid>
+      <Grid item xs={12} md={6} lg={6}>
+        <Paper
+          sx={{
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <EvidencePerMonthChart />
         </Paper>
       </Grid>
     </Grid>

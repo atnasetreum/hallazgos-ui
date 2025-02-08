@@ -5,21 +5,25 @@ import { useEffect, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
+import { ResponseDashboardEvidencesByMonth } from "@interfaces";
 import { optionsChartDefault } from "@shared/libs";
 import { DashboardService } from "@services";
-import { ResponseDashboardMainTypes } from "@interfaces";
 
 if (typeof Highcharts === "object") {
   require("highcharts/modules/exporting")(Highcharts);
   require("highcharts/modules/drilldown")(Highcharts);
 }
 
-export const MainTypesChart = () => {
-  const [data, setData] = useState({} as ResponseDashboardMainTypes);
+interface Props {
+  year?: number;
+}
+
+export const EvidencePerMonthChart = ({ year }: Props) => {
+  const [data, setData] = useState({} as ResponseDashboardEvidencesByMonth);
 
   useEffect(() => {
-    DashboardService.findAllMainTypes().then(setData);
-  }, []);
+    DashboardService.findAllEvidencesByMonth(year).then(setData);
+  }, [year]);
 
   if (!Object.keys(data).length) return null;
 
@@ -30,46 +34,33 @@ export const MainTypesChart = () => {
       options={{
         ...optionsChartDefault,
         chart: {
-          type: "column",
+          type: "line",
         },
         title: {
-          align: "left",
-          text: "Critertios de hallazgos, en planta",
-        },
-        accessibility: {
-          announceNewData: {
-            enabled: true,
-          },
+          text: `Hallazgos por mes, ${year || new Date().getFullYear()}`,
         },
         xAxis: {
-          type: "category",
+          categories: data.categories,
         },
         yAxis: {
           title: {
-            text: "Porcentaje total",
+            text: "Total de hallazgos",
           },
         },
         legend: {
-          enabled: false,
+          layout: "vertical",
+          align: "right",
+          verticalAlign: "middle",
         },
         plotOptions: {
-          series: {
-            borderWidth: 0,
+          line: {
             dataLabels: {
               enabled: true,
-              format: "{point.y:.1f}%",
             },
+            enableMouseTracking: false,
           },
         },
-
-        tooltip: {
-          headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-          pointFormat:
-            '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>',
-        },
-
         series: data.series,
-        drilldown: data.drilldown,
       }}
     />
   );

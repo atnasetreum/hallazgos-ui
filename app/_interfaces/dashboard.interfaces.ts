@@ -50,3 +50,13 @@ interface DatumClass {
   y: number;
   drilldown: null | string;
 }
+
+export interface ResponseDashboardEvidencesByMonth {
+  series: ResponseDashboardEvidencesByMonthSeries[];
+  categories: string[];
+}
+
+interface ResponseDashboardEvidencesByMonthSeries {
+  name: string;
+  data: number[];
+}

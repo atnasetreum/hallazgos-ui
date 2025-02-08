@@ -1,8 +1,9 @@
+import axiosWrapper from "./axiosWrapper";
 import {
+  ResponseDashboardEvidencesByMonth,
   ResponseDashboardMainTypes,
   ResponseDashboardMultiNivel,
 } from "@interfaces";
-import axiosWrapper from "./axiosWrapper";
 
 const api = axiosWrapper({
   baseURL: "/dashboard",
@@ -23,7 +24,20 @@ const findAllMainTypes = async () => {
   return data;
 };
 
+const findAllEvidencesByMonth = async (year?: number) => {
+  const { data } = await api.get<ResponseDashboardEvidencesByMonth>(
+    "/evidences-by-month",
+    {
+      params: {
+        ...(year && { year }),
+      },
+    }
+  );
+  return data;
+};
+
 export const DashboardService = {
+  findAllEvidencesByMonth,
   findAllStatus,
   findAllZones,
   findAllMainTypes,

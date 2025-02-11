@@ -60,3 +60,20 @@ interface ResponseDashboardEvidencesByMonthSeries {
   name: string;
   data: number[];
 }
+
+export interface ResponseTopUsersByPlant {
+  data: TopUsersByPlantData[];
+}
+
+export interface TopUsersByPlantData {
+  name: string;
+  data: TopUsersByPlant[];
+}
+
+interface TopUsersByPlant {
+  userId: number;
+  username: string;
+  manufacturingPlantId: number;
+  manufacturingplantname: string;
+  total: string;
+}

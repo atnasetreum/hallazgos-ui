@@ -1,10 +1,13 @@
-import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
 
-import { StatusChart } from "./_components/StatusChart";
-import { ZonesChart } from "./_components/ZonesChart";
-import { MainTypesChart } from "./_components/MainTypesChart";
-import { EvidencePerMonthChart } from "./_components/EvidencePerMonthChart";
+import {
+  EvidencePerMonthChart,
+  MainTypesChart,
+  StatusChart,
+  TopUsersByPlantChart,
+  ZonesChart,
+} from "./_components";
 //import { PyramidChart } from "./_components/PyramidChart";
 
 export default function DashboardPage() {
@@ -21,17 +24,6 @@ export default function DashboardPage() {
           <StatusChart />
         </Paper>
       </Grid>
-      <Grid item xs={12} md={6} lg={6}>
-        <Paper
-          sx={{
-            p: 2,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <MainTypesChart />
-        </Paper>
-      </Grid>
       <Grid item xs={12} md={3} lg={3}>
         <Paper
           sx={{
@@ -41,6 +33,17 @@ export default function DashboardPage() {
           }}
         >
           <ZonesChart />
+        </Paper>
+      </Grid>
+      <Grid item xs={12} md={6} lg={6}>
+        <Paper
+          sx={{
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <MainTypesChart />
         </Paper>
       </Grid>
       <Grid item xs={12} md={6} lg={6}>
@@ -63,6 +66,17 @@ export default function DashboardPage() {
           }}
         >
           <EvidencePerMonthChart />
+        </Paper>
+      </Grid>
+      <Grid item xs={12} md={6} lg={6}>
+        <Paper
+          sx={{
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <TopUsersByPlantChart />
         </Paper>
       </Grid>
     </Grid>

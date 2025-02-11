@@ -3,6 +3,7 @@ import {
   ResponseDashboardEvidencesByMonth,
   ResponseDashboardMainTypes,
   ResponseDashboardMultiNivel,
+  ResponseTopUsersByPlant,
 } from "@interfaces";
 
 const api = axiosWrapper({
@@ -36,7 +37,15 @@ const findAllEvidencesByMonth = async (year?: number) => {
   return data;
 };
 
+const findTopUsersByPlant = async () => {
+  const { data } = await api.get<ResponseTopUsersByPlant>(
+    "/top-users-by-plant"
+  );
+  return data.data;
+};
+
 export const DashboardService = {
+  findTopUsersByPlant,
   findAllEvidencesByMonth,
   findAllStatus,
   findAllZones,

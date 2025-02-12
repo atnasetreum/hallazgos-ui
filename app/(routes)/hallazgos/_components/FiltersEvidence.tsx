@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
 
 import { useCategoriesStore, useUserSessionStore } from "@store";
-import { SecondaryType } from "@interfaces";
 import SelectDefault from "@components/SelectDefault";
+import { SecondaryType } from "@interfaces";
 
 export interface FiltersEvidences {
   manufacturingPlantId: string;
@@ -43,7 +43,7 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
   return (
     <Grid container spacing={2} sx={{ mb: 2 }}>
       <Grid item xs={12} sm={12} md={12}>
-        <Typography variant="subtitle1" gutterBottom>
+        <Typography variant="subtitle1" gutterBottom color="primary.main">
           <FilterListIcon sx={{ pt: 1 }} /> Filters ({count})
         </Typography>
       </Grid>

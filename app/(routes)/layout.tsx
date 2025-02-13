@@ -9,6 +9,8 @@ import {
   useState,
 } from "react";
 
+import { usePathname } from "next/navigation";
+
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { useTheme, ThemeProvider, createTheme } from "@mui/material/styles";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -88,7 +90,7 @@ function BtnChangeMode() {
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
 
-  const pathname = window.location.pathname;
+  const pathname = usePathname();
 
   const modeCurrent = theme.palette.mode;
 

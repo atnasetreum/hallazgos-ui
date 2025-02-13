@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import Highcharts from "highcharts";
 
+import { ResponseDashboardMultiNivel } from "@interfaces";
 import { optionsChartDefault } from "@shared/libs";
 import { DashboardService } from "@services";
-import { ResponseDashboardMultiNivel } from "@interfaces";
 
 if (typeof Highcharts === "object") {
   require("highcharts/modules/exporting")(Highcharts);

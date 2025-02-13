@@ -33,7 +33,6 @@ export const MainTypesChart = () => {
           type: "column",
         },
         title: {
-          align: "left",
           text: "Critertios de hallazgos, en planta",
         },
         accessibility: {

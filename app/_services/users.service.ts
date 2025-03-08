@@ -64,6 +64,11 @@ const remove = async (id: number) => {
   return data;
 };
 
+const findAllSupervisors = async () => {
+  const { data } = await api.get<User[]>("/supervisors");
+  return data;
+};
+
 export const UsersService = {
   create,
   findAll,
@@ -71,4 +76,5 @@ export const UsersService = {
   findOne,
   update,
   remove,
+  findAllSupervisors,
 };

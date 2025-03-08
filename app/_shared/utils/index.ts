@@ -37,8 +37,12 @@ export const dataURLtoFile = (dataurl: string, filename: string) => {
   return new File([u8arr], filename, { type: mime });
 };
 
-export const baseUrlImage = (image: string) => {
-  return `${process.env.NEXT_PUBLIC_URL_API_RAW}/static/images/evidences/${image}`;
+export const baseUrlImage = (image: string, path?: string) => {
+  if (!path) {
+    path = "/static/images/evidences/";
+  }
+
+  return `${process.env.NEXT_PUBLIC_URL_API_RAW}${path}${image}`;
 };
 
 export const stringToDateWithTime = (date: string | Date) =>

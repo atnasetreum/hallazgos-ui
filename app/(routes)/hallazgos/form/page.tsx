@@ -2,27 +2,23 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import PartyModeIcon from "@mui/icons-material/PartyMode";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import SaveIcon from "@mui/icons-material/Save";
 import ClearIcon from "@mui/icons-material/Clear";
-import Camera, { FACING_MODES } from "react-html5-camera-photo";
 import { v4 as uuidv4 } from "uuid";
 
-import { EvidencesService, handleErrorResponse } from "@services";
-import { SecondaryType } from "@interfaces";
+import { EvidencesService, handleErrorResponse, UsersService } from "@services";
+import { SecondaryType, User } from "@interfaces";
 import { useCategoriesStore, useUserSessionStore } from "@store";
 import { dataURLtoFile, notify } from "@shared/utils";
 import SelectDefault from "@components/SelectDefault";
+import ImageORCamera from "@shared/components/ImageORCamera";
 
-import "react-html5-camera-photo/build/css/index.css";
 import "./form.css";
 
 export default function HallazgosFormPage() {
@@ -33,8 +29,16 @@ export default function HallazgosFormPage() {
   const [manufacturingPlantId, setManufacturingPlantId] = useState<string>("");
   const [secondaryTypes, setSecondaryTypes] = useState<SecondaryType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [supervisors, setSupervisors] = useState<User[]>([]);
+  const [supervisorsCurrent, setSupervisorsCurrent] = useState<User[]>([]);
+  const [supervisor, setSupervisor] = useState<string>("");
+  const [attachedFile, setAttachedFile] = useState<File | null>(null);
 
   const { mainTypes, zones } = useCategoriesStore();
+
+  useEffect(() => {
+    UsersService.findAllSupervisors().then(setSupervisors);
+  }, []);
 
   const manufacturingPlants = useUserSessionStore(
     (state) => state.manufacturingPlants
@@ -63,15 +67,40 @@ export default function HallazgosFormPage() {
     }
   }, [typeHallazgo, mainTypes]);
 
+  useEffect(() => {
+    if (manufacturingPlantId && supervisors.length && zone) {
+      const supervisorsFilter = supervisors.filter(
+        ({ manufacturingPlants, zones }) => {
+          return (
+            manufacturingPlants.some(
+              (manufacturingPlant) =>
+                Number(manufacturingPlant.id) === Number(manufacturingPlantId)
+            ) && zones.some((zoneData) => Number(zoneData.id) === Number(zone))
+          );
+        }
+      );
+
+      setSupervisorsCurrent(supervisorsFilter);
+    }
+  }, [manufacturingPlantId, supervisors, zone]);
+
   const isValidForm = useMemo(
     () =>
       (manufacturingPlantId &&
         typeHallazgo &&
         secondaryType &&
         zone &&
-        image) ||
+        (image || attachedFile)) ||
       isLoading,
-    [manufacturingPlantId, typeHallazgo, secondaryType, zone, image, isLoading]
+    [
+      manufacturingPlantId,
+      typeHallazgo,
+      secondaryType,
+      zone,
+      image,
+      isLoading,
+      attachedFile,
+    ]
   );
 
   const saveEvidence = async () => {
@@ -81,10 +110,21 @@ export default function HallazgosFormPage() {
     formData.append("typeHallazgo", typeHallazgo);
     formData.append("type", secondaryType);
     formData.append("zone", zone);
+    if (supervisor) {
+      formData.append("supervisor", supervisor);
+    }
 
     const uuid = uuidv4();
 
-    formData.append("file", dataURLtoFile(image, `${uuid}-evidence.png`));
+    if (image) {
+      formData.append("file", dataURLtoFile(image, `${uuid}-evidence.png`));
+    } else if (attachedFile) {
+      const extension = attachedFile.name.split(".").pop();
+
+      const nameWithUuid = `${uuid}-evidence.${extension}`;
+
+      formData.append("file", attachedFile, nameWithUuid);
+    }
 
     setIsLoading(true);
     EvidencesService.create(formData)
@@ -98,7 +138,7 @@ export default function HallazgosFormPage() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid item xs={12} sm={6} md={2}>
         <SelectDefault
           data={manufacturingPlants}
           label="Planta"
@@ -107,7 +147,7 @@ export default function HallazgosFormPage() {
         />
       </Grid>
 
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid item xs={12} sm={6} md={2}>
         <SelectDefault
           data={mainTypes}
           label="Hallazgo"
@@ -119,7 +159,7 @@ export default function HallazgosFormPage() {
         />
       </Grid>
 
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid item xs={12} sm={6} md={2}>
         <SelectDefault
           data={secondaryTypes}
           label="Tipo"
@@ -129,7 +169,7 @@ export default function HallazgosFormPage() {
         />
       </Grid>
 
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid item xs={12} sm={6} md={2}>
         <SelectDefault
           data={zones.filter(
             (data) =>
@@ -142,42 +182,28 @@ export default function HallazgosFormPage() {
         />
       </Grid>
 
-      {manufacturingPlantId && typeHallazgo && secondaryType && zone && (
-        <>
-          <Grid item xs={12} sm={12} md={12}>
-            <Box display="flex" justifyContent="center" alignItems="center">
-              <Paper sx={{ p: 2 }}>
-                {!image ? (
-                  <Camera
-                    onTakePhoto={(dataUri) => setImage(dataUri)}
-                    idealFacingMode={FACING_MODES.ENVIRONMENT}
-                  />
-                ) : (
-                  <>
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      startIcon={<PartyModeIcon />}
-                      onClick={() => setImage("")}
-                      disabled={isLoading}
-                    >
-                      Volver a tomar hallazgo
-                    </Button>
-                    <Image
-                      src={image}
-                      alt="Hallazgo"
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      style={{ width: "100%", height: "auto" }}
-                    />
-                  </>
-                )}
-              </Paper>
-            </Box>
-          </Grid>
-        </>
-      )}
+      <Grid item xs={12} sm={6} md={2}>
+        <SelectDefault
+          data={supervisorsCurrent}
+          label="Supervisor"
+          value={supervisor}
+          onChange={(e) => setSupervisor(e.target.value)}
+          helperText={
+            !manufacturingPlantId || !zone ? "Seleccione una planta y zona" : ""
+          }
+          attention={
+            manufacturingPlantId && zone && !supervisor
+              ? "* Nota: Si no selecciona ningun supervisor, el hallazgo se asignará a todos los supervisores de la planta y zona seleccionada"
+              : ""
+          }
+        />
+      </Grid>
+      <ImageORCamera
+        setImage={setImage}
+        image={image}
+        setAttachedFile={setAttachedFile}
+        attachedFile={attachedFile}
+      />
       <Grid item xs={12} sm={12} md={12}>
         <Paper sx={{ p: 2 }}>
           <ButtonGroup

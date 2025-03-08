@@ -12,6 +12,7 @@ interface Props {
   label: string;
   isFilter?: boolean;
   helperText?: string;
+  attention?: string;
 }
 
 export default function SelectDefault({
@@ -21,6 +22,7 @@ export default function SelectDefault({
   label,
   isFilter = false,
   helperText,
+  attention,
 }: Props) {
   return (
     <Paper>
@@ -49,6 +51,7 @@ export default function SelectDefault({
           ))}
         </Select>
         {helperText && <FormHelperText>{helperText}</FormHelperText>}
+        {attention && <FormHelperText>{attention}</FormHelperText>}
       </FormControl>
     </Paper>
   );

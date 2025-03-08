@@ -1,7 +1,5 @@
 import { useState } from "react";
 
-import Image from "next/image";
-
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -10,17 +8,14 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import PartyModeIcon from "@mui/icons-material/PartyMode";
-import Camera, { FACING_MODES } from "react-html5-camera-photo";
 import { v4 as uuidv4 } from "uuid";
+import imageCompression from "browser-image-compression";
 
 import { dataURLtoFile, notify } from "@shared/utils";
 import { EvidencesService, handleErrorResponse } from "@services";
 
 import "react-html5-camera-photo/build/css/index.css";
+import ImageORCamera from "@shared/components/ImageORCamera";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -40,13 +35,22 @@ interface Props {
 export default function CloseEvidence({ isOpen, handleClose, idRow }: Props) {
   const [image, setImage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [attachedFile, setAttachedFile] = useState<File | null>(null);
 
   const saveSolution = () => {
     const formData = new FormData();
 
     const uuid = uuidv4();
 
-    formData.append("file", dataURLtoFile(image, `${uuid}-solution.png`));
+    if (image) {
+      formData.append("file", dataURLtoFile(image, `${uuid}-solution.png`));
+    } else if (attachedFile) {
+      const extension = attachedFile.name.split(".").pop();
+
+      const nameWithUuid = `${uuid}-solution.${extension}`;
+
+      formData.append("file", attachedFile, nameWithUuid);
+    }
 
     setIsLoading(true);
     EvidencesService.solution(idRow, formData)
@@ -82,46 +86,18 @@ export default function CloseEvidence({ isOpen, handleClose, idRow }: Props) {
         <CloseIcon />
       </IconButton>
       <DialogContent dividers>
-        <Grid container>
-          <Grid item xs={12} sm={12} md={12}>
-            <Box display="flex" justifyContent="center" alignItems="center">
-              <Paper sx={{ p: 2 }}>
-                {!image && idRow ? (
-                  <Camera
-                    onTakePhoto={(dataUri) => setImage(dataUri)}
-                    idealFacingMode={FACING_MODES.ENVIRONMENT}
-                  />
-                ) : (
-                  <>
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      startIcon={<PartyModeIcon />}
-                      onClick={() => setImage("")}
-                      disabled={isLoading}
-                    >
-                      Volver a tomar hallazgo
-                    </Button>
-                    <Image
-                      src={image}
-                      alt="Hallazgo"
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      style={{ width: "100%", height: "auto" }}
-                    />
-                  </>
-                )}
-              </Paper>
-            </Box>
-          </Grid>
-        </Grid>
+        <ImageORCamera
+          setImage={setImage}
+          image={image}
+          setAttachedFile={setAttachedFile}
+          attachedFile={attachedFile}
+        />
       </DialogContent>
       <DialogActions>
         <Button
           onClick={saveSolution}
           variant="contained"
-          disabled={!image || isLoading}
+          disabled={!(image || attachedFile) || isLoading}
         >
           Guardar imagen
         </Button>

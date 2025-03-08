@@ -10,16 +10,20 @@ const api = axiosWrapper({
   baseURL,
 });
 
+const paramsFilter = (params: FiltersEvidences) => {
+  return {
+    ...(params.manufacturingPlantId && {
+      manufacturingPlantId: params.manufacturingPlantId,
+    }),
+    ...(params.mainTypeId && { mainTypeId: params.mainTypeId }),
+    ...(params.secondaryType && { secondaryType: params.secondaryType }),
+    ...(params.zone && { zone: params.zone }),
+  };
+};
+
 const findAll = async (params: FiltersEvidences) => {
   const { data } = await api.get<Evidence[]>("", {
-    params: {
-      ...(params.manufacturingPlantId && {
-        manufacturingPlantId: params.manufacturingPlantId,
-      }),
-      ...(params.mainTypeId && { mainTypeId: params.mainTypeId }),
-      ...(params.secondaryType && { secondaryType: params.secondaryType }),
-      ...(params.zone && { zone: params.zone }),
-    },
+    params: paramsFilter(params),
   });
   return data;
 };

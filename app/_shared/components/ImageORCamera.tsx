@@ -99,7 +99,7 @@ const ImageORCamera = ({
                 Adjuntar imagen
                 <VisuallyHiddenInput
                   type="file"
-                  accept="image/*"
+                  accept="image/png, image/jpeg, image/jpg"
                   onChange={handleChange}
                 />
               </Button>

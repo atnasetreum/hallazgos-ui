@@ -38,6 +38,7 @@ export default function HallazgosPage() {
     secondaryType: "",
     zone: "",
     state: "",
+    typeManage: "",
   });
 
   const [isLoadingPdf, setIsLoadingPdf] = useState<boolean>(false);
@@ -74,6 +75,7 @@ export default function HallazgosPage() {
           ["Grupo"]: evidence.mainType.name,
           ["Tipo de hallazgo"]: evidence.secondaryType.name,
           ["Zona"]: evidence.zone.name,
+          ["Administrado por"]: evidence.typeManage?.name || "",
           ["Creado por"]: evidence.user.name,
           ["Supervisores"]: evidence.supervisors
             .map((supervisor) => supervisor.name)
@@ -141,41 +143,6 @@ export default function HallazgosPage() {
           baseUrlImage("logo-pdf.png", "/static/images/")
         )) as string;
 
-        for (const evidence of evidencesCurrent) {
-          const imgEvidence = await getBase64ImageFromURL(
-            baseUrlImage(evidence?.imgEvidence || "")
-          );
-
-          const imgSolutionValue = evidence?.imgSolution;
-
-          const imageSolutionRaw = baseUrlImage(
-            imgSolutionValue || "image-not-found.png",
-            imgSolutionValue ? "" : "/static/images/"
-          );
-
-          const imgSolution = await getBase64ImageFromURL(imageSolutionRaw);
-
-          data.push([
-            evidence.id,
-            evidence.mainType.name,
-            evidence.secondaryType.name,
-            evidence.zone.name,
-            evidence.user.name,
-            evidence.status,
-            stringToDateWithTime(evidence.createdAt),
-            {
-              image: imgEvidence,
-              width: 50,
-              height: 50,
-            },
-            {
-              image: imgSolution,
-              width: 50,
-              height: 50,
-            },
-          ]);
-        }
-
         const logo: Content = {
           image: imgSolutionTmp,
           width: 100,
@@ -196,9 +163,10 @@ export default function HallazgosPage() {
             margin: [0, 0, 0, 70],
           },
           signature: {
-            fontSize: 14,
+            //fontSize: 14,
             bold: true,
             // alignment: 'left',
+            background: "#66BB6A",
           },
           footer: {
             fontSize: 10,
@@ -207,6 +175,58 @@ export default function HallazgosPage() {
             margin: [0, 0, 0, 20],
           },
         };
+
+        const headers = [
+          "ID",
+          "Grupo",
+          "Tipo de hallazgo",
+          "Zona",
+          "Administrado por",
+          "Creado por",
+          "Estatus",
+          "Fecha de creación",
+          "Imagen de hallazgo",
+          "Imagen de solución",
+        ];
+
+        for (const evidence of evidencesCurrent) {
+          const imgEvidence = await getBase64ImageFromURL(
+            baseUrlImage(evidence?.imgEvidence || "")
+          );
+
+          const imgSolutionValue = evidence?.imgSolution;
+
+          const imageSolutionRaw = baseUrlImage(
+            imgSolutionValue || "image-not-found.png",
+            imgSolutionValue ? "" : "/static/images/"
+          );
+
+          const imgSolution = await getBase64ImageFromURL(imageSolutionRaw);
+
+          data.push([
+            evidence.id,
+            evidence.mainType.name,
+            evidence.secondaryType.name,
+            evidence.zone.name,
+            evidence.typeManage?.name || "",
+            evidence.user.name,
+            {
+              text: evidence.status,
+              style: evidence.status === "Cerrado" ? "signature" : "",
+            },
+            stringToDateWithTime(evidence.createdAt),
+            {
+              image: imgEvidence,
+              width: 50,
+              height: 50,
+            },
+            {
+              image: imgSolution,
+              width: 50,
+              height: 50,
+            },
+          ]);
+        }
 
         const manufacturingPlantName = manufacturingPlant?.name;
 
@@ -224,7 +244,7 @@ export default function HallazgosPage() {
                 columns: [
                   logo,
                   {
-                    text: `Reporte de hallazgos de la planta "${manufacturingPlantName}"`,
+                    text: `Hallazgos - "${manufacturingPlantName}"`,
                     alignment: "right",
                     margin: [40, 40],
                   },
@@ -242,20 +262,7 @@ export default function HallazgosPage() {
                     headerRows: 1,
                     widths: data[0].map(() => "auto"),
 
-                    body: [
-                      [
-                        "ID",
-                        "Grupo",
-                        "Tipo de hallazgo",
-                        "Zona",
-                        "Creado por",
-                        "Estatus",
-                        "Fecha de creación",
-                        "Imagen de hallazgo",
-                        "Imagen de solución",
-                      ],
-                      ...data,
-                    ],
+                    body: [[...headers], ...data],
                   },
                 },
               ],

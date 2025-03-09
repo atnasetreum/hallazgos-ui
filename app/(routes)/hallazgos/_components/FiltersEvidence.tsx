@@ -13,6 +13,7 @@ export interface FiltersEvidences {
   mainTypeId: string;
   secondaryType: string;
   zone: string;
+  typeManage: string;
   state: string;
 }
 
@@ -29,7 +30,7 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
     (state) => state.manufacturingPlants
   );
 
-  const { mainTypes, zones } = useCategoriesStore();
+  const { mainTypes, zones, typeManages } = useCategoriesStore();
 
   useEffect(() => {
     if (filters.mainTypeId) {
@@ -112,6 +113,21 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
           }
           helperText={
             !filters.manufacturingPlantId ? "Seleccione una planta" : ""
+          }
+        />
+      </Grid>
+
+      <Grid item xs={12} sm={3} md={2}>
+        <SelectDefault
+          data={typeManages}
+          label="Administrador"
+          isFilter={true}
+          value={filters.typeManage}
+          onChange={(e) =>
+            setFilters({
+              ...filters,
+              typeManage: e.target.value,
+            })
           }
         />
       </Grid>

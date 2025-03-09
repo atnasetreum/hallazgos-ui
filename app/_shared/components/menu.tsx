@@ -19,10 +19,15 @@ import HubIcon from "@mui/icons-material/Hub";
 import Tooltip from "@mui/material/Tooltip";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 
-import { AuthService, MainTypesService, ZonesService } from "@services";
-import { notify } from "@shared/utils";
 import { useCategoriesStore, useUserSessionStore } from "@store";
 import { ROLE_ADMINISTRADOR } from "@shared/constants";
+import { notify } from "@shared/utils";
+import {
+  AuthService,
+  MainTypesService,
+  TypeManagesService,
+  ZonesService,
+} from "@services";
 
 function CreateLink({
   url,
@@ -57,14 +62,16 @@ export const MainListItems = () => {
   const { setCategories } = useCategoriesStore();
 
   const initialCategories = useCallback(async () => {
-    const [mainTypes, zones] = await Promise.all([
+    const [mainTypes, zones, typeManages] = await Promise.all([
       MainTypesService.findAll({}),
       ZonesService.findAll({}),
+      TypeManagesService.findAll(),
     ]);
 
     setCategories({
       mainTypes,
       zones,
+      typeManages,
     });
   }, [setCategories]);
 

@@ -8,6 +8,7 @@ export interface Evidence {
   mainType: GenericType;
   secondaryType: GenericType;
   zone: GenericType;
+  typeManage?: GenericType;
   user: User;
   supervisors: User[];
   status: string;

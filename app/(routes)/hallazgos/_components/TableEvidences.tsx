@@ -29,6 +29,7 @@ const columns = [
   "Grupo",
   "Tipo de hallazgo",
   "Zona",
+  "Administrado por",
   "Creado por",
   "Supervisores",
   "Estatus",
@@ -116,6 +117,7 @@ export default function TableEvidences({
             <StyledTableCell>{row.mainType.name}</StyledTableCell>
             <StyledTableCell>{row.secondaryType.name}</StyledTableCell>
             <StyledTableCell>{row.zone.name}</StyledTableCell>
+            <StyledTableCell>{row.typeManage?.name}</StyledTableCell>
             <StyledTableCell>{row.user.name}</StyledTableCell>
             <StyledTableCell>
               {row.supervisors.map((supervisor) => supervisor.name).join(", ")}

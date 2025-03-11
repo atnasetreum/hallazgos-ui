@@ -9,7 +9,6 @@ import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { v4 as uuidv4 } from "uuid";
-import imageCompression from "browser-image-compression";
 
 import { dataURLtoFile, notify } from "@shared/utils";
 import { EvidencesService, handleErrorResponse } from "@services";

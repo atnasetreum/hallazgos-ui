@@ -149,6 +149,7 @@ export default function HallazgosFormPage() {
           label="Planta"
           value={manufacturingPlantId}
           onChange={(e) => setManufacturingPlantId(e.target.value)}
+          validationEmpty
         />
       </Grid>
 
@@ -161,6 +162,7 @@ export default function HallazgosFormPage() {
             setTypeHallazgo(e.target.value);
             setSecondaryType("");
           }}
+          validationEmpty
         />
       </Grid>
 
@@ -171,6 +173,7 @@ export default function HallazgosFormPage() {
           value={secondaryType}
           onChange={(e) => setSecondaryType(e.target.value)}
           helperText={!typeHallazgo ? "Seleccione un hallazgo" : ""}
+          validationEmpty
         />
       </Grid>
 
@@ -184,6 +187,7 @@ export default function HallazgosFormPage() {
           value={zone}
           onChange={(e) => setZone(e.target.value)}
           helperText={!manufacturingPlantId ? "Seleccione una planta" : ""}
+          validationEmpty
         />
       </Grid>
 
@@ -210,6 +214,7 @@ export default function HallazgosFormPage() {
           label="Administrador"
           value={typeManage}
           onChange={(e) => setTypeManage(e.target.value)}
+          validationEmpty
         />
       </Grid>
 

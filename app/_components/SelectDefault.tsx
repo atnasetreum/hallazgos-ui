@@ -13,6 +13,7 @@ interface Props {
   isFilter?: boolean;
   helperText?: string;
   attention?: string;
+  validationEmpty?: boolean;
 }
 
 export default function SelectDefault({
@@ -23,10 +24,14 @@ export default function SelectDefault({
   isFilter = false,
   helperText,
   attention,
+  validationEmpty = false,
 }: Props) {
   return (
     <Paper>
-      <FormControl fullWidth>
+      <FormControl
+        fullWidth
+        error={!validationEmpty ? false : value === "" ? true : false}
+      >
         <InputLabel id={`${label}-simple-select-helper-label`}>
           {label}
         </InputLabel>

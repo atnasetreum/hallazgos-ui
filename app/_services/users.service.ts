@@ -8,6 +8,9 @@ interface Payload {
   rule: string;
   manufacturingPlantNames: string[];
   zoneNames: string[];
+  typeResponsible: string;
+  manufacturingPlantNamesMaintenanceSecurity: string[];
+  zonesMaintenanceSecurity: string[];
 }
 
 const api = axiosWrapper({

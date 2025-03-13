@@ -11,4 +11,7 @@ export interface User {
   updatedAt: Date;
   manufacturingPlants: ManufacturingPlant[];
   zones: Zone[];
+  typeResponsible: string;
+  manufacturingPlantNamesMaintenanceSecurity: ManufacturingPlant[];
+  zonesMaintenanceSecurity: Zone[];
 }

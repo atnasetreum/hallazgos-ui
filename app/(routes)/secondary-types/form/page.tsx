@@ -13,6 +13,10 @@ import SaveIcon from "@mui/icons-material/Save";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "sonner";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
 
 import { SecondaryTypesService } from "@services";
 import SelectMainTypes from "@components/SelectMainTypes";
@@ -22,6 +26,7 @@ const SecondaryTypesFormPage = () => {
   const [form, setForm] = useState({
     name: "",
     mainTypeId: "",
+    typeResponsible: "",
   });
   const [idCurrent, setIdCurrent] = useState<number>(0);
 
@@ -31,6 +36,7 @@ const SecondaryTypesFormPage = () => {
   const save = () => {
     const nameClean = form.name.trim();
     const mainTypeId = Number(form.mainTypeId);
+    const typeResponsible = form.typeResponsible;
 
     if (!nameClean) {
       toast.error("El nombre es requerido");
@@ -42,23 +48,28 @@ const SecondaryTypesFormPage = () => {
       return;
     }
 
+    if (!typeResponsible) {
+      toast.error("El tipo de responsable es requerido");
+      return;
+    }
+
     setIsLoading(true);
 
+    const payload = {
+      name: nameClean,
+      mainTypeId,
+      typeResponsible,
+    };
+
     if (!idCurrent) {
-      SecondaryTypesService.create({
-        name: nameClean,
-        mainTypeId,
-      })
+      SecondaryTypesService.create(payload)
         .then(() => {
           toast.success("Tipo de criterio creado correctamente");
           cancel();
         })
         .finally(() => setIsLoading(false));
     } else {
-      SecondaryTypesService.update(idCurrent, {
-        name: nameClean,
-        mainTypeId,
-      })
+      SecondaryTypesService.update(idCurrent, payload)
         .then(() => {
           toast.success("Tipo de criterio actualizado correctamente");
           cancel();
@@ -85,13 +96,14 @@ const SecondaryTypesFormPage = () => {
       setForm({
         name: data.name,
         mainTypeId: `${data.mainType.id}`,
+        typeResponsible: data.typeResponsible,
       });
     });
   }, [searchParams]);
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid item xs={12} sm={6} md={4}>
         <Paper>
           <TextField
             label="Nombre"
@@ -108,7 +120,7 @@ const SecondaryTypesFormPage = () => {
           />
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid item xs={12} sm={6} md={4}>
         <Paper>
           <SelectMainTypes
             value={form.mainTypeId}
@@ -121,7 +133,31 @@ const SecondaryTypesFormPage = () => {
           />
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={3} md={3}>
+      <Grid item xs={12} sm={6} md={4}>
+        <Paper>
+          <FormControl fullWidth>
+            <InputLabel id="responsible-type-select-label">
+              Responsable
+            </InputLabel>
+            <Select
+              labelId="responsible-type-select-label"
+              id="responsible-type-select"
+              value={form.typeResponsible}
+              label="Responsable (opcional)"
+              onChange={(e: SelectChangeEvent) =>
+                setForm({
+                  ...form,
+                  typeResponsible: e.target.value as string,
+                })
+              }
+            >
+              <MenuItem value="Mantenimiento">Mantenimiento</MenuItem>
+              <MenuItem value="Seguridad">Seguridad</MenuItem>
+            </Select>
+          </FormControl>
+        </Paper>
+      </Grid>
+      <Grid item xs={12} sm={6} md={6}>
         <Button
           variant="contained"
           color="error"
@@ -132,7 +168,7 @@ const SecondaryTypesFormPage = () => {
           Cancelar
         </Button>
       </Grid>
-      <Grid item xs={12} sm={3} md={3}>
+      <Grid item xs={12} sm={6} md={6}>
         <LoadingButton
           loading={isLoading}
           loadingPosition="start"

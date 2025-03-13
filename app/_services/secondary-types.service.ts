@@ -4,6 +4,7 @@ import { SecondaryType } from "@interfaces";
 interface Payload {
   name: string;
   mainTypeId: number;
+  typeResponsible: string;
 }
 
 const api = axiosWrapper({

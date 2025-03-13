@@ -24,6 +24,7 @@ const columns = [
   "ID",
   "Nombre",
   "Criterio",
+  "Responsable",
   "Creación",
   "Ultima actualización",
   "Acciones",
@@ -55,6 +56,7 @@ export default function TableSecondaryTypes({ rows, getData }: Props) {
           </StyledTableCell>
           <StyledTableCell>{row.name}</StyledTableCell>
           <StyledTableCell>{row.mainType.name}</StyledTableCell>
+          <StyledTableCell>{row.typeResponsible}</StyledTableCell>
           <StyledTableCell>
             {stringToDateWithTime(row.createdAt)}
           </StyledTableCell>

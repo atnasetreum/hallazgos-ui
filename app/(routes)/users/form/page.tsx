@@ -22,33 +22,25 @@ import { UsersService } from "@services";
 import MultiSelectManufacturingPlants from "@components/MultiSelectManufacturingPlants";
 import MultiSelectZones from "@components/MultiSelectZones";
 import { isValidEmail } from "@shared/utils";
-import MultiSelectMaintenanceSecurity from "@components/MultiSelectMaintenanceSecurity";
-import MultiSelectZonesMaintenanceSecurity from "@components/MultiSelectZonesMaintenanceSecurity";
 
 const UsersFormPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [idCurrent, setIdCurrent] = useState<number>(0);
   const [form, setForm] = useState<{
     name: string;
     email: string;
     password: string;
     rule: string;
     manufacturingPlantNames: string[];
-    manufacturingPlantNamesMaintenanceSecurity: string[];
-    zonesMaintenanceSecurity: string[];
     zoneNames: string[];
-    typeResponsible: string;
   }>({
     name: "",
     email: "",
     password: "",
     rule: "",
     manufacturingPlantNames: [],
-    manufacturingPlantNamesMaintenanceSecurity: [],
-    zonesMaintenanceSecurity: [],
     zoneNames: [],
-    typeResponsible: "",
   });
-  const [idCurrent, setIdCurrent] = useState<number>(0);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -88,17 +80,6 @@ const UsersFormPage = () => {
       return;
     }
 
-    if (
-      form.rule === "Supervisor" &&
-      form.typeResponsible &&
-      !form.manufacturingPlantNamesMaintenanceSecurity.length
-    ) {
-      toast.error(
-        `Seleccione al menos una planta para ${form.typeResponsible}`
-      );
-      return;
-    }
-
     setIsLoading(true);
 
     const payload = {
@@ -108,22 +89,6 @@ const UsersFormPage = () => {
       rule: form.rule,
       manufacturingPlantNames: form.manufacturingPlantNames,
       zoneNames: form.rule === "Supervisor" ? form.zoneNames : [],
-      typeResponsible:
-        form.rule === "Supervisor" && form.typeResponsible
-          ? form.typeResponsible
-          : "",
-      manufacturingPlantNamesMaintenanceSecurity:
-        form.rule === "Supervisor" &&
-        form.typeResponsible &&
-        form.manufacturingPlantNamesMaintenanceSecurity.length
-          ? form.manufacturingPlantNamesMaintenanceSecurity
-          : [],
-      zonesMaintenanceSecurity:
-        form.rule === "Supervisor" &&
-        form.typeResponsible &&
-        form.zonesMaintenanceSecurity.length
-          ? form.zonesMaintenanceSecurity
-          : [],
     };
 
     if (!idCurrent) {
@@ -170,13 +135,6 @@ const UsersFormPage = () => {
             )
           : [];
 
-      const zonesMaintenanceSecurity =
-        data.role === "Supervisor" && data.typeResponsible
-          ? data.zonesMaintenanceSecurity.map(
-              (zone) => `${zone.manufacturingPlant.name} - ${zone.name}`
-            )
-          : [];
-
       setForm({
         name: data.name,
         email: data.email,
@@ -186,45 +144,9 @@ const UsersFormPage = () => {
           (plant) => plant.name
         ),
         zoneNames,
-        typeResponsible: data.typeResponsible,
-        zonesMaintenanceSecurity,
-        manufacturingPlantNamesMaintenanceSecurity:
-          data.manufacturingPlantNamesMaintenanceSecurity.map(
-            (plant) => plant.name
-          ),
       });
     });
   }, [searchParams]);
-
-  const optionsZones = useMemo(() => {
-    if (!form.zoneNames.length) {
-      return [];
-    }
-
-    const optionsZonesCurrent = form.zoneNames.filter((zone) =>
-      form.manufacturingPlantNamesMaintenanceSecurity.includes(
-        zone.split(" - ")[0]
-      )
-    );
-
-    if (
-      form.zonesMaintenanceSecurity.length &&
-      !optionsZonesCurrent.some((zone) =>
-        form.zonesMaintenanceSecurity.includes(zone)
-      )
-    ) {
-      setForm({
-        ...form,
-        zonesMaintenanceSecurity: [],
-      });
-    }
-
-    return optionsZonesCurrent;
-  }, [
-    form.zoneNames,
-    form.manufacturingPlantNamesMaintenanceSecurity,
-    form.zonesMaintenanceSecurity,
-  ]);
 
   return (
     <Grid container spacing={2}>
@@ -335,76 +257,6 @@ const UsersFormPage = () => {
           </Paper>
         </Grid>
       )}
-
-      {form.rule === "Supervisor" &&
-        !!form.manufacturingPlantNames.length &&
-        !!form.zoneNames.length && (
-          <Grid item xs={12} sm={6} md={3}>
-            <Paper>
-              <FormControl fullWidth>
-                <InputLabel id="responsible-select-label">
-                  Responsable (opcional)
-                </InputLabel>
-                <Select
-                  labelId="responsible-select-label"
-                  id="responsible-select"
-                  value={form.typeResponsible}
-                  label="Responsable (opcional)"
-                  onChange={(e: SelectChangeEvent) =>
-                    setForm({
-                      ...form,
-                      typeResponsible: e.target.value as string,
-                    })
-                  }
-                >
-                  <MenuItem value="Mantenimiento">Mantenimiento</MenuItem>
-                  <MenuItem value="Seguridad">Seguridad</MenuItem>
-                </Select>
-              </FormControl>
-            </Paper>
-          </Grid>
-        )}
-
-      {form.rule === "Supervisor" &&
-        !!form.manufacturingPlantNames.length &&
-        !!form.typeResponsible && (
-          <Grid item xs={12} sm={6} md={3}>
-            <Paper>
-              <MultiSelectMaintenanceSecurity
-                label={form.typeResponsible}
-                options={form.manufacturingPlantNames}
-                values={form.manufacturingPlantNamesMaintenanceSecurity}
-                onChange={(values) => {
-                  setForm({
-                    ...form,
-                    manufacturingPlantNamesMaintenanceSecurity: values,
-                  });
-                }}
-              />
-            </Paper>
-          </Grid>
-        )}
-
-      {form.rule === "Supervisor" &&
-        !!form.manufacturingPlantNames.length &&
-        !!form.typeResponsible &&
-        !!form.manufacturingPlantNamesMaintenanceSecurity.length && (
-          <Grid item xs={12} sm={6} md={3}>
-            <Paper>
-              <MultiSelectZonesMaintenanceSecurity
-                label={form.typeResponsible}
-                options={optionsZones}
-                values={form.zonesMaintenanceSecurity}
-                onChange={(values) => {
-                  setForm({
-                    ...form,
-                    zonesMaintenanceSecurity: values,
-                  });
-                }}
-              />
-            </Paper>
-          </Grid>
-        )}
 
       <Grid item xs={12} sm={3} md={3}>
         <Button

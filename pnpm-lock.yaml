@@ -48,7 +48,7 @@ importers:
         specifier: ^3.2.1
         version: 3.2.1(highcharts@11.4.8)(react@18.3.1)
       moment:
-        specifier: ^2.29.4
+        specifier: ^2.30.1
         version: 2.30.1
       next:
         specifier: ^14.2.15
@@ -97,7 +97,7 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1
       '@types/react-html5-camera-photo':
-        specifier: ^1.5.1
+        specifier: ^1.5.3
         version: 1.5.3
       '@types/react-signature-canvas':
         specifier: ^1.0.6
@@ -106,7 +106,7 @@ importers:
         specifier: ^0.13.5
         version: 0.13.5
       '@types/uuid':
-        specifier: ^9.0.7
+        specifier: ^9.0.8
         version: 9.0.8
       eslint:
         specifier: ^8.57.1
@@ -895,8 +895,8 @@ packages:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
     engines: {node: '>=6'}
 
-  caniuse-lite@1.0.30001612:
-    resolution: {integrity: sha512-lFgnZ07UhaCcsSZgWW0K5j4e69dK1u/ltrL9lTUiFOwNHs12S3UMIEYgBV0Z6C6hRDev7iRnMzzYmKabYdXF9g==}
+  caniuse-lite@1.0.30001704:
+    resolution: {integrity: sha512-+L2IgBbV6gXB4ETf0keSvLr7JUrRVbIaB/lrQ1+z8mRcQiisG5k+lG6O4n6Y5q6f5EuNfaYXKgymucphlEXQew==}
 
   cfb@1.2.2:
     resolution: {integrity: sha512-KfdUZsSOw19/ObEWasvBP/Ac4reZvAGauZhs6S/gqNhXhI7cKwvlH7ulj+dOEYnca4bm4SGo8C1bTAQvnTjgQA==}
@@ -3189,7 +3189,7 @@ snapshots:
 
   callsites@3.1.0: {}
 
-  caniuse-lite@1.0.30001612: {}
+  caniuse-lite@1.0.30001704: {}
 
   cfb@1.2.2:
     dependencies:
@@ -4128,7 +4128,7 @@ snapshots:
       '@next/env': 14.2.15
       '@swc/helpers': 0.5.5
       busboy: 1.6.0
-      caniuse-lite: 1.0.30001612
+      caniuse-lite: 1.0.30001704
       graceful-fs: 4.2.11
       postcss: 8.4.31
       react: 18.3.1

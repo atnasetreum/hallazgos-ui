@@ -14,10 +14,10 @@ import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "sonner";
 
-import { ZonesService } from "@services";
+import { ProcessesService } from "@services";
 import SelectManufacturingPlants from "@components/SelectManufacturingPlants";
 
-const ZonesFormPage = () => {
+const ProcessesFormPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [form, setForm] = useState({
     name: "",
@@ -45,22 +45,22 @@ const ZonesFormPage = () => {
     setIsLoading(true);
 
     if (!idCurrent) {
-      ZonesService.create({
+      ProcessesService.create({
         name: nameClean,
         manufacturingPlantId,
       })
         .then(() => {
-          toast.success("Zona creada correctamente");
+          toast.success("Proceso creado correctamente");
           cancel();
         })
         .finally(() => setIsLoading(false));
     } else {
-      ZonesService.update(idCurrent, {
+      ProcessesService.update(idCurrent, {
         name: nameClean,
         manufacturingPlantId,
       })
         .then(() => {
-          toast.success("Zona actualizada correctamente");
+          toast.success("Proceso actualizado correctamente");
           cancel();
         })
         .finally(() => setIsLoading(false));
@@ -68,7 +68,7 @@ const ZonesFormPage = () => {
   };
 
   const cancel = () => {
-    router.push("/zones");
+    router.push("/processes");
   };
 
   const isValidateForm = useMemo(
@@ -81,7 +81,7 @@ const ZonesFormPage = () => {
     if (!id) return;
 
     setIdCurrent(id);
-    ZonesService.findOne(id).then((data) => {
+    ProcessesService.findOne(id).then((data) => {
       setForm({
         name: data.name,
         manufacturingPlantId: `${data.manufacturingPlant.id}`,
@@ -150,4 +150,4 @@ const ZonesFormPage = () => {
   );
 };
 
-export default ZonesFormPage;
+export default ProcessesFormPage;

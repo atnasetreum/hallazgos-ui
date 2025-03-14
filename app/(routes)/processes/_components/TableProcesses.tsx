@@ -38,7 +38,7 @@ export default function TableProcess({ rows, getData }: Props) {
     setIsLoading(true);
     ProcessesService.remove(id)
       .then(() => {
-        notify("Planta eliminada correctamente", true);
+        notify("Proceso eliminado correctamente", true);
         getData();
       })
       .finally(() => setIsLoading(false));

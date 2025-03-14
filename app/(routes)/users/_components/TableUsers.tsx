@@ -28,9 +28,6 @@ const columns = [
   "Plantas",
   "Zonas",
   "Role",
-  "Responsable",
-  "Plantas responsables",
-  "Zonas responsables",
   "Creación",
   "Ultima actualización",
   "Acciones",
@@ -71,13 +68,6 @@ export default function TableUsers({ rows, getData }: Props) {
           )
           .join(", ");
 
-        const zonesMaintenanceSecurityName = row.zonesMaintenanceSecurity
-          .map(
-            ({ name, manufacturingPlant }) =>
-              `${name} (${manufacturingPlant.name})`
-          )
-          .join(", ");
-
         return (
           <StyledTableRow key={row.id}>
             <StyledTableCell component="th" scope="row">
@@ -94,17 +84,6 @@ export default function TableUsers({ rows, getData }: Props) {
               </Tooltip>
             </StyledTableCell>
             <StyledTableCell>{row.role}</StyledTableCell>
-            <StyledTableCell>{row.typeResponsible}</StyledTableCell>
-            <StyledTableCell>
-              {row.manufacturingPlantNamesMaintenanceSecurity
-                .map(({ name }) => name)
-                .join(", ")}
-            </StyledTableCell>
-            <StyledTableCell>
-              <Tooltip title={zonesMaintenanceSecurityName}>
-                <div>{truncateText(zonesMaintenanceSecurityName)}</div>
-              </Tooltip>
-            </StyledTableCell>
             <StyledTableCell>
               {stringToDateWithTime(row.createdAt)}
             </StyledTableCell>

@@ -38,7 +38,7 @@ export default function TableZones({ rows, getData }: Props) {
     setIsLoading(true);
     ZonesService.remove(id)
       .then(() => {
-        notify("Planta eliminada correctamente", true);
+        notify("Zona eliminada correctamente", true);
         getData();
       })
       .finally(() => setIsLoading(false));

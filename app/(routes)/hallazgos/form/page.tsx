@@ -193,6 +193,20 @@ export default function HallazgosFormPage() {
 
       <Grid item xs={12} sm={6} md={2}>
         <SelectDefault
+          data={processes.filter(
+            (data) =>
+              data.manufacturingPlant.id === Number(manufacturingPlantId)
+          )}
+          label="Proceso"
+          value={process}
+          onChange={(e) => setProcess(e.target.value)}
+          validationEmpty
+          helperText={!manufacturingPlantId ? "Seleccione una planta" : ""}
+        />
+      </Grid>
+
+      <Grid item xs={12} sm={6} md={2}>
+        <SelectDefault
           data={supervisorsCurrent}
           label="Supervisor"
           value={supervisor}
@@ -205,19 +219,6 @@ export default function HallazgosFormPage() {
               ? "* Nota: Si no selecciona ningun supervisor, el hallazgo se asignará a todos los supervisores de la planta y zona seleccionada"
               : ""
           }
-        />
-      </Grid>
-
-      <Grid item xs={12} sm={6} md={2}>
-        <SelectDefault
-          data={processes.filter(
-            (data) =>
-              data.manufacturingPlant.id === Number(manufacturingPlantId)
-          )}
-          label="Proceso"
-          value={process}
-          onChange={(e) => setProcess(e.target.value)}
-          validationEmpty
         />
       </Grid>
 

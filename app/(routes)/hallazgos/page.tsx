@@ -80,6 +80,9 @@ export default function HallazgosPage() {
           ["Supervisores"]: evidence.supervisors
             .map((supervisor) => supervisor.name)
             .join(" / "),
+          ["Responsables"]: evidence.responsibles
+            .map((supervisor) => supervisor.name)
+            .join(" / "),
           ["Estatus"]: evidence.status,
           ["Fecha de creación"]: stringToDateWithTime(evidence.createdAt),
           ["Fecha de actualización"]: stringToDateWithTime(evidence.updatedAt),

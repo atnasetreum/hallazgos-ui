@@ -128,6 +128,17 @@ export default function DetailsTabs({
           <ListItem>
             <ListItemButton>
               <ListItemText
+                primary={evidenceCurrent.responsibles
+                  .map((responsible) => responsible.name)
+                  .join(" / ")}
+                secondary="Responsables asignados"
+              />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <ListItemButton>
+              <ListItemText
                 primary={stringToDateWithTime(evidenceCurrent.createdAt)}
                 secondary="Fecha de creación"
               />

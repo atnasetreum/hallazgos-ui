@@ -32,6 +32,7 @@ const columns = [
   "Processo",
   "Creado por",
   "Supervisores",
+  "Responsables",
   "Estatus",
   "Creación",
   "Ultima actualización",
@@ -78,9 +79,12 @@ export default function TableEvidences({
     return (
       row.status === STATUS_OPEN &&
       role === ROLE_SUPERVISOR &&
-      row.supervisors
+      (row.supervisors
         .map((supervisor) => Number(supervisor.id))
-        .includes(userId)
+        .includes(userId) ||
+        row.responsibles
+          .map((responsible) => Number(responsible.id))
+          .includes(userId))
     );
   };
 
@@ -121,6 +125,11 @@ export default function TableEvidences({
             <StyledTableCell>{row.user.name}</StyledTableCell>
             <StyledTableCell>
               {row.supervisors.map((supervisor) => supervisor.name).join(", ")}
+            </StyledTableCell>
+            <StyledTableCell>
+              {row.responsibles
+                .map((responsible) => responsible.name)
+                .join(", ")}
             </StyledTableCell>
             <StyledTableCell>
               <Chip

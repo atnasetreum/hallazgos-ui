@@ -50,6 +50,10 @@ const query = gql`
           id
           name
         }
+        responsibles {
+          id
+          name
+        }
         zone {
           name
         }
@@ -101,6 +105,7 @@ export interface EvidenceGraphql {
   mainType: OnlyName;
   secondaryType: OnlyName;
   supervisors: { id: number; name: string }[];
+  responsibles: { id: number; name: string }[];
   comments: CommentEvidenceGraphql[];
   zone: OnlyName;
   process: OnlyName | null;

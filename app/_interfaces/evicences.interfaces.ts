@@ -11,6 +11,7 @@ export interface Evidence {
   process?: GenericType;
   user: User;
   supervisors: User[];
+  responsibles: User[];
   status: string;
   imgSolution: string;
   solutionDate: Date;

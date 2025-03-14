@@ -26,7 +26,7 @@ import { notify } from "@shared/utils";
 import {
   AuthService,
   MainTypesService,
-  TypeManagesService,
+  ProcessesService,
   ZonesService,
 } from "@services";
 
@@ -63,16 +63,16 @@ export const MainListItems = () => {
   const { setCategories } = useCategoriesStore();
 
   const initialCategories = useCallback(async () => {
-    const [mainTypes, zones, typeManages] = await Promise.all([
+    const [mainTypes, zones, processes] = await Promise.all([
       MainTypesService.findAll({}),
       ZonesService.findAll({}),
-      TypeManagesService.findAll(),
+      ProcessesService.findAll({}),
     ]);
 
     setCategories({
       mainTypes,
       zones,
-      typeManages,
+      processes,
     });
   }, [setCategories]);
 

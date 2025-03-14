@@ -13,7 +13,7 @@ export interface FiltersEvidences {
   mainTypeId: string;
   secondaryType: string;
   zone: string;
-  typeManage: string;
+  process: string;
   state: string;
 }
 
@@ -30,7 +30,7 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
     (state) => state.manufacturingPlants
   );
 
-  const { mainTypes, zones, typeManages } = useCategoriesStore();
+  const { mainTypes, zones, processes } = useCategoriesStore();
 
   useEffect(() => {
     if (filters.mainTypeId) {
@@ -119,14 +119,14 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
 
       <Grid item xs={12} sm={3} md={2}>
         <SelectDefault
-          data={typeManages}
+          data={processes}
           label="Administrador"
           isFilter={true}
-          value={filters.typeManage}
+          value={filters.process}
           onChange={(e) =>
             setFilters({
               ...filters,
-              typeManage: e.target.value,
+              process: e.target.value,
             })
           }
         />

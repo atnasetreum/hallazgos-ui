@@ -37,8 +37,8 @@ export default function HallazgosPage() {
     mainTypeId: "",
     secondaryType: "",
     zone: "",
+    process: "",
     state: "",
-    typeManage: "",
   });
 
   const [isLoadingPdf, setIsLoadingPdf] = useState<boolean>(false);
@@ -75,7 +75,7 @@ export default function HallazgosPage() {
           ["Grupo"]: evidence.mainType.name,
           ["Tipo de hallazgo"]: evidence.secondaryType.name,
           ["Zona"]: evidence.zone.name,
-          ["Administrado por"]: evidence.typeManage?.name || "",
+          ["Proceso"]: evidence.process,
           ["Creado por"]: evidence.user.name,
           ["Supervisores"]: evidence.supervisors
             .map((supervisor) => supervisor.name)
@@ -181,7 +181,7 @@ export default function HallazgosPage() {
           "Grupo",
           "Tipo de hallazgo",
           "Zona",
-          "Administrado por",
+          "Proceso",
           "Creado por",
           "Estatus",
           "Fecha de creación",
@@ -208,7 +208,7 @@ export default function HallazgosPage() {
             evidence.mainType.name,
             evidence.secondaryType.name,
             evidence.zone.name,
-            evidence.typeManage?.name || "",
+            evidence.process?.name || "",
             evidence.user.name,
             {
               text: evidence.status,

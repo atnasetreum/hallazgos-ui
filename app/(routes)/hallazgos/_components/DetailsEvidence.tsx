@@ -66,6 +66,15 @@ export default function DetailsTabs({
           <ListItem>
             <ListItemButton>
               <ListItemText
+                primary={evidenceCurrent.process?.name}
+                secondary="Proceso"
+              />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <ListItemButton>
+              <ListItemText
                 primary={evidenceCurrent.status}
                 secondary="Status"
               />

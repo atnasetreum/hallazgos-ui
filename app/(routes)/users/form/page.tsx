@@ -22,6 +22,7 @@ import { UsersService } from "@services";
 import MultiSelectManufacturingPlants from "@components/MultiSelectManufacturingPlants";
 import MultiSelectZones from "@components/MultiSelectZones";
 import { isValidEmail } from "@shared/utils";
+import MultiSelectProcesses from "@components/MultiSelectProcesses";
 
 const UsersFormPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -33,6 +34,7 @@ const UsersFormPage = () => {
     rule: string;
     manufacturingPlantNames: string[];
     zoneNames: string[];
+    processNames: string[];
   }>({
     name: "",
     email: "",
@@ -40,6 +42,7 @@ const UsersFormPage = () => {
     rule: "",
     manufacturingPlantNames: [],
     zoneNames: [],
+    processNames: [],
   });
 
   const router = useRouter();
@@ -89,6 +92,7 @@ const UsersFormPage = () => {
       rule: form.rule,
       manufacturingPlantNames: form.manufacturingPlantNames,
       zoneNames: form.rule === "Supervisor" ? form.zoneNames : [],
+      processNames: form.rule === "Supervisor" ? form.processNames : [],
     };
 
     if (!idCurrent) {
@@ -135,6 +139,14 @@ const UsersFormPage = () => {
             )
           : [];
 
+      const processNames =
+        data.role === "Supervisor"
+          ? data.processes.map(
+              (process) =>
+                `${process.manufacturingPlant.name} - ${process.name}`
+            )
+          : [];
+
       setForm({
         name: data.name,
         email: data.email,
@@ -144,146 +156,173 @@ const UsersFormPage = () => {
           (plant) => plant.name
         ),
         zoneNames,
+        processNames,
       });
     });
   }, [searchParams]);
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} sm={6} md={3}>
-        <Paper>
-          <TextField
-            label="Nombre"
-            variant="outlined"
-            fullWidth
-            autoComplete="off"
-            value={form.name}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                name: e.target.value,
-              })
-            }
-          />
-        </Paper>
-      </Grid>
-      <Grid item xs={12} sm={6} md={3}>
-        <Paper>
-          <TextField
-            label="Correo electrónico"
-            variant="outlined"
-            fullWidth
-            autoComplete="off"
-            value={form.email}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                email: e.target.value,
-              })
-            }
-          />
-        </Paper>
-      </Grid>
-      <Grid item xs={12} sm={6} md={3}>
-        <Paper>
-          <TextField
-            label="Contraseña"
-            variant="outlined"
-            fullWidth
-            autoComplete="off"
-            value={form.password}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                password: e.target.value,
-              })
-            }
-          />
-        </Paper>
-      </Grid>
-      <Grid item xs={12} sm={6} md={3}>
-        <Paper>
-          <FormControl fullWidth>
-            <InputLabel id="rule-select-label">Rol</InputLabel>
-            <Select
-              labelId="rule-select-label"
-              id="rule-select"
-              value={form.rule}
-              label="Rol"
-              onChange={(e: SelectChangeEvent) =>
+    <>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper>
+            <TextField
+              label="Nombre"
+              variant="outlined"
+              fullWidth
+              autoComplete="off"
+              value={form.name}
+              onChange={(e) =>
                 setForm({
                   ...form,
-                  rule: e.target.value as string,
+                  name: e.target.value,
                 })
               }
-            >
-              <MenuItem value="Administrador">Administrador</MenuItem>
-              <MenuItem value="General">General</MenuItem>
-              <MenuItem value="Supervisor">Supervisor</MenuItem>
-            </Select>
-          </FormControl>
-        </Paper>
-      </Grid>
-
-      {form.rule && (
-        <Grid item xs={12} sm={6} md={3}>
-          <Paper>
-            <MultiSelectManufacturingPlants
-              values={form.manufacturingPlantNames}
-              onChange={(values) => {
-                setForm({
-                  ...form,
-                  manufacturingPlantNames: values,
-                });
-              }}
             />
           </Paper>
         </Grid>
-      )}
-
-      {form.rule === "Supervisor" && !!form.manufacturingPlantNames.length && (
         <Grid item xs={12} sm={6} md={3}>
           <Paper>
-            <MultiSelectZones
-              values={form.zoneNames}
-              onChange={(values) => {
+            <TextField
+              label="Correo electrónico"
+              variant="outlined"
+              fullWidth
+              autoComplete="off"
+              value={form.email}
+              onChange={(e) =>
                 setForm({
                   ...form,
-                  zoneNames: values,
-                });
-              }}
-              manufacturingPlantNames={form.manufacturingPlantNames}
+                  email: e.target.value,
+                })
+              }
             />
           </Paper>
         </Grid>
-      )}
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper>
+            <TextField
+              label="Contraseña"
+              variant="outlined"
+              fullWidth
+              autoComplete="off"
+              value={form.password}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  password: e.target.value,
+                })
+              }
+            />
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper>
+            <FormControl fullWidth>
+              <InputLabel id="rule-select-label">Rol</InputLabel>
+              <Select
+                labelId="rule-select-label"
+                id="rule-select"
+                value={form.rule}
+                label="Rol"
+                onChange={(e: SelectChangeEvent) =>
+                  setForm({
+                    ...form,
+                    rule: e.target.value as string,
+                  })
+                }
+              >
+                <MenuItem value="Administrador">Administrador</MenuItem>
+                <MenuItem value="General">General</MenuItem>
+                <MenuItem value="Supervisor">Supervisor</MenuItem>
+              </Select>
+            </FormControl>
+          </Paper>
+        </Grid>
 
-      <Grid item xs={12} sm={3} md={3}>
-        <Button
-          variant="contained"
-          color="error"
-          fullWidth
-          startIcon={<CloseIcon />}
-          onClick={cancel}
-        >
-          Cancelar
-        </Button>
+        {form.rule && (
+          <Grid item xs={12} sm={6} md={4}>
+            <Paper>
+              <MultiSelectManufacturingPlants
+                values={form.manufacturingPlantNames}
+                onChange={(values) => {
+                  setForm({
+                    ...form,
+                    manufacturingPlantNames: values,
+                  });
+                }}
+              />
+            </Paper>
+          </Grid>
+        )}
+
+        {form.rule === "Supervisor" &&
+          !!form.manufacturingPlantNames.length && (
+            <>
+              <Grid item xs={12} sm={6} md={4}>
+                <Paper>
+                  <MultiSelectZones
+                    values={form.zoneNames}
+                    onChange={(values) => {
+                      setForm({
+                        ...form,
+                        zoneNames: values,
+                      });
+                    }}
+                    manufacturingPlantNames={form.manufacturingPlantNames}
+                  />
+                </Paper>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Paper>
+                  <MultiSelectProcesses
+                    values={form.processNames}
+                    onChange={(values) => {
+                      setForm({
+                        ...form,
+                        processNames: values,
+                      });
+                    }}
+                    manufacturingPlantNames={form.manufacturingPlantNames}
+                  />
+                </Paper>
+              </Grid>
+            </>
+          )}
       </Grid>
-      <Grid item xs={12} sm={3} md={3}>
-        <LoadingButton
-          loading={isLoading}
-          loadingPosition="start"
-          startIcon={<SaveIcon />}
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={save}
-          disabled={isValidateForm || isLoading}
-        >
-          Guardar
-        </LoadingButton>
+      <Grid
+        container
+        spacing={2}
+        alignContent={"center"}
+        justifyContent={"center"}
+        sx={{ marginTop: 2 }}
+      >
+        <Grid item xs={12} sm={3} md={3}>
+          <Button
+            variant="contained"
+            color="error"
+            fullWidth
+            startIcon={<CloseIcon />}
+            onClick={cancel}
+          >
+            Cancelar
+          </Button>
+        </Grid>
+        <Grid item xs={12} sm={3} md={3}>
+          <LoadingButton
+            loading={isLoading}
+            loadingPosition="start"
+            startIcon={<SaveIcon />}
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={save}
+            disabled={isValidateForm || isLoading}
+          >
+            Guardar
+          </LoadingButton>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
 

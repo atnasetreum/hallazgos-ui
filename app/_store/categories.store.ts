@@ -6,7 +6,7 @@ import { CategoriesState } from "@interfaces";
 const stateInitial = {
   mainTypes: [],
   zones: [],
-  typeManages: [],
+  processes: [],
 };
 
 type Actions = {

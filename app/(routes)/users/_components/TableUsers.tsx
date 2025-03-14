@@ -27,6 +27,7 @@ const columns = [
   "Correo electrónico",
   "Plantas",
   "Zonas",
+  "Procesos",
   "Role",
   "Creación",
   "Ultima actualización",
@@ -42,7 +43,7 @@ export default function TableUsers({ rows, getData }: Props) {
     setIsLoading(true);
     UsersService.remove(id)
       .then(() => {
-        notify("Planta eliminada correctamente", true);
+        notify("Usuario eliminado correctamente", true);
         getData();
       })
       .finally(() => setIsLoading(false));
@@ -66,7 +67,14 @@ export default function TableUsers({ rows, getData }: Props) {
             ({ name, manufacturingPlant }) =>
               `${name} (${manufacturingPlant.name})`
           )
-          .join(", ");
+          .join("\n");
+
+        const processesName = row.processes
+          .map(
+            ({ name, manufacturingPlant }) =>
+              `${name} (${manufacturingPlant.name})`
+          )
+          .join("\n");
 
         return (
           <StyledTableRow key={row.id}>
@@ -81,6 +89,11 @@ export default function TableUsers({ rows, getData }: Props) {
             <StyledTableCell>
               <Tooltip title={zonesName}>
                 <div>{truncateText(zonesName)}</div>
+              </Tooltip>
+            </StyledTableCell>
+            <StyledTableCell>
+              <Tooltip title={processesName}>
+                <div>{truncateText(processesName)}</div>
               </Tooltip>
             </StyledTableCell>
             <StyledTableCell>{row.role}</StyledTableCell>

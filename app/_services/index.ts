@@ -6,6 +6,5 @@ export * from "./main-types.service";
 export * from "./manufacturing-plants.service";
 export * from "./process.service";
 export * from "./secondary-types.service";
-export * from "./type-manages.service";
 export * from "./users.service";
 export * from "./zones.service";

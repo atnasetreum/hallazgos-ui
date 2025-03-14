@@ -23,7 +23,7 @@ import "./form.css";
 
 export default function HallazgosFormPage() {
   const [typeHallazgo, setTypeHallazgo] = useState<string>("");
-  const [typeManage, setTypeManage] = useState<string>("");
+  const [process, setProcess] = useState<string>("");
   const [secondaryType, setSecondaryType] = useState<string>("");
   const [image, setImage] = useState<string>("");
   const [zone, setZone] = useState<string>("");
@@ -35,7 +35,7 @@ export default function HallazgosFormPage() {
   const [supervisor, setSupervisor] = useState<string>("");
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
 
-  const { mainTypes, zones, typeManages } = useCategoriesStore();
+  const { mainTypes, zones, processes } = useCategoriesStore();
 
   useEffect(() => {
     UsersService.findAllSupervisors().then(setSupervisors);
@@ -91,7 +91,7 @@ export default function HallazgosFormPage() {
         typeHallazgo &&
         secondaryType &&
         zone &&
-        typeManage &&
+        process &&
         (image || attachedFile)) ||
       isLoading,
     [
@@ -102,7 +102,7 @@ export default function HallazgosFormPage() {
       image,
       isLoading,
       attachedFile,
-      typeManage,
+      process,
     ]
   );
 
@@ -113,7 +113,7 @@ export default function HallazgosFormPage() {
     formData.append("typeHallazgo", typeHallazgo);
     formData.append("type", secondaryType);
     formData.append("zone", zone);
-    formData.append("typeManage", typeManage);
+    formData.append("process", process);
 
     if (supervisor) {
       formData.append("supervisor", supervisor);
@@ -210,10 +210,13 @@ export default function HallazgosFormPage() {
 
       <Grid item xs={12} sm={6} md={2}>
         <SelectDefault
-          data={typeManages}
-          label="Administrador"
-          value={typeManage}
-          onChange={(e) => setTypeManage(e.target.value)}
+          data={processes.filter(
+            (data) =>
+              data.manufacturingPlant.id === Number(manufacturingPlantId)
+          )}
+          label="Proceso"
+          value={process}
+          onChange={(e) => setProcess(e.target.value)}
           validationEmpty
         />
       </Grid>

@@ -1,4 +1,5 @@
 import { ManufacturingPlant } from "./manufacturing-plants.interfaces";
+import { Processes } from "./processes.interfaces";
 import { Zone } from "./zones.interfaces";
 
 export interface User {
@@ -11,4 +12,5 @@ export interface User {
   updatedAt: Date;
   manufacturingPlants: ManufacturingPlant[];
   zones: Zone[];
+  processes: Processes[];
 }

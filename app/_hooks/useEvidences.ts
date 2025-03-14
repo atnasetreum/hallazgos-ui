@@ -12,7 +12,7 @@ const query = gql`
     $mainTypeId: Float
     $secondaryTypeId: Float
     $zoneId: Float
-    $typeManageId: Float
+    $processId: Float
     $status: String
   ) {
     evidences(
@@ -22,7 +22,7 @@ const query = gql`
       mainTypeId: $mainTypeId
       secondaryTypeId: $secondaryTypeId
       zoneId: $zoneId
-      typeManageId: $typeManageId
+      processId: $processId
       status: $status
     ) {
       count
@@ -53,7 +53,7 @@ const query = gql`
         zone {
           name
         }
-        typeManage {
+        process {
           name
         }
         comments {
@@ -103,7 +103,7 @@ export interface EvidenceGraphql {
   supervisors: { id: number; name: string }[];
   comments: CommentEvidenceGraphql[];
   zone: OnlyName;
-  typeManage: OnlyName | null;
+  process: OnlyName | null;
 }
 
 interface OnlyName {
@@ -131,7 +131,7 @@ export const useEvidences = () => {
         secondaryTypeId: filters.secondaryType,
       }),
       ...(filters.zone && { zoneId: filters.zone }),
-      ...(filters.typeManage && { typeManageId: filters.typeManage }),
+      ...(filters.process && { processId: filters.process }),
       ...(filters.state && { status: filters.state }),
     };
 

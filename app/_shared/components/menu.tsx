@@ -16,6 +16,7 @@ import BusinessIcon from "@mui/icons-material/Business";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import DnsIcon from "@mui/icons-material/Dns";
 import HubIcon from "@mui/icons-material/Hub";
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import Tooltip from "@mui/material/Tooltip";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 
@@ -111,6 +112,11 @@ export const MainListItems = () => {
             icon={<DnsIcon />}
           />
           <CreateLink url="/zones" title="Zonas" icon={<HubIcon />} />
+          <CreateLink
+            url="/processes"
+            title="Procesos"
+            icon={<AccountTreeIcon />}
+          />
           <CreateLink
             url="/users"
             title="Usuarios"

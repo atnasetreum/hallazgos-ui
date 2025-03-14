@@ -3,6 +3,7 @@ export * from "./dashboard.interfaces";
 export * from "./evicences.interfaces";
 export * from "./main-types.interfaces";
 export * from "./manufacturing-plants.interfaces";
+export * from "./processes.interfaces";
 export * from "./secondary-types.interfaces";
 export * from "./type-manages.interfaces";
 export * from "./userSession.interfaces";

@@ -12,11 +12,11 @@ import TableDefault, {
   StyledTableCell,
   StyledTableRow,
 } from "@shared/components/TableDefault";
-import { Zone } from "@interfaces";
-import { ZonesService } from "@services";
+import { Processes } from "@interfaces";
+import { ProcessesService } from "@services";
 
 interface Props {
-  rows: Zone[];
+  rows: Processes[];
   getData: () => void;
 }
 
@@ -29,14 +29,14 @@ const columns = [
   "Acciones",
 ];
 
-export default function TableZones({ rows, getData }: Props) {
+export default function TableProcess({ rows, getData }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const router = useRouter();
 
   const remove = (id: number) => {
     setIsLoading(true);
-    ZonesService.remove(id)
+    ProcessesService.remove(id)
       .then(() => {
         notify("Planta eliminada correctamente", true);
         getData();
@@ -48,7 +48,7 @@ export default function TableZones({ rows, getData }: Props) {
     <TableDefault
       rows={rows}
       columns={columns}
-      paintRows={(row: Zone) => (
+      paintRows={(row: Processes) => (
         <StyledTableRow key={row.id}>
           <StyledTableCell component="th" scope="row">
             {row.id}
@@ -67,7 +67,7 @@ export default function TableZones({ rows, getData }: Props) {
                 icon={<EditIcon />}
                 label="Editar"
                 color="warning"
-                onClick={() => router.push("/zones/form?id=" + row.id)}
+                onClick={() => router.push("/processes/form?id=" + row.id)}
               />
               <Chip
                 icon={<DeleteIcon />}

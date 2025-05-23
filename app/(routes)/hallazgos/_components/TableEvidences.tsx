@@ -63,7 +63,7 @@ export default function TableEvidences({
     useState<EvidenceGraphql | null>(null);
   const [idRow, setIdRow] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { id: userId, role } = useUserSessionStore();
+  const { id: userId, role, email } = useUserSessionStore();
 
   const removeEvicence = (id: number) => {
     setIsLoading(true);
@@ -76,6 +76,9 @@ export default function TableEvidences({
   };
 
   const validateSupervisor = (row: EvidenceGraphql) => {
+    if (["sst@hadamexico.com", "gsalgado@hadamexico.com"].includes(email)) {
+      return true;
+    }
     return (
       row.status === STATUS_OPEN &&
       role === ROLE_SUPERVISOR &&
@@ -124,7 +127,11 @@ export default function TableEvidences({
             <StyledTableCell>{row.process?.name}</StyledTableCell>
             <StyledTableCell>{row.user.name}</StyledTableCell>
             <StyledTableCell>
-              {row.supervisors.map((supervisor) => supervisor.name).join(", ")}
+              {row.supervisors
+                .map((supervisor) => supervisor.name)
+                .join(", ")
+                .substring(0, 50)}
+              ...
             </StyledTableCell>
             <StyledTableCell>
               {row.responsibles

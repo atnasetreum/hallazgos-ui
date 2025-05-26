@@ -76,7 +76,13 @@ export default function TableEvidences({
   };
 
   const validateSupervisor = (row: EvidenceGraphql) => {
-    if (["sst@hadamexico.com", "gsalgado@hadamexico.com"].includes(email)) {
+    if (
+      [
+        "sst@hadamexico.com",
+        "gsalgado@hadamexico.com",
+        "auxsistemadegestion@hadainternational.com",
+      ].includes(email)
+    ) {
       return true;
     }
     return (

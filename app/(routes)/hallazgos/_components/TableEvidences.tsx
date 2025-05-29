@@ -81,6 +81,7 @@ export default function TableEvidences({
         "sst@hadamexico.com",
         "gsalgado@hadamexico.com",
         "auxsistemadegestion@hadainternational.com",
+        "glora@hadainternational.com",
       ].includes(email)
     ) {
       return true;

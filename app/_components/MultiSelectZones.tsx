@@ -44,6 +44,7 @@ export default function MultiSelectZones({
 }: Props) {
   const theme = useTheme();
   const [names, setNames] = React.useState<string[]>([]);
+  const [labelSelectAll, setLabelSelectAll] = React.useState("Todos");
 
   React.useEffect(() => {
     ZonesService.findAll({
@@ -56,6 +57,16 @@ export default function MultiSelectZones({
   }, [manufacturingPlantNames]);
 
   React.useEffect(() => {
+    if (!values.length) {
+      setLabelSelectAll("Todos");
+    } else if (values.length === names.length) {
+      setLabelSelectAll("Ninguno");
+    } else {
+      setLabelSelectAll("Todos");
+    }
+  }, [values, names]);
+
+  React.useEffect(() => {
     if (!manufacturingPlantNames.length) return onChange([]);
 
     const zonesFiltered = values.filter((value) => {
@@ -66,10 +77,18 @@ export default function MultiSelectZones({
     onChange(zonesFiltered);
   }, [manufacturingPlantNames]);
 
-  const handleChange = (event: SelectChangeEvent<typeof values>) => {
-    const {
-      target: { value },
-    } = event;
+  const handleChange = ({
+    target: { value },
+  }: SelectChangeEvent<typeof values>) => {
+    if (value.includes("none-all")) {
+      if (values.length === names.length) {
+        onChange([]);
+        return;
+      } else {
+        onChange(names);
+        return;
+      }
+    }
     onChange(typeof value === "string" ? value.split(",") : value);
   };
 
@@ -95,6 +114,7 @@ export default function MultiSelectZones({
           )}
           MenuProps={MenuProps}
         >
+          <MenuItem value="none-all">{labelSelectAll}</MenuItem>
           {names
             .sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }))
             .map((name) => (

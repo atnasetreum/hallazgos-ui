@@ -15,6 +15,7 @@ interface Props {
 }
 
 const FormForgotPassword = ({ setForgotPassword }: Props) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState(
     process.env.NODE_ENV === constants.environments.development
       ? "eduardo-266@hotmail.com"
@@ -34,10 +35,14 @@ const FormForgotPassword = ({ setForgotPassword }: Props) => {
       return;
     }
 
-    AuthService.forgotPassword(email).then(({ message }) => {
-      notify(message, true);
-      setForgotPassword(false);
-    });
+    setIsLoading(true);
+
+    AuthService.forgotPassword(email)
+      .then(({ message }) => {
+        notify(message, true);
+        setForgotPassword(false);
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -56,6 +61,7 @@ const FormForgotPassword = ({ setForgotPassword }: Props) => {
         variant="contained"
         sx={{ mt: 3, mb: 2 }}
         onClick={login}
+        disabled={isLoading}
       >
         Enviar correo de recuperación
       </Button>

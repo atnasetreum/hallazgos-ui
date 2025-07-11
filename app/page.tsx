@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
@@ -11,9 +12,16 @@ import Container from "@mui/material/Container";
 import FormLogin from "@components/login/FormLogin";
 import Copyright from "@shared/components/Copyright";
 import FormForgotPassword from "@components/login/FormForgotPassword";
+import FormRestorePassword from "@components/login/FormRestorePassword";
 
 export default function SignIn() {
   const [forgotPassword, setForgotPassword] = useState(false);
+  const searchParams = useSearchParams();
+  const [token, setToken] = useState<string>("");
+
+  useEffect(() => {
+    setToken(searchParams.get("token") || "");
+  }, [searchParams]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -32,7 +40,9 @@ export default function SignIn() {
           width="300"
           height="200"
         />
-        {!forgotPassword ? (
+        {token ? (
+          <FormRestorePassword />
+        ) : !forgotPassword ? (
           <FormLogin setForgotPassword={setForgotPassword} />
         ) : (
           <FormForgotPassword setForgotPassword={setForgotPassword} />

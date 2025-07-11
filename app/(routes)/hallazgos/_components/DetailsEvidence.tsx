@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
@@ -22,6 +24,22 @@ export default function DetailsTabs({
   setRefreshData,
 }: Props) {
   const theme = useTheme();
+
+  const [withImages, setWithImages] = useState<boolean>(false);
+  const [isUnsafeBehavior, setIsUnsafeBehavior] = useState<boolean>(false);
+
+  useEffect(() => {
+    setWithImages(
+      !!evidenceCurrent.imgEvidence || !!evidenceCurrent.imgSolution
+    );
+  }, [evidenceCurrent]);
+
+  useEffect(() => {
+    if (!evidenceCurrent) return;
+    const { name } = evidenceCurrent.mainType;
+    if (!name.toLocaleLowerCase().includes("comportamiento inseguro")) return;
+    setIsUnsafeBehavior(true);
+  }, [evidenceCurrent]);
 
   return (
     <Grid container sx={{ p: 2 }}>
@@ -75,15 +93,6 @@ export default function DetailsTabs({
           <ListItem>
             <ListItemButton>
               <ListItemText
-                primary={evidenceCurrent.status}
-                secondary="Status"
-              />
-            </ListItemButton>
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemButton>
-              <ListItemText
                 primary={
                   <Typography
                     variant="subtitle1"
@@ -100,11 +109,60 @@ export default function DetailsTabs({
                     {evidenceCurrent.status}
                   </Typography>
                 }
-                secondary="Status"
+                secondary="Estatus"
               />
             </ListItemButton>
           </ListItem>
           <Divider />
+          {!withImages && (
+            <>
+              <ListItem>
+                <ListItemButton>
+                  <ListItemText
+                    primary={
+                      <Typography
+                        variant="subtitle1"
+                        style={{
+                          color: theme.palette.warning.main,
+                        }}
+                      >
+                        * Sin evidencia fotográfica
+                      </Typography>
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+              <Divider />
+            </>
+          )}
+          {isUnsafeBehavior && (
+            <>
+              <ListItem>
+                <ListItemButton>
+                  <ListItemText
+                    primary={evidenceCurrent.description}
+                    secondary="Descripción del comportamiento inseguro"
+                  />
+                </ListItemButton>
+              </ListItem>
+              <Divider />
+            </>
+          )}
+
+          {isUnsafeBehavior && evidenceCurrent.descriptionSolution && (
+            <>
+              <ListItem>
+                <ListItemButton>
+                  <ListItemText
+                    primary={evidenceCurrent.descriptionSolution}
+                    secondary="Descripción de la solución del comportamiento inseguro"
+                  />
+                </ListItemButton>
+              </ListItem>
+              <Divider />
+            </>
+          )}
+
           <ListItem>
             <ListItemButton>
               <ListItemText
@@ -177,6 +235,7 @@ export default function DetailsTabs({
         <TabsImageAndLogs
           evidenceCurrent={evidenceCurrent}
           setRefreshData={setRefreshData}
+          withImages={withImages}
         />
       </Grid>
     </Grid>

@@ -56,11 +56,13 @@ function a11yProps(index: number) {
 interface Props {
   evidenceCurrent: EvidenceGraphql;
   setRefreshData: (refreshData: boolean) => void;
+  withImages: boolean;
 }
 
 export default function TabsImageAndLogs({
   evidenceCurrent,
   setRefreshData,
+  withImages,
 }: Props) {
   const theme = useTheme();
   const [value, setValue] = useState<number>(0);
@@ -101,8 +103,11 @@ export default function TabsImageAndLogs({
           variant="fullWidth"
           aria-label="full width tabs example"
         >
-          <Tab label="Imagenes" {...a11yProps(0)} />
-          <Tab label={`Comentarios (${comments.length})`} {...a11yProps(1)} />
+          {withImages && <Tab label="Imagenes" {...a11yProps(0)} />}
+          <Tab
+            label={`Comentarios (${comments.length})`}
+            {...a11yProps(withImages ? 1 : 0)}
+          />
         </Tabs>
       </AppBar>
       <SwipeableViews
@@ -110,43 +115,48 @@ export default function TabsImageAndLogs({
         index={value}
         onChangeIndex={handleChangeIndex}
       >
-        <TabPanel value={value} index={0} dir={theme.direction}>
-          <Grid container spacing={3}>
-            <Grid
-              item
-              xs={12}
-              sm={evidenceCurrent.imgSolution ? 6 : 12}
-              md={evidenceCurrent.imgSolution ? 6 : 12}
-            >
-              <Typography variant="h6" gutterBottom>
-                Hallazgo
-              </Typography>
-              <Image
-                src={baseUrlImage(evidenceCurrent?.imgEvidence || "")}
-                alt="Hallazgo imagen"
-                width={0}
-                height={0}
-                sizes="100vw"
-                style={{ width: "100%", height: "auto" }}
-              />
+        {withImages && (
+          <TabPanel value={value} index={0} dir={theme.direction}>
+            <Grid container spacing={3}>
+              {evidenceCurrent?.imgEvidence && (
+                <Grid
+                  item
+                  xs={12}
+                  sm={evidenceCurrent.imgSolution ? 6 : 12}
+                  md={evidenceCurrent.imgSolution ? 6 : 12}
+                >
+                  <Typography variant="h6" gutterBottom>
+                    Hallazgo
+                  </Typography>
+                  <Image
+                    src={baseUrlImage(evidenceCurrent.imgEvidence || "")}
+                    alt="Hallazgo imagen"
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    style={{ width: "100%", height: "auto" }}
+                  />
+                </Grid>
+              )}
+
+              {evidenceCurrent.imgSolution && (
+                <Grid item xs={12} sm={6} md={6}>
+                  <Typography variant="h6" gutterBottom>
+                    Solución
+                  </Typography>
+                  <Image
+                    src={baseUrlImage(evidenceCurrent?.imgSolution || "")}
+                    alt="Imagen Solución"
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    style={{ width: "100%", height: "auto" }}
+                  />
+                </Grid>
+              )}
             </Grid>
-            {evidenceCurrent.imgSolution && (
-              <Grid item xs={12} sm={6} md={6}>
-                <Typography variant="h6" gutterBottom>
-                  Solución
-                </Typography>
-                <Image
-                  src={baseUrlImage(evidenceCurrent?.imgSolution || "")}
-                  alt="Imagen Solución"
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  style={{ width: "100%", height: "auto" }}
-                />
-              </Grid>
-            )}
-          </Grid>
-        </TabPanel>
+          </TabPanel>
+        )}
         <TabPanel value={value} index={1} dir={theme.direction}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={10} md={10}>

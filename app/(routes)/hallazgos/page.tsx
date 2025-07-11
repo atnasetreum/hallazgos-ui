@@ -84,6 +84,9 @@ export default function HallazgosPage() {
             .map((supervisor) => supervisor.name)
             .join(" / "),
           ["Estatus"]: evidence.status,
+          // ...(evidence.description && {
+          //   ["Descripción del comportamiento inseguro"]: evidence.description,
+          // }),
           ["Fecha de creación"]: stringToDateWithTime(evidence.createdAt),
           ["Fecha de actualización"]: stringToDateWithTime(evidence.updatedAt),
           ["Fecha de cierre"]: evidence.solutionDate
@@ -192,19 +195,18 @@ export default function HallazgosPage() {
           "Imagen de solución",
         ];
 
-        for (const evidence of evidencesCurrent) {
-          const imgEvidence = await getBase64ImageFromURL(
-            baseUrlImage(evidence?.imgEvidence || "")
-          );
-
-          const imgSolutionValue = evidence?.imgSolution;
-
+        async function findImg(img: string) {
           const imageSolutionRaw = baseUrlImage(
-            imgSolutionValue || "image-not-found.png",
-            imgSolutionValue ? "" : "/static/images/"
+            img || "image-not-found.png",
+            img ? "" : "/static/images/"
           );
-
           const imgSolution = await getBase64ImageFromURL(imageSolutionRaw);
+          return imgSolution;
+        }
+
+        for (const evidence of evidencesCurrent) {
+          const imgSolution = await findImg(evidence.imgSolution);
+          const imgEvidence = await findImg(evidence.imgEvidence);
 
           data.push([
             evidence.id,

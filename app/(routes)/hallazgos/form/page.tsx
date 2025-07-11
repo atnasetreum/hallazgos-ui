@@ -4,20 +4,21 @@ import { useEffect, useMemo, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import SaveIcon from "@mui/icons-material/Save";
 import ClearIcon from "@mui/icons-material/Clear";
+import SaveIcon from "@mui/icons-material/Save";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
 import { v4 as uuidv4 } from "uuid";
 
 import { EvidencesService, handleErrorResponse, UsersService } from "@services";
-import { SecondaryType, User } from "@interfaces";
 import { useCategoriesStore, useUserSessionStore } from "@store";
+import ImageORCamera from "@shared/components/ImageORCamera";
 import { dataURLtoFile, notify } from "@shared/utils";
 import SelectDefault from "@components/SelectDefault";
-import ImageORCamera from "@shared/components/ImageORCamera";
+import { SecondaryType, User } from "@interfaces";
 
 import "./form.css";
 
@@ -34,6 +35,8 @@ export default function HallazgosFormPage() {
   const [supervisorsCurrent, setSupervisorsCurrent] = useState<User[]>([]);
   const [supervisor, setSupervisor] = useState<string>("");
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
+  const [isUnsafeBehavior, setIsUnsafeBehavior] = useState<boolean>(false);
+  const [description, setDescription] = useState<string>("");
 
   const { mainTypes, zones, processes } = useCategoriesStore();
 
@@ -85,15 +88,18 @@ export default function HallazgosFormPage() {
     }
   }, [manufacturingPlantId, supervisors, zone]);
 
+  const currentDescription = useMemo(() => description.trim(), [description]);
+
   const isValidForm = useMemo(
     () =>
       (manufacturingPlantId &&
-        typeHallazgo &&
-        secondaryType &&
-        zone &&
-        process &&
-        (image || attachedFile)) ||
-      isLoading,
+      typeHallazgo &&
+      secondaryType &&
+      zone &&
+      process &&
+      isUnsafeBehavior
+        ? currentDescription
+        : image || attachedFile) || isLoading,
     [
       manufacturingPlantId,
       typeHallazgo,
@@ -103,6 +109,8 @@ export default function HallazgosFormPage() {
       isLoading,
       attachedFile,
       process,
+      isUnsafeBehavior,
+      currentDescription,
     ]
   );
 
@@ -114,6 +122,7 @@ export default function HallazgosFormPage() {
     formData.append("type", secondaryType);
     formData.append("zone", zone);
     formData.append("process", process);
+    formData.append("description", currentDescription);
 
     if (supervisor) {
       formData.append("supervisor", supervisor);
@@ -141,9 +150,24 @@ export default function HallazgosFormPage() {
       .finally(() => setIsLoading(false));
   };
 
+  const validateUnsafeBehavior = (value: string) => {
+    const unsafeBehaviorId = Number(value ?? 0);
+    const mainTypeCurrent = mainTypes.find(
+      (data) => data.id === unsafeBehaviorId
+    );
+
+    if (!mainTypeCurrent) return;
+
+    const { name } = mainTypeCurrent;
+
+    if (!name.toLocaleLowerCase().includes("comportamiento inseguro")) return;
+
+    setIsUnsafeBehavior(true);
+  };
+
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} sm={6} md={2}>
+      <Grid item xs={12} sm={6} md={3}>
         <SelectDefault
           data={manufacturingPlants}
           label="Planta"
@@ -153,20 +177,21 @@ export default function HallazgosFormPage() {
         />
       </Grid>
 
-      <Grid item xs={12} sm={6} md={2}>
+      <Grid item xs={12} sm={6} md={3}>
         <SelectDefault
           data={mainTypes}
           label="Hallazgo"
           value={typeHallazgo}
-          onChange={(e) => {
-            setTypeHallazgo(e.target.value);
+          onChange={({ target: { value } }) => {
+            setTypeHallazgo(value);
             setSecondaryType("");
+            validateUnsafeBehavior(value);
           }}
           validationEmpty
         />
       </Grid>
 
-      <Grid item xs={12} sm={6} md={2}>
+      <Grid item xs={12} sm={6} md={3}>
         <SelectDefault
           data={secondaryTypes}
           label="Tipo"
@@ -177,7 +202,7 @@ export default function HallazgosFormPage() {
         />
       </Grid>
 
-      <Grid item xs={12} sm={6} md={2}>
+      <Grid item xs={12} sm={6} md={3}>
         <SelectDefault
           data={zones.filter(
             (data) =>
@@ -191,7 +216,7 @@ export default function HallazgosFormPage() {
         />
       </Grid>
 
-      <Grid item xs={12} sm={6} md={2}>
+      <Grid item xs={12} sm={6} md={3}>
         <SelectDefault
           data={processes.filter(
             (data) =>
@@ -205,7 +230,7 @@ export default function HallazgosFormPage() {
         />
       </Grid>
 
-      <Grid item xs={12} sm={6} md={2}>
+      <Grid item xs={12} sm={6} md={3}>
         <SelectDefault
           data={supervisorsCurrent}
           label="Supervisor"
@@ -221,6 +246,31 @@ export default function HallazgosFormPage() {
           }
         />
       </Grid>
+
+      {isUnsafeBehavior && (
+        <Grid item xs={12} sm={6} md={6}>
+          <Paper sx={{ p: 2 }}>
+            <TextField
+              id="description-multiline"
+              multiline
+              rows={4}
+              variant="standard"
+              fullWidth
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              label={
+                currentDescription
+                  ? "Descripción del comportamiento inseguro"
+                  : ""
+              }
+              helperText={
+                !currentDescription ? "Por favor, ingrese una descripción" : ""
+              }
+              error={!currentDescription}
+            />
+          </Paper>
+        </Grid>
+      )}
 
       <ImageORCamera
         setImage={setImage}

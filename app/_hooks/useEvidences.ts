@@ -34,6 +34,8 @@ const query = gql`
         solutionDate
         imgEvidence
         imgSolution
+        description
+        descriptionSolution
         manufacturingPlant {
           name
         }
@@ -109,6 +111,8 @@ export interface EvidenceGraphql {
   comments: CommentEvidenceGraphql[];
   zone: OnlyName;
   process: OnlyName | null;
+  description?: string;
+  descriptionSolution?: string;
 }
 
 interface OnlyName {

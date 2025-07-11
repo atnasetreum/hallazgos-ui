@@ -75,10 +75,12 @@ export default function TableEvidences({
       .finally(() => setIsLoading(false));
   };
 
+  // !Atention: Force close evidence if the user is a supervisor
   const validateSupervisor = (row: EvidenceGraphql) => {
     if (
       [
         "sst@hadamexico.com",
+        "eduardo-266@hotmail.com",
         "gsalgado@hadamexico.com",
         "auxsistemadegestion@hadainternational.com",
         "glora@hadainternational.com",
@@ -100,25 +102,31 @@ export default function TableEvidences({
 
   return (
     <>
-      <EvidencePreview
-        evidenceCurrent={evidenceCurrent}
-        handleClose={(refreshData) => {
-          if (refreshData) {
-            getData();
-          }
-          setEvidenceCurrent(null);
-        }}
-      />
-      <CloseEvidence
-        isOpen={!!idRow}
-        handleClose={(refresh) => {
-          if (refresh) {
-            getData();
-          }
-          setIdRow(0);
-        }}
-        idRow={idRow}
-      />
+      {idRow ? (
+        <CloseEvidence
+          evidenceCurrent={evidenceCurrent}
+          isOpen={!!idRow}
+          handleClose={(refresh) => {
+            if (refresh) {
+              getData();
+            }
+            setIdRow(0);
+            setEvidenceCurrent(null);
+          }}
+          idRow={idRow}
+        />
+      ) : (
+        <EvidencePreview
+          evidenceCurrent={evidenceCurrent}
+          handleClose={(refreshData) => {
+            if (refreshData) {
+              getData();
+            }
+            setEvidenceCurrent(null);
+          }}
+        />
+      )}
+
       <TableDefault
         rows={rows}
         columns={columns}
@@ -178,12 +186,15 @@ export default function TableEvidences({
                   color="secondary"
                   onClick={() => setEvidenceCurrent(row)}
                 />
-                {validateSupervisor(row) && (
+                {validateSupervisor(row) && row.status !== STATUS_CLOSED && (
                   <Chip
                     icon={<AddAPhotoIcon />}
                     label="Cerrar hallazgo"
                     color="warning"
-                    onClick={() => setIdRow(row.id)}
+                    onClick={() => {
+                      setIdRow(row.id);
+                      setEvidenceCurrent(row);
+                    }}
                   />
                 )}
 

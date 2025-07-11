@@ -16,6 +16,7 @@ export interface Evidence {
   imgSolution: string;
   solutionDate: Date;
   comments: Comment[];
+  description: string;
 }
 
 export interface Comment {

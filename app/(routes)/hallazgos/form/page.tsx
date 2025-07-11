@@ -264,7 +264,9 @@ export default function HallazgosFormPage() {
                   : ""
               }
               helperText={
-                !currentDescription ? "Por favor, ingrese una descripción" : ""
+                !currentDescription
+                  ? "Por favor, ingrese una descripción del comportamiento inseguro"
+                  : ""
               }
               error={!currentDescription}
             />

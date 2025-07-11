@@ -147,12 +147,12 @@ export default function CloseEvidence({
                   onChange={(e) => setDescriptionSolution(e.target.value)}
                   label={
                     currentDescriptionSolution
-                      ? "Descripción de la solución"
+                      ? "Descripción de la solución para el comportamiento inseguro"
                       : ""
                   }
                   helperText={
                     !currentDescriptionSolution
-                      ? "Por favor, ingrese una descripción de la solución"
+                      ? "Por favor, ingrese una descripción de la solución, para el comportamiento inseguro"
                       : ""
                   }
                   error={!currentDescriptionSolution}

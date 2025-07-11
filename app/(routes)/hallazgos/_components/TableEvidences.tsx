@@ -80,7 +80,7 @@ export default function TableEvidences({
     if (
       [
         "sst@hadamexico.com",
-        "eduardo-266@hotmail.com",
+        //"eduardo-266@hotmail.com",
         "gsalgado@hadamexico.com",
         "auxsistemadegestion@hadainternational.com",
         "glora@hadainternational.com",

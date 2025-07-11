@@ -14,12 +14,18 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
 
 import { AuthService } from "@services";
 import { constants } from "@constants";
 import { notify, isValidEmail } from "@shared/utils";
 
-const FormLogin = () => {
+interface Props {
+  setForgotPassword: (value: boolean) => void;
+}
+
+const FormLogin = ({ setForgotPassword }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleMouseDownPassword = (
@@ -122,6 +128,17 @@ const FormLogin = () => {
       >
         Iniciar
       </Button>
+      <Grid container>
+        <Grid item xs>
+          <Link
+            variant="body2"
+            onClick={() => setForgotPassword(true)}
+            sx={{ cursor: "pointer" }}
+          >
+            ¿Has olvidado tu contraseña?
+          </Link>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

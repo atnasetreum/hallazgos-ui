@@ -14,6 +14,13 @@ const login = async (payload: PayloadLogin) => {
   return data;
 };
 
+const forgotPassword = async (email: string) => {
+  const { data } = await api.post<{ message: string }>("/forgot-password", {
+    email,
+  });
+  return data;
+};
+
 const logout = async () => {
   const { data } = await api.post<{ message: string }>("/logout");
   return data;
@@ -22,4 +29,5 @@ const logout = async () => {
 export const AuthService = {
   login,
   logout,
+  forgotPassword,
 };

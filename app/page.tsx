@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+
 import Image from "next/image";
 
 import CssBaseline from "@mui/material/CssBaseline";
@@ -6,8 +10,11 @@ import Container from "@mui/material/Container";
 
 import FormLogin from "@components/login/FormLogin";
 import Copyright from "@shared/components/Copyright";
+import FormForgotPassword from "@components/login/FormForgotPassword";
 
 export default function SignIn() {
+  const [forgotPassword, setForgotPassword] = useState(false);
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -25,7 +32,11 @@ export default function SignIn() {
           width="300"
           height="200"
         />
-        <FormLogin />
+        {!forgotPassword ? (
+          <FormLogin setForgotPassword={setForgotPassword} />
+        ) : (
+          <FormForgotPassword setForgotPassword={setForgotPassword} />
+        )}
       </Box>
       <Image
         src={`${process.env.NEXT_PUBLIC_URL_API_RAW}/static/images/login/logo-inferior.png`}

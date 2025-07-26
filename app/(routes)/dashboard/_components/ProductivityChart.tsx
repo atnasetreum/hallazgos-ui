@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 
-import { ResponseDashboardMultiNivel, ResponseOpenVsClosed } from "@interfaces";
+import { ResponseOpenVsClosed } from "@interfaces";
 import { optionsChartDefault } from "@shared/libs";
 import { DashboardService } from "@services";
 

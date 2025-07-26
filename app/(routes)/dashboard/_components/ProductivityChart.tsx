@@ -7,6 +7,7 @@ import Highcharts from "highcharts";
 
 import { ResponseOpenVsClosed } from "@interfaces";
 import { optionsChartDefault } from "@shared/libs";
+import useCustomTheme from "_hooks/useCustomTheme";
 import { DashboardService } from "@services";
 
 if (typeof Highcharts === "object") {
@@ -16,6 +17,8 @@ if (typeof Highcharts === "object") {
 
 export const ProductivityChart = () => {
   const [data, setData] = useState({} as ResponseOpenVsClosed);
+
+  const { colorText } = useCustomTheme();
 
   useEffect(() => {
     DashboardService.findOpendVsClosed().then(setData);
@@ -38,6 +41,11 @@ export const ProductivityChart = () => {
         },
         xAxis: {
           categories: data.categories,
+          labels: {
+            style: {
+              color: colorText,
+            },
+          },
         },
         yAxis: {
           min: 0,

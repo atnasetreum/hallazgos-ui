@@ -7,6 +7,7 @@ import HighchartsReact from "highcharts-react-official";
 
 import { ResponseDashboardEvidencesByMonth } from "@interfaces";
 import { optionsChartDefault } from "@shared/libs";
+import useCustomTheme from "_hooks/useCustomTheme";
 import { DashboardService } from "@services";
 
 if (typeof Highcharts === "object") {
@@ -20,6 +21,8 @@ interface Props {
 
 export const EvidencePerMonthChart = ({ year }: Props) => {
   const [data, setData] = useState({} as ResponseDashboardEvidencesByMonth);
+
+  const { colorText } = useCustomTheme();
 
   useEffect(() => {
     DashboardService.findAllEvidencesByMonth(year).then(setData);
@@ -41,16 +44,27 @@ export const EvidencePerMonthChart = ({ year }: Props) => {
         },
         xAxis: {
           categories: data.categories,
+          labels: {
+            style: {
+              color: colorText,
+            },
+          },
         },
         yAxis: {
           title: {
             text: "Total de hallazgos",
+            style: {
+              color: colorText,
+            },
           },
         },
         legend: {
           layout: "vertical",
           align: "right",
           verticalAlign: "middle",
+          itemStyle: {
+            color: colorText,
+          },
         },
         plotOptions: {
           line: {

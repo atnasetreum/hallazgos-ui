@@ -3,6 +3,7 @@ import {
   ResponseDashboardEvidencesByMonth,
   ResponseDashboardMainTypes,
   ResponseDashboardMultiNivel,
+  ResponseOpenVsClosed,
   ResponseTopUsersByPlant,
 } from "@interfaces";
 
@@ -12,6 +13,11 @@ const api = axiosWrapper({
 
 const findAllStatus = async () => {
   const { data } = await api.get<ResponseDashboardMultiNivel>("/status");
+  return data;
+};
+
+const findOpendVsClosed = async () => {
+  const { data } = await api.get<ResponseOpenVsClosed>("/open-vs-closed");
   return data;
 };
 
@@ -50,4 +56,5 @@ export const DashboardService = {
   findAllStatus,
   findAllZones,
   findAllMainTypes,
+  findOpendVsClosed,
 };

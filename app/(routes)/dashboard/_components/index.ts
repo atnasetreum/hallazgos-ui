@@ -1,5 +1,6 @@
 export * from "./EvidencePerMonthChart";
 export * from "./MainTypesChart";
+export * from "./ProductivityChart";
 export * from "./PyramidChart";
 export * from "./StatusChart";
 export * from "./TopUsersByPlantChart";

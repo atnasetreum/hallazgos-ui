@@ -1,3 +1,11 @@
+export interface ResponseOpenVsClosed {
+  categories: string[];
+  series: {
+    name: string;
+    data: number[];
+  }[];
+}
+
 export interface ResponseDashboardMultiNivel {
   statusData: StatusDatum[];
   statusSeries: StatusSery[];

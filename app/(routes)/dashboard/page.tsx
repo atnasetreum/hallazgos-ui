@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import {
   EvidencePerMonthChart,
   MainTypesChart,
+  ProductivityChart,
   StatusChart,
   TopUsersByPlantChart,
   ZonesChart,
@@ -13,6 +14,28 @@ import {
 export default function DashboardPage() {
   return (
     <Grid container spacing={2}>
+      <Grid item xs={12} md={3} lg={3}>
+        <Paper
+          sx={{
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <StatusChart />
+        </Paper>
+      </Grid>
+      <Grid item xs={12} md={6} lg={6}>
+        <Paper
+          sx={{
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <ProductivityChart />
+        </Paper>
+      </Grid>
       <Grid item xs={12} md={3} lg={3}>
         <Paper
           sx={{
@@ -35,7 +58,7 @@ export default function DashboardPage() {
           <ZonesChart />
         </Paper>
       </Grid>
-      <Grid item xs={12} md={6} lg={6}>
+      <Grid item xs={12} md={4} lg={4}>
         <Paper
           sx={{
             p: 2,
@@ -46,7 +69,7 @@ export default function DashboardPage() {
           <MainTypesChart />
         </Paper>
       </Grid>
-      <Grid item xs={12} md={6} lg={6}>
+      <Grid item xs={12} md={5} lg={5}>
         <Paper
           sx={{
             p: 2,

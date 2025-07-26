@@ -77,7 +77,7 @@ export default function DashboardPage() {
             flexDirection: "column",
           }}
         >
-          <EvidencePerMonthChart year={2024} />
+          <EvidencePerMonthChart projections={true} />
         </Paper>
       </Grid>
       <Grid item xs={12} md={6} lg={6}>
@@ -92,6 +92,17 @@ export default function DashboardPage() {
         </Paper>
       </Grid>
       <Grid item xs={12} md={6} lg={6}>
+        <Paper
+          sx={{
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <EvidencePerMonthChart year={2024} />
+        </Paper>
+      </Grid>
+      <Grid item xs={12} md={12} lg={12}>
         <Paper
           sx={{
             p: 2,

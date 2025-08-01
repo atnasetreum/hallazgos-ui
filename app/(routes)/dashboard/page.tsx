@@ -44,21 +44,10 @@ export default function DashboardPage() {
             flexDirection: "column",
           }}
         >
-          <StatusChart />
-        </Paper>
-      </Grid>
-      <Grid item xs={12} md={3} lg={3}>
-        <Paper
-          sx={{
-            p: 2,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
           <ZonesChart />
         </Paper>
       </Grid>
-      <Grid item xs={12} md={4} lg={4}>
+      <Grid item xs={12} md={6} lg={4}>
         <Paper
           sx={{
             p: 2,
@@ -69,7 +58,7 @@ export default function DashboardPage() {
           <MainTypesChart />
         </Paper>
       </Grid>
-      <Grid item xs={12} md={5} lg={5}>
+      <Grid item xs={12} md={6} lg={4}>
         <Paper
           sx={{
             p: 2,
@@ -80,7 +69,7 @@ export default function DashboardPage() {
           <EvidencePerMonthChart projections={true} />
         </Paper>
       </Grid>
-      <Grid item xs={12} md={6} lg={6}>
+      <Grid item xs={12} md={6} lg={4}>
         <Paper
           sx={{
             p: 2,
@@ -91,7 +80,7 @@ export default function DashboardPage() {
           <EvidencePerMonthChart />
         </Paper>
       </Grid>
-      <Grid item xs={12} md={6} lg={6}>
+      <Grid item xs={12} md={6} lg={4}>
         <Paper
           sx={{
             p: 2,
@@ -102,7 +91,7 @@ export default function DashboardPage() {
           <EvidencePerMonthChart year={2024} />
         </Paper>
       </Grid>
-      <Grid item xs={12} md={12} lg={12}>
+      <Grid item xs={12} md={8} lg={8}>
         <Paper
           sx={{
             p: 2,

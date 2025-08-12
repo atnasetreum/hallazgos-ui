@@ -37,8 +37,6 @@ export async function middleware(request: NextRequest) {
       })
     ).json();
 
-    console.log({ data });
-
     statusCode = data.statusCode || 0;
   } else if (tokenRestorePassword) {
     const data = await (

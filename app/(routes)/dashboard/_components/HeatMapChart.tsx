@@ -7,7 +7,6 @@ import Highcharts from "highcharts";
 
 import { ResponseOpenVsClosed } from "@interfaces";
 import { optionsChartDefault } from "@shared/libs";
-import useCustomTheme from "_hooks/useCustomTheme";
 import { DashboardService } from "@services";
 
 if (typeof Highcharts === "object") {
@@ -18,8 +17,6 @@ if (typeof Highcharts === "object") {
 
 export const HeatMapChart = () => {
   const [data, setData] = useState({} as ResponseOpenVsClosed);
-
-  const { colorText } = useCustomTheme();
 
   useEffect(() => {
     DashboardService.findOpendVsClosed().then(setData);

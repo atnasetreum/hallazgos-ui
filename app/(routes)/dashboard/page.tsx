@@ -2,9 +2,9 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 
 import {
-  AccidentRateIndicator,
+  //AccidentRateIndicator,
   EvidencePerMonthChart,
-  HeatMapChart,
+  //HeatMapChart,
   MainTypesChart,
   ProductivityChart,
   StatusChart,

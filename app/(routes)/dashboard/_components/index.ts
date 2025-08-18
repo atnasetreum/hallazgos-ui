@@ -1,4 +1,6 @@
+export * from "./AccidentRateIndicator";
 export * from "./EvidencePerMonthChart";
+export * from "./HeatMapChart";
 export * from "./MainTypesChart";
 export * from "./ProductivityChart";
 export * from "./PyramidChart";

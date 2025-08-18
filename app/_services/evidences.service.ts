@@ -18,6 +18,7 @@ const paramsFilter = (params: FiltersEvidences) => {
     ...(params.mainTypeId && { mainTypeId: params.mainTypeId }),
     ...(params.secondaryType && { secondaryType: params.secondaryType }),
     ...(params.zone && { zone: params.zone }),
+    ...(params.state && { status: params.state }),
   };
 };
 

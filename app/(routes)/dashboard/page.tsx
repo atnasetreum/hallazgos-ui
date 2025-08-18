@@ -2,7 +2,9 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 
 import {
+  AccidentRateIndicator,
   EvidencePerMonthChart,
+  HeatMapChart,
   MainTypesChart,
   ProductivityChart,
   StatusChart,
@@ -14,7 +16,18 @@ import {
 export default function DashboardPage() {
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={3} lg={3}>
+      {/* <Grid item xs={12} md={6} lg={3}>
+        <Paper
+          sx={{
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <AccidentRateIndicator />
+        </Paper>
+      </Grid> */}
+      <Grid item xs={12} md={6} lg={3}>
         <Paper
           sx={{
             p: 2,
@@ -36,7 +49,7 @@ export default function DashboardPage() {
           <ProductivityChart />
         </Paper>
       </Grid>
-      <Grid item xs={12} md={3} lg={3}>
+      <Grid item xs={12} md={6} lg={3}>
         <Paper
           sx={{
             p: 2,
@@ -58,6 +71,17 @@ export default function DashboardPage() {
           <MainTypesChart />
         </Paper>
       </Grid>
+      {/* <Grid item xs={12} md={6} lg={8}>
+        <Paper
+          sx={{
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <HeatMapChart />
+        </Paper>
+      </Grid> */}
       <Grid item xs={12} md={6} lg={4}>
         <Paper
           sx={{
@@ -91,7 +115,7 @@ export default function DashboardPage() {
           <EvidencePerMonthChart year={2024} />
         </Paper>
       </Grid>
-      <Grid item xs={12} md={8} lg={8}>
+      <Grid item xs={12} md={6} lg={8}>
         <Paper
           sx={{
             p: 2,

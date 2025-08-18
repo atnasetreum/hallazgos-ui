@@ -6,6 +6,13 @@ export interface ResponseOpenVsClosed {
   }[];
 }
 
+export interface ResponseAccidents {
+  numeroDeMes: number;
+  numeroDeEmpleados: number;
+  numeroDeAccidentes: number;
+  nombreMes: string;
+}
+
 export interface ResponseDashboardMultiNivel {
   statusData: StatusDatum[];
   statusSeries: StatusSery[];

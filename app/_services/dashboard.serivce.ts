@@ -1,5 +1,6 @@
 import axiosWrapper from "./axiosWrapper";
 import {
+  ResponseAccidents,
   ResponseDashboardEvidencesByMonth,
   ResponseDashboardMainTypes,
   ResponseDashboardMultiNivel,
@@ -18,6 +19,15 @@ const findAllStatus = async () => {
 
 const findOpendVsClosed = async () => {
   const { data } = await api.get<ResponseOpenVsClosed>("/open-vs-closed");
+  return data;
+};
+
+const findAccidentRate = async (year?: number) => {
+  const { data } = await api.get<ResponseAccidents[]>("/accidents-by-month", {
+    params: {
+      ...(year && { year }),
+    },
+  });
   return data;
 };
 
@@ -51,6 +61,7 @@ const findTopUsersByPlant = async () => {
 };
 
 export const DashboardService = {
+  findAccidentRate,
   findTopUsersByPlant,
   findAllEvidencesByMonth,
   findAllStatus,

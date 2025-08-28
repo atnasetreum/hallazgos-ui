@@ -19,6 +19,7 @@ import HubIcon from "@mui/icons-material/Hub";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import Tooltip from "@mui/material/Tooltip";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
+import DescriptionIcon from "@mui/icons-material/Description";
 
 import { useCategoriesStore, useUserSessionStore } from "@store";
 import { ROLE_ADMINISTRADOR } from "@shared/constants";
@@ -122,6 +123,7 @@ export const MainListItems = () => {
             title="Usuarios"
             icon={<SupervisedUserCircleIcon />}
           />
+          <CreateLink url="/epp" title="EPP" icon={<DescriptionIcon />} />
         </>
       )}
     </>

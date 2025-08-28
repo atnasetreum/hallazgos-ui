@@ -19,6 +19,7 @@ import { UsersService } from "@services";
 import { User } from "@interfaces";
 import TableUsers from "./_components/TableUsers";
 import FiltersUsers, { IFiltersUsers } from "./_components/FiltersUsers";
+import { useTheme } from "@mui/material/styles";
 
 const UsersPage = () => {
   const [data, setData] = useState<User[]>([]);
@@ -31,6 +32,7 @@ const UsersPage = () => {
   });
 
   const router = useRouter();
+  const theme = useTheme();
 
   const getData = useDebouncedCallback(() => {
     setIsLoading(true);
@@ -46,7 +48,15 @@ const UsersPage = () => {
   return (
     <Grid container>
       <Grid item xs={12} sm={12} md={12}>
-        <Typography variant="h4" gutterBottom>
+        <Typography
+          variant="h4"
+          gutterBottom
+          color={
+            theme.palette.mode === "light"
+              ? theme.palette.common.black
+              : theme.palette.common.white
+          }
+        >
           Usuarios
         </Typography>
       </Grid>

@@ -3,6 +3,7 @@ import Typography from "@mui/material/Typography";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
+import { useTheme } from "@mui/material/styles";
 // import SelectManufacturingPlants from "@components/SelectManufacturingPlants";
 // import SelectRules from "@components/SelectRules";
 // import SelectZones from "@components/SelectZones";
@@ -21,10 +22,20 @@ interface Props {
 }
 
 const FiltersUsers = ({ filters, setFilters, count }: Props) => {
+  const theme = useTheme();
+
   return (
     <Grid container spacing={2} sx={{ mb: 2 }}>
       <Grid item xs={12} sm={12} md={12}>
-        <Typography variant="subtitle1" gutterBottom>
+        <Typography
+          variant="subtitle1"
+          gutterBottom
+          color={
+            theme.palette.mode === "light"
+              ? theme.palette.common.black
+              : theme.palette.common.white
+          }
+        >
           <FilterListIcon sx={{ pt: 1 }} /> Filters ({count})
         </Typography>
       </Grid>

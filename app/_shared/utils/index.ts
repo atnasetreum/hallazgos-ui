@@ -57,3 +57,8 @@ export const durantionToTime = (startTime: Date, end: Date) => {
     seconds ? seconds + "s" : ""
   }`;
 };
+
+export const stringYYYYMMDDToDDMMYYYY = (dateString: string) => {
+  const date = dateString.split("T")[0].split("-");
+  return `${date[2]}/${date[1]}/${date[0]}`;
+};

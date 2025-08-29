@@ -12,7 +12,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import { EvidenceGraphql } from "@hooks";
 import DetailsEvidence from "./DetailsEvidence";
 
-const Transition = forwardRef(function Transition(
+export const Transition = forwardRef(function Transition(
   props: TransitionProps & {
     children: ReactElement;
   },

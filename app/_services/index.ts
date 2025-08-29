@@ -2,6 +2,7 @@ export * from "./auth.service";
 export * from "./axiosWrapper";
 export * from "./dashboard.serivce";
 export * from "./epp.service";
+export * from "./equipments.service";
 export * from "./evidences.service";
 export * from "./main-types.service";
 export * from "./manufacturing-plants.service";

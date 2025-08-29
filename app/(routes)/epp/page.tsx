@@ -1,64 +1,55 @@
 "use client";
 
-import Paper from "@mui/material/Paper";
+import { useEffect, useState } from "react";
+
+import AddIcon from "@mui/icons-material/Add";
 import Grid from "@mui/material/Grid";
 import { Button } from "@mui/material";
+
+import DialogCreateEpp from "./_components/DialogCreateEpp";
+import TableEpps from "./_components/TableEpps";
 import { EppService } from "@services";
+import { Epp } from "@interfaces";
 
 export default function EppPage() {
-  const createEppFormat = () => {
-    EppService.create({
-      employeeId: 3,
-      signature: "kjsghdfkjsdf",
-      equipments: [
-        {
-          id: 1,
-          quantity: 1,
-          observations: "test",
-        },
-        {
-          id: 2,
-          quantity: 1,
-          observations: "test",
-        },
-      ],
-    }).then((response) => {
-      console.log(response);
-      /* XLSX.fromFileAsync("formatoEPP.xlsx")
-        .then((workbook) => {
-          // Selecciona la hoja de cálculo por su nombre (reemplaza "Hoja1" por el nombre de tu hoja)
-          const sheet = workbook.sheet("EPP Personas");
+  const [data, setData] = useState<Epp[]>([]);
+  const [open, setOpen] = useState(false);
 
-          // Escribe la información en la celda A1
-          sheet.cell("B4").value("Nuevo dato en B4");
-
-          // Guarda los cambios en un nuevo archivo o sobrescribe el existente
-          return workbook.toFileAsync("archivo_actualizado.xlsx");
-        })
-        .then((res) => {
-          console.log("Archivo Excel actualizado correctamente.", res.message);
-        })
-        .catch((err) => {
-          console.error("Error al actualizar el archivo Excel:", err);
-        }); */
-    });
+  const getData = () => {
+    EppService.findAll().then(setData);
   };
 
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} md={6} lg={8}>
-        <Paper
-          sx={{
-            p: 2,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Button variant="contained" onClick={createEppFormat}>
-            Crear formato
+    <>
+      <DialogCreateEpp
+        open={open}
+        create={(form) => {
+          const confirm = Object.keys(form).length > 0;
+          if (!confirm) return setOpen(false);
+          EppService.create(form).then(() => {
+            setOpen(false);
+            getData();
+          });
+        }}
+      />
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={2} lg={2}>
+          <Button
+            variant="contained"
+            onClick={() => setOpen(true)}
+            startIcon={<AddIcon />}
+          >
+            Entregar EPP
           </Button>
-        </Paper>
+        </Grid>
+        <Grid item xs={12} sm={12} md={12}>
+          <TableEpps data={data} />
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 }

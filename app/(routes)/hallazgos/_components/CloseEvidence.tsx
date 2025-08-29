@@ -18,7 +18,7 @@ import ImageORCamera from "@shared/components/ImageORCamera";
 import { EvidenceGraphql } from "@hooks";
 import { Grid, Paper, TextField } from "@mui/material";
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+export const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
   },

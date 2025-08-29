@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Image from "next/image";
 
@@ -11,7 +11,6 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
-import SignatureCanvas from "react-signature-canvas";
 import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
 import TextField from "@mui/material/TextField";

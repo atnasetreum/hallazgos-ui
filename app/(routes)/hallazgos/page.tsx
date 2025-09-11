@@ -12,7 +12,6 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
-import { utils, WorkBook, writeFileXLSX } from "xlsx";
 import { Content, StyleDictionary } from "pdfmake/interfaces";
 import * as pdfMake from "pdfmake/build/pdfmake";
 import { toast } from "sonner";
@@ -23,11 +22,7 @@ import LoadingLinear from "@shared/components/LoadingLinear";
 import FiltersEvidence, {
   FiltersEvidences,
 } from "./_components/FiltersEvidence";
-import {
-  baseUrlImage,
-  durantionToTime,
-  stringToDateWithTime,
-} from "@shared/utils";
+import { baseUrlImage, stringToDateWithTime } from "@shared/utils";
 import { useEvidences } from "@hooks";
 import { EvidencesService } from "@services";
 
@@ -278,7 +273,12 @@ export default function HallazgosPage() {
             <LoadingButton
               variant="contained"
               startIcon={<SimCardDownloadIcon />}
-              onClick={() => EvidencesService.downloadFile(filters)}
+              onClick={() => {
+                setIsLoadingExcel(true);
+                EvidencesService.downloadFile(filters)
+                  .then(() => toast.success("Descarga exitosa"))
+                  .finally(() => setIsLoadingExcel(false));
+              }}
               loading={isLoadingExcel}
             >
               EXCEL

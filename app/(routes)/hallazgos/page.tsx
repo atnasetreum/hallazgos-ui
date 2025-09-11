@@ -61,49 +61,6 @@ export default function HallazgosPage() {
     findEvidences(filters);
   }, [filters, page, rowsPerPage]);
 
-  const createExcel = () => {
-    if (!filters.manufacturingPlantId) {
-      toast.error("Seleccione una planta");
-      return;
-    }
-    setIsLoadingExcel(true);
-    EvidencesService.findAll(filters)
-      .then(async (evidencesCurrent) => {
-        const data = evidencesCurrent.map((evidence) => ({
-          ["ID"]: evidence.id,
-          ["Palnta"]: evidence.manufacturingPlant.name,
-          ["Grupo"]: evidence.mainType.name,
-          ["Tipo de hallazgo"]: evidence.secondaryType.name,
-          ["Zona"]: evidence.zone.name,
-          ["Proceso"]: evidence.process,
-          ["Creado por"]: evidence.user.name,
-          ["Supervisores"]: evidence.supervisors
-            .map((supervisor) => supervisor.name)
-            .join(" / "),
-          ["Responsables"]: evidence.responsibles
-            .map((supervisor) => supervisor.name)
-            .join(" / "),
-          ["Estatus"]: evidence.status,
-          // ...(evidence.description && {
-          //   ["Descripción del comportamiento inseguro"]: evidence.description,
-          // }),
-          ["Fecha de creación"]: stringToDateWithTime(evidence.createdAt),
-          ["Fecha de actualización"]: stringToDateWithTime(evidence.updatedAt),
-          ["Fecha de cierre"]: evidence.solutionDate
-            ? stringToDateWithTime(evidence.solutionDate)
-            : "",
-          ["Tiempo de solución"]: evidence.solutionDate
-            ? durantionToTime(evidence.createdAt, evidence.solutionDate)
-            : "",
-        }));
-        const wb: WorkBook = utils.book_new();
-        const ws = utils.json_to_sheet(data);
-        utils.book_append_sheet(wb, ws, "SheetJS");
-        writeFileXLSX(wb, "hallazgos.xlsx");
-      })
-      .finally(() => setIsLoadingExcel(false));
-  };
-
   const getBase64ImageFromURL = (url: string) => {
     return new Promise((resolve, reject) => {
       var img = new Image();
@@ -317,11 +274,11 @@ export default function HallazgosPage() {
               variant="contained"
               startIcon={<RefreshIcon />}
               onClick={() => getData()}
-            ></Button>
+            />
             <LoadingButton
               variant="contained"
               startIcon={<SimCardDownloadIcon />}
-              onClick={() => createExcel()}
+              onClick={() => EvidencesService.downloadFile(filters)}
               loading={isLoadingExcel}
             >
               EXCEL

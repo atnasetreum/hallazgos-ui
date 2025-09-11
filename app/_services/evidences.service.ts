@@ -69,8 +69,8 @@ const addComment = async (id: number, comment: string) => {
   return data;
 };
 
-const downloadFile = async (filters: FiltersEvidences) => {
-  const { data } = await api.get(`/download/file`, {
+const downloadExcel = async (filters: FiltersEvidences) => {
+  const { data } = await api.get(`/download/xlsx`, {
     responseType: "blob",
     params: paramsFilter(filters),
   });
@@ -89,11 +89,30 @@ const downloadFile = async (filters: FiltersEvidences) => {
   return "ok";
 };
 
+const downloadPdf = async (filters: FiltersEvidences) => {
+  const { data } = await api.get(`/download/pdf`, {
+    responseType: "blob",
+    params: paramsFilter(filters),
+  });
+  const url = window.URL.createObjectURL(new Blob([data]));
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", "Hallazgos.pdf");
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
+
+  return "ok";
+};
+
 export const EvidencesService = {
   findAll,
   create,
   remove,
   solution,
   addComment,
-  downloadFile,
+  downloadExcel,
+  downloadPdf,
 };

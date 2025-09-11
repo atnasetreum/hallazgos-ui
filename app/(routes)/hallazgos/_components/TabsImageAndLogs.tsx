@@ -2,22 +2,22 @@ import { ReactNode, SyntheticEvent, useEffect, useState } from "react";
 
 import Image from "next/image";
 
+import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import SwipeableViews from "react-swipeable-views";
-import { useTheme } from "@mui/material/styles";
-import AppBar from "@mui/material/AppBar";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
+import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
+import AppBar from "@mui/material/AppBar";
+import Grid from "@mui/material/Grid";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
 
+import { CommentEvidenceGraphql, EvidenceGraphql } from "@hooks";
 import { baseUrlImage, notify } from "@shared/utils";
 import { EvidencesService } from "@services";
 import ListComments from "./ListComments";
-import { CommentEvidenceGraphql, EvidenceGraphql } from "@hooks";
 
 interface TabPanelProps {
   children?: ReactNode;
@@ -26,27 +26,23 @@ interface TabPanelProps {
   value: number;
 }
 
-function TabPanel(props: TabPanelProps) {
+export function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 }
 
-function a11yProps(index: number) {
+export function a11yProps(index: number) {
   return {
     id: `full-width-tab-${index}`,
     "aria-controls": `full-width-tabpanel-${index}`,

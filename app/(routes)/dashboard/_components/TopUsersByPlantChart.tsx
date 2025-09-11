@@ -20,40 +20,10 @@ import Box from "@mui/material/Box";
 
 import { TopUsersByPlantData } from "@interfaces";
 import { DashboardService } from "@services";
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  dir?: string;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-function a11yProps(index: number) {
-  return {
-    id: `full-width-tab-${index}`,
-    "aria-controls": `full-width-tabpanel-${index}`,
-  };
-}
+import {
+  a11yProps,
+  TabPanel,
+} from "@routes/hallazgos/_components/TabsImageAndLogs";
 
 export const TopUsersByPlantChart = () => {
   const [data, setData] = useState([] as TopUsersByPlantData[]);

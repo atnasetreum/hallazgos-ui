@@ -43,7 +43,7 @@ export default function EppPage() {
             onClick={() => setOpen(true)}
             startIcon={<AddIcon />}
           >
-            Entregar EPP
+            Crear registro
           </Button>
         </Grid>
         <Grid item xs={12} sm={12} md={12}>

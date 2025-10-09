@@ -14,6 +14,7 @@ interface Props {
   helperText?: string;
   attention?: string;
   validationEmpty?: boolean;
+  disabled?: boolean;
 }
 
 export default function SelectDefault({
@@ -25,6 +26,7 @@ export default function SelectDefault({
   helperText,
   attention,
   validationEmpty = false,
+  disabled = false,
 }: Props) {
   return (
     <Paper>
@@ -41,7 +43,7 @@ export default function SelectDefault({
           value={value}
           label={label}
           onChange={onChange}
-          disabled={!!helperText}
+          disabled={!!helperText || disabled}
         >
           {isFilter && (
             <MenuItem value="">

@@ -6,12 +6,14 @@ const api = axiosWrapper({
 });
 
 interface FiltersEmployees {
-  manufacturingPlantId: number;
+  manufacturingPlantId?: number;
 }
 
 const findAll = async ({ manufacturingPlantId }: FiltersEmployees) => {
   const { data } = await api.get<Employee[]>("", {
-    params: { manufacturingPlantId },
+    params: {
+      ...(manufacturingPlantId && { manufacturingPlantId }),
+    },
   });
   return data;
 };

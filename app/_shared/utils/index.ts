@@ -48,6 +48,10 @@ export const baseUrlImage = (image: string, path?: string) => {
 export const stringToDateWithTime = (date: string | Date) =>
   moment(date).format("DD/MM/YYYY h:mm a");
 
+// Format 05 - January - 2024
+export const stringToDate = (date: string | Date) =>
+  moment(date).format("DD [ - ] MMMM [ - ] YYYY");
+
 export const durantionToTime = (startTime: Date, end: Date) => {
   const duration = moment.duration(moment(end).diff(moment(startTime)));
   const hours = duration.hours();

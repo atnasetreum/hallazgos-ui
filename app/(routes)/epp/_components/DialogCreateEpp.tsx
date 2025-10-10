@@ -59,7 +59,7 @@ export default function DialogCreateEpp({ open, create }: Props) {
   }, []);
 
   useEffect(() => {
-    EmployeesService.findAll().then(setEmployees);
+    EmployeesService.findAll({}).then(setEmployees);
   }, []);
 
   const isDisabledSave = useMemo(() => {

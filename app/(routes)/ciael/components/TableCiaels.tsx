@@ -39,7 +39,7 @@ export default function TableCiaels({ data }: Props) {
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <StyledTableCell component="th" scope="row">
-                {ciael.description}
+                {ciael.typeOfEvent.name}
               </StyledTableCell>
               <StyledTableCell>{ciael.employee.name}</StyledTableCell>
               <StyledTableCell>{stringToDate(ciael.eventDate)}</StyledTableCell>

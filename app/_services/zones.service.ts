@@ -19,6 +19,7 @@ const findAll = async (filters: {
   name?: string;
   manufacturingPlantId?: string;
   manufacturingPlantNames?: string[];
+  withArea?: boolean;
 }) => {
   const { data } = await api.get<Zone[]>("", {
     params: {
@@ -30,6 +31,9 @@ const findAll = async (filters: {
       }),
       ...(filters?.manufacturingPlantNames && {
         manufacturingPlantNames: filters.manufacturingPlantNames,
+      }),
+      ...(filters?.withArea && {
+        withArea: filters.withArea,
       }),
     },
   });

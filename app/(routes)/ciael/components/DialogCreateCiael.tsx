@@ -180,7 +180,9 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
       EmployeesService.findAll({
         manufacturingPlantId: Number(manufacturingPlantId),
       }).then(setEmployees);
-      ZonesService.findAll({ manufacturingPlantId }).then(setZones);
+      ZonesService.findAll({ manufacturingPlantId, withArea: true }).then(
+        setZones
+      );
       AccidentPositionsService.findAll({ manufacturingPlantId }).then(
         setAccidentPositions
       );

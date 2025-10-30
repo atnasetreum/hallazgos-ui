@@ -135,19 +135,16 @@ export default function DetailsTabs({
               <Divider />
             </>
           )}
-          {isUnsafeBehavior && (
-            <>
-              <ListItem>
-                <ListItemButton>
-                  <ListItemText
-                    primary={evidenceCurrent.description}
-                    secondary="Descripción del comportamiento inseguro"
-                  />
-                </ListItemButton>
-              </ListItem>
-              <Divider />
-            </>
-          )}
+
+          <ListItem>
+            <ListItemButton>
+              <ListItemText
+                primary={evidenceCurrent.description}
+                secondary="Descripción del comportamiento inseguro"
+              />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
 
           {isUnsafeBehavior && evidenceCurrent.descriptionSolution && (
             <>

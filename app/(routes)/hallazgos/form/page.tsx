@@ -90,29 +90,42 @@ export default function HallazgosFormPage() {
 
   const currentDescription = useMemo(() => description.trim(), [description]);
 
-  const isValidForm = useMemo(
-    () =>
-      (manufacturingPlantId &&
+  const isValidForm = useMemo(() => {
+    /* (manufacturingPlantId &&
       typeHallazgo &&
       secondaryType &&
       zone &&
       process &&
+      currentDescription &&
       isUnsafeBehavior
         ? currentDescription
-        : image || attachedFile) || isLoading,
-    [
-      manufacturingPlantId,
-      typeHallazgo,
-      secondaryType,
-      zone,
-      image,
-      isLoading,
-      attachedFile,
-      process,
-      isUnsafeBehavior,
-      currentDescription,
-    ]
-  );
+        : image || attachedFile) || isLoading */
+
+    let validate =
+      !manufacturingPlantId ||
+      !typeHallazgo ||
+      !secondaryType ||
+      !zone ||
+      !process ||
+      !currentDescription;
+
+    if (!isUnsafeBehavior) {
+      validate = image || attachedFile ? false : true;
+    }
+
+    return !validate || isLoading;
+  }, [
+    manufacturingPlantId,
+    typeHallazgo,
+    secondaryType,
+    zone,
+    image,
+    isLoading,
+    attachedFile,
+    process,
+    isUnsafeBehavior,
+    currentDescription,
+  ]);
 
   const saveEvidence = async () => {
     const formData = new FormData();
@@ -247,32 +260,30 @@ export default function HallazgosFormPage() {
         />
       </Grid>
 
-      {isUnsafeBehavior && (
-        <Grid item xs={12} sm={6} md={6}>
-          <Paper sx={{ p: 2 }}>
-            <TextField
-              id="description-multiline"
-              multiline
-              rows={4}
-              variant="standard"
-              fullWidth
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              label={
-                currentDescription
-                  ? "Descripción del comportamiento inseguro"
-                  : ""
-              }
-              helperText={
-                !currentDescription
-                  ? "Por favor, ingrese una descripción del comportamiento inseguro"
-                  : ""
-              }
-              error={!currentDescription}
-            />
-          </Paper>
-        </Grid>
-      )}
+      <Grid item xs={12} sm={6} md={6}>
+        <Paper sx={{ p: 2 }}>
+          <TextField
+            id="description-multiline"
+            multiline
+            rows={4}
+            variant="standard"
+            fullWidth
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            label={
+              currentDescription
+                ? "Descripción del comportamiento inseguro"
+                : ""
+            }
+            helperText={
+              !currentDescription
+                ? "Por favor, ingrese una descripción del comportamiento inseguro"
+                : ""
+            }
+            error={!currentDescription}
+          />
+        </Paper>
+      </Grid>
 
       <ImageORCamera
         setImage={setImage}

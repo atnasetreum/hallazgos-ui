@@ -7,7 +7,7 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { durantionToTime, notify, stringToDateWithTime } from "@shared/utils";
-import TableDefault, {
+import {
   StyledTableCell,
   StyledTableRow,
 } from "@shared/components/TableDefault";
@@ -22,6 +22,7 @@ import CloseEvidence from "./CloseEvidence";
 import { useUserSessionStore } from "@store";
 import { EvidencesService } from "@services";
 import { EvidenceGraphql } from "@hooks";
+import TableDefaultServer from "@shared/components/TableDefaultServer";
 
 const columns = [
   "ID",
@@ -86,6 +87,8 @@ export default function TableEvidences({
         "auxsistemadegestion@hadainternational.com",
         "glora@hadainternational.com",
         "mruiz@hadamexico.com",
+        "arodriguez@hadamexico.com",
+        "esanchez@hadamexico.com",
       ].includes(email)
     ) {
       return true;
@@ -129,7 +132,7 @@ export default function TableEvidences({
         />
       )}
 
-      <TableDefault
+      <TableDefaultServer
         rows={rows}
         columns={columns}
         paintRows={(row: EvidenceGraphql) => (

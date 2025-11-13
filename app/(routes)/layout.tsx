@@ -34,7 +34,7 @@ import Copyright from "@shared/components/Copyright";
 import { useUserSessionStore } from "@store";
 import { UsersService } from "@services";
 
-const drawerWidth: number = 240;
+const drawerWidth: number = 260;
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;

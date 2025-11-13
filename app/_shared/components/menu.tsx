@@ -8,6 +8,8 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
+import List from "@mui/material/List";
+import Collapse from "@mui/material/Collapse";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -21,6 +23,11 @@ import Tooltip from "@mui/material/Tooltip";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import DescriptionIcon from "@mui/icons-material/Description";
 import WarningIcon from "@mui/icons-material/Warning";
+import ContentPasteGoIcon from "@mui/icons-material/ContentPasteGo";
+import SettingsIcon from "@mui/icons-material/Settings";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import FolderSharedIcon from "@mui/icons-material/FolderShared";
 
 import { useCategoriesStore, useUserSessionStore } from "@store";
 import { ROLE_ADMINISTRADOR } from "@shared/constants";
@@ -36,10 +43,12 @@ function CreateLink({
   url,
   title,
   icon,
+  nested = false,
 }: {
   url: string;
   title: string;
   icon: ReactNode;
+  nested?: boolean;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -49,6 +58,7 @@ function CreateLink({
       <ListItemButton
         onClick={() => router.push(url)}
         selected={pathname.startsWith(url)}
+        sx={nested ? { pl: 4 } : undefined}
       >
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={title} />
@@ -59,6 +69,7 @@ function CreateLink({
 
 export const MainListItems = () => {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [openConfig, setOpenConfig] = useState(false);
 
   const role = useUserSessionStore((state) => state.role);
 
@@ -98,34 +109,68 @@ export const MainListItems = () => {
       />
       {isAdmin && (
         <>
-          <CreateLink
-            url="/manufacturing-plants"
-            title="Plantas"
-            icon={<BusinessIcon />}
-          />
-          <CreateLink
-            url="/main-types"
-            title="Criterios"
-            icon={<EngineeringIcon />}
-          />
-          <CreateLink
-            url="/secondary-types"
-            title="Tipos de criterios"
-            icon={<DnsIcon />}
-          />
-          <CreateLink url="/zones" title="Zonas" icon={<HubIcon />} />
-          <CreateLink
-            url="/processes"
-            title="Procesos"
-            icon={<AccountTreeIcon />}
-          />
-          <CreateLink
-            url="/users"
-            title="Usuarios"
-            icon={<SupervisedUserCircleIcon />}
-          />
+          <Tooltip title="Configuraciones" placement="right">
+            <ListItemButton onClick={() => setOpenConfig((prev) => !prev)}>
+              <ListItemIcon>
+                <SettingsIcon />
+              </ListItemIcon>
+              <ListItemText primary="Configuraciones" />
+              {openConfig ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+          </Tooltip>
+          <Collapse in={openConfig} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <CreateLink
+                nested
+                url="/users"
+                title="Usuarios"
+                icon={<SupervisedUserCircleIcon />}
+              />
+              <CreateLink
+                nested
+                url="/employees"
+                title="Colaboradores"
+                icon={<FolderSharedIcon />}
+              />
+              <CreateLink
+                nested
+                url="/manufacturing-plants"
+                title="Plantas"
+                icon={<BusinessIcon />}
+              />
+              <CreateLink
+                nested
+                url="/main-types"
+                title="Criterios"
+                icon={<EngineeringIcon />}
+              />
+              <CreateLink
+                nested
+                url="/secondary-types"
+                title="Tipos de criterios"
+                icon={<DnsIcon />}
+              />
+              <CreateLink
+                nested
+                url="/zones"
+                title="Zonas"
+                icon={<HubIcon />}
+              />
+              <CreateLink
+                nested
+                url="/processes"
+                title="Procesos"
+                icon={<AccountTreeIcon />}
+              />
+            </List>
+          </Collapse>
           <CreateLink url="/epp" title="EPP" icon={<DescriptionIcon />} />
           <CreateLink url="/ciael" title="CIAEL" icon={<WarningIcon />} />
+          <CreateLink
+            url="/training-guide"
+            title="Guías de entrenamiento"
+            icon={<ContentPasteGoIcon />}
+          />
         </>
       )}
     </>

@@ -18,3 +18,21 @@ interface Area {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface CatalogEmployee {
+  areas: Area[];
+  positions: Area[];
+  manufacturingPlants: ManufacturingPlant[];
+  genres: Area[];
+}
+
+interface ManufacturingPlant {
+  id: number;
+  name: string;
+  link: string;
+  lat: string;
+  lng: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}

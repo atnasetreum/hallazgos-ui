@@ -1,111 +1,141 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 
 import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "sonner";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import TextField, { TextFieldProps } from "@mui/material/TextField";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs, { Dayjs } from "dayjs";
 
-import { UsersService } from "@services";
+import { EmployeesService } from "@services";
+import { CatalogEmployee } from "@interfaces";
+import SelectDefault from "@components/SelectDefault";
+import { SelectChangeEvent } from "@mui/material";
 import MultiSelectManufacturingPlants from "@components/MultiSelectManufacturingPlants";
-import MultiSelectZones from "@components/MultiSelectZones";
-import { isValidEmail } from "@shared/utils";
-import MultiSelectProcesses from "@components/MultiSelectProcesses";
 
 const EmployeesFormPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [idCurrent, setIdCurrent] = useState<number>(0);
+  const [catalogs, setCatalogs] = useState<CatalogEmployee | null>(null);
   const [form, setForm] = useState<{
+    code: string;
     name: string;
-    email: string;
-    password: string;
-    rule: string;
+    birthdate: Dayjs | null;
+    dateOfAdmission: Dayjs | null;
+    area: string;
+    position: string;
+    gender: string;
     manufacturingPlantNames: string[];
-    zoneNames: string[];
-    processNames: string[];
   }>({
+    code: "",
     name: "",
-    email: "",
-    password: "",
-    rule: "",
+    birthdate: null,
+    dateOfAdmission: null,
+    area: "",
+    position: "",
+    gender: "",
     manufacturingPlantNames: [],
-    zoneNames: [],
-    processNames: [],
   });
 
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  useEffect(() => {
+    EmployeesService.catalogs().then((data) => setCatalogs(data));
+  }, []);
+
   const save = () => {
+    const codeClean = form.code.trim();
     const nameClean = form.name.trim();
-    const emailClean = form.email.trim();
-    const passwordClean = form.password.trim();
+    const birthdateClean = form.birthdate;
+    const dateOfAdmissionClean = form.dateOfAdmission;
+    const areaClean = form.area;
+    const positionClean = form.position;
+    const manufacturingPlantNamesClean = form.manufacturingPlantNames;
+
+    if (!codeClean) {
+      toast.error("El código es requerido");
+      return;
+    }
 
     if (!nameClean) {
       toast.error("El nombre es requerido");
       return;
     }
 
-    if (!emailClean) {
-      toast.error("El correo electrónico es requerido");
+    if (!birthdateClean) {
+      toast.error("La fecha de nacimiento es requerida");
       return;
     }
 
-    if (!isValidEmail(emailClean)) {
-      toast.error("El correo electrónico no es válido");
+    if (!birthdateClean.isValid()) {
+      toast.error("La fecha de nacimiento no es válida");
       return;
     }
 
-    if (!idCurrent && !passwordClean) {
-      toast.error("La contraseña es requerida");
+    if (!dateOfAdmissionClean) {
+      toast.error("La fecha de admisión es requerida");
       return;
     }
 
-    if (!form.manufacturingPlantNames.length) {
-      toast.error("La planta de manufactura es requerida");
+    if (!dateOfAdmissionClean.isValid()) {
+      toast.error("La fecha de admisión no es válida");
       return;
     }
 
-    if (form.rule === "Supervisor" && !form.zoneNames.length) {
-      toast.error("La zona es requerida");
+    if (!areaClean) {
+      toast.error("El área es requerida");
+      return;
+    }
+
+    if (!positionClean) {
+      toast.error("El puesto es requerido");
+      return;
+    }
+
+    if (!manufacturingPlantNamesClean.length) {
+      toast.error("Seleccione al menos una planta");
       return;
     }
 
     setIsLoading(true);
 
     const payload = {
+      code: codeClean,
       name: nameClean,
-      email: emailClean,
-      password: passwordClean,
-      rule: form.rule,
-      manufacturingPlantNames: form.manufacturingPlantNames,
-      zoneNames: form.rule === "Supervisor" ? form.zoneNames : [],
-      processNames: form.rule === "Supervisor" ? form.processNames : [],
+      birthdate: birthdateClean.toISOString(),
+      dateOfAdmission: dateOfAdmissionClean.toISOString(),
+      areaId: areaClean,
+      positionId: positionClean,
+      genderId: form.gender,
+      manufacturingPlantsIds:
+        catalogs?.manufacturingPlants
+          .filter((mp) => manufacturingPlantNamesClean.includes(mp.name))
+          .map((mp) => mp.id) || [],
     };
 
     if (!idCurrent) {
-      UsersService.create(payload)
+      EmployeesService.create(payload)
         .then(() => {
-          toast.success("Usuario creado correctamente");
+          toast.success("Colaborador creado correctamente");
           cancel();
         })
         .finally(() => setIsLoading(false));
     } else {
-      UsersService.update(idCurrent, payload)
+      EmployeesService.update(idCurrent, payload)
         .then(() => {
-          toast.success("Usuario actualizado correctamente");
+          toast.success("Colaborador actualizado correctamente");
           cancel();
         })
         .finally(() => setIsLoading(false));
@@ -113,17 +143,19 @@ const EmployeesFormPage = () => {
   };
 
   const cancel = () => {
-    router.push("/users");
+    router.push("/employees");
   };
 
   const isValidateForm = useMemo(
     () =>
+      !form.code?.trim() ||
       !form.name?.trim() ||
-      !form.email?.trim() ||
-      (!idCurrent && !form.password?.trim()) ||
-      !form.rule?.trim() ||
-      !form.manufacturingPlantNames?.length,
-    [form, idCurrent]
+      !form.birthdate ||
+      !form.dateOfAdmission ||
+      !form.manufacturingPlantNames.length ||
+      !form.birthdate.isValid() ||
+      !form.dateOfAdmission.isValid(),
+    [form]
   );
 
   useEffect(() => {
@@ -131,35 +163,31 @@ const EmployeesFormPage = () => {
     if (!id) return;
 
     setIdCurrent(id);
-    UsersService.findOne(id).then((data) => {
-      const zoneNames =
-        data.role === "Supervisor"
-          ? data.zones.map(
-              (zone) => `${zone.manufacturingPlant.name} - ${zone.name}`
-            )
-          : [];
-
-      const processNames =
-        data.role === "Supervisor"
-          ? data.processes.map(
-              (process) =>
-                `${process.manufacturingPlant.name} - ${process.name}`
-            )
-          : [];
-
+    EmployeesService.findOne(id).then((data) => {
       setForm({
+        code: `${data.code}`,
         name: data.name,
-        email: data.email,
-        password: "",
-        rule: data.role,
-        manufacturingPlantNames: data.manufacturingPlants.map(
-          (plant) => plant.name
-        ),
-        zoneNames,
-        processNames,
+        birthdate: dayjs(data.birthdate),
+        dateOfAdmission: dayjs(data.dateOfAdmission),
+        area: "",
+        position: "",
+        gender: "",
+        manufacturingPlantNames: [""],
       });
     });
   }, [searchParams]);
+
+  const onChangeSelect = (
+    event:
+      | SelectChangeEvent<string>
+      | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = event.target;
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  };
 
   return (
     <>
@@ -167,127 +195,109 @@ const EmployeesFormPage = () => {
         <Grid item xs={12} sm={6} md={3}>
           <Paper>
             <TextField
-              label="Nombre"
+              label="Código de empleado *"
+              variant="outlined"
+              fullWidth
+              autoComplete="off"
+              value={form.code}
+              onChange={onChangeSelect}
+              name="code"
+            />
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper>
+            <TextField
+              label="Nombre completo *"
               variant="outlined"
               fullWidth
               autoComplete="off"
               value={form.name}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  name: e.target.value,
-                })
-              }
+              onChange={onChangeSelect}
+              name="name"
             />
           </Paper>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <Paper>
-            <TextField
-              label="Correo electrónico"
-              variant="outlined"
-              fullWidth
-              autoComplete="off"
-              value={form.email}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  email: e.target.value,
-                })
-              }
-            />
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Paper>
-            <TextField
-              label="Contraseña"
-              variant="outlined"
-              fullWidth
-              autoComplete="off"
-              value={form.password}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  password: e.target.value,
-                })
-              }
-            />
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Paper>
-            <FormControl fullWidth>
-              <InputLabel id="rule-select-label">Rol</InputLabel>
-              <Select
-                labelId="rule-select-label"
-                id="rule-select"
-                value={form.rule}
-                label="Rol"
-                onChange={(e: SelectChangeEvent) =>
-                  setForm({
-                    ...form,
-                    rule: e.target.value as string,
-                  })
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Fecha de nacimiento *"
+                format="DD/MM/YYYY"
+                maxDate={dayjs()}
+                value={form.birthdate}
+                onChange={(newValue: Dayjs | null) =>
+                  setForm({ ...form, birthdate: newValue })
                 }
-              >
-                <MenuItem value="Administrador">Administrador</MenuItem>
-                <MenuItem value="General">General</MenuItem>
-                <MenuItem value="Supervisor">Supervisor</MenuItem>
-              </Select>
-            </FormControl>
-          </Paper>
-        </Grid>
-
-        {form.rule && (
-          <Grid item xs={12} sm={6} md={4}>
-            <Paper>
-              <MultiSelectManufacturingPlants
-                values={form.manufacturingPlantNames}
-                onChange={(values) => {
-                  setForm({
-                    ...form,
-                    manufacturingPlantNames: values,
-                  });
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                  } as TextFieldProps,
                 }}
               />
-            </Paper>
-          </Grid>
-        )}
-
-        {form.rule === "Supervisor" &&
-          !!form.manufacturingPlantNames.length && (
-            <>
-              <Grid item xs={12} sm={6} md={4}>
-                <Paper>
-                  <MultiSelectZones
-                    values={form.zoneNames}
-                    onChange={(values) => {
-                      setForm({
-                        ...form,
-                        zoneNames: values,
-                      });
-                    }}
-                    manufacturingPlantNames={form.manufacturingPlantNames}
-                  />
-                </Paper>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Paper>
-                  <MultiSelectProcesses
-                    values={form.processNames}
-                    onChange={(values) => {
-                      setForm({
-                        ...form,
-                        processNames: values,
-                      });
-                    }}
-                    manufacturingPlantNames={form.manufacturingPlantNames}
-                  />
-                </Paper>
-              </Grid>
-            </>
-          )}
+            </LocalizationProvider>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Fecha de admisión *"
+                format="DD/MM/YYYY"
+                maxDate={dayjs()}
+                value={form.dateOfAdmission}
+                onChange={(newValue: Dayjs | null) =>
+                  setForm({ ...form, dateOfAdmission: newValue })
+                }
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                  } as TextFieldProps,
+                }}
+              />
+            </LocalizationProvider>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <SelectDefault
+            data={catalogs?.areas || []}
+            label="Area *"
+            value={form.area}
+            onChange={onChangeSelect}
+            name="area"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <SelectDefault
+            data={catalogs?.positions || []}
+            label="Puesto *"
+            value={form.position}
+            onChange={onChangeSelect}
+            name="position"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <SelectDefault
+            data={catalogs?.genres || []}
+            label="Género *"
+            value={form.gender}
+            onChange={onChangeSelect}
+            name="gender"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper>
+            <MultiSelectManufacturingPlants
+              values={form.manufacturingPlantNames}
+              onChange={(values) => {
+                setForm({
+                  ...form,
+                  manufacturingPlantNames: values,
+                });
+              }}
+            />
+          </Paper>
+        </Grid>
       </Grid>
       <Grid
         container

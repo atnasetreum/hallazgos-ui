@@ -1,67 +1,73 @@
-import { stringToDateWithTime } from "@shared/utils";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import Stack from "@mui/material/Stack";
+import Chip from "@mui/material/Chip";
+
+import { notify, stringToDate } from "@shared/utils";
+import { Employee } from "@interfaces";
 import TableDefault, {
   StyledTableCell,
   StyledTableRow,
 } from "@shared/components/TableDefault";
-import { Employee } from "@interfaces";
+import { EmployeesService } from "@services";
 
 interface Props {
   rows: Employee[];
   getData: () => void;
 }
 
-const columns = ["Código", "Nombre", "Fecha de admisión"];
+const columns = [
+  "Código",
+  "Nombre",
+  "Fecha de admisión",
+  "Fecha de nacimiento",
+  "Área",
+  "Puesto",
+  "Genero",
+  "Plantas",
+  "Acciones",
+];
 
-export default function TableEmployees({ rows }: Props) {
+export default function TableEmployees({ rows, getData }: Props) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const router = useRouter();
+
+  const remove = (id: number) => {
+    setIsLoading(true);
+    EmployeesService.remove(id)
+      .then(() => {
+        notify("Usuario eliminado correctamente", true);
+        getData();
+      })
+      .finally(() => setIsLoading(false));
+  };
+
   return (
     <TableDefault
       rows={rows}
       columns={columns}
       paintRows={(row: Employee) => {
-        /* const zonesName = row.zones
-          .map(
-            ({ name, manufacturingPlant }) =>
-              `${name} (${manufacturingPlant.name})`
-          )
-          .join("\n");
-
-        const processesName = row.processes
-          .map(
-            ({ name, manufacturingPlant }) =>
-              `${name} (${manufacturingPlant.name})`
-          )
-          .join("\n"); */
-
         return (
           <StyledTableRow key={row.id}>
             <StyledTableCell component="th" scope="row">
               {row.code}
             </StyledTableCell>
             <StyledTableCell>{row.name}</StyledTableCell>
-            <StyledTableCell>
-              {stringToDateWithTime(row.dateOfAdmission || "")}
+            <StyledTableCell style={{ minWidth: 180 }}>
+              {row.dateOfAdmission ? stringToDate(row.dateOfAdmission) : ""}
             </StyledTableCell>
-            {/* 
-            <StyledTableCell>{row.email}</StyledTableCell>
-            <StyledTableCell>
-              {row.manufacturingPlants.map(({ name }) => name).join(", ")}
+            <StyledTableCell style={{ minWidth: 180 }}>
+              {row.birthdate ? stringToDate(row.birthdate) : ""}
             </StyledTableCell>
+            <StyledTableCell>{row.area?.name || ""}</StyledTableCell>
+            <StyledTableCell>{row.position?.name || ""}</StyledTableCell>
+            <StyledTableCell>{row.gender?.name || ""}</StyledTableCell>
             <StyledTableCell>
-              <Tooltip title={zonesName}>
-                <div>{truncateText(zonesName)}</div>
-              </Tooltip>
-            </StyledTableCell>
-            <StyledTableCell>
-              <Tooltip title={processesName}>
-                <div>{truncateText(processesName)}</div>
-              </Tooltip>
-            </StyledTableCell>
-            <StyledTableCell>{row.role}</StyledTableCell>
-            <StyledTableCell>
-              {stringToDateWithTime(row.createdAt)}
-            </StyledTableCell>
-            <StyledTableCell>
-              {stringToDateWithTime(row.updatedAt)}
+              {row.manufacturingPlants.map((plant) => plant.name).join(", ")}
             </StyledTableCell>
             <StyledTableCell>
               <Stack direction="row" spacing={1}>
@@ -69,17 +75,17 @@ export default function TableEmployees({ rows }: Props) {
                   icon={<EditIcon />}
                   label="Editar"
                   color="warning"
-                  onClick={() => router.push("/users/form?id=" + row.id)}
+                  onClick={() => router.push("/employees/form?id=" + row.id)}
                 />
                 <Chip
                   icon={<DeleteIcon />}
-                  label="Cancelar"
+                  label="Eliminar"
                   color="error"
                   onClick={() => remove(row.id)}
                   disabled={isLoading}
                 />
               </Stack>
-            </StyledTableCell> */}
+            </StyledTableCell>
           </StyledTableRow>
         );
       }}

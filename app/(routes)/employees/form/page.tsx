@@ -152,6 +152,9 @@ const EmployeesFormPage = () => {
       !form.name?.trim() ||
       !form.birthdate ||
       !form.dateOfAdmission ||
+      !form.area ||
+      !form.position ||
+      !form.gender ||
       !form.manufacturingPlantNames.length ||
       !form.birthdate.isValid() ||
       !form.dateOfAdmission.isValid(),
@@ -167,12 +170,14 @@ const EmployeesFormPage = () => {
       setForm({
         code: `${data.code}`,
         name: data.name,
-        birthdate: dayjs(data.birthdate),
-        dateOfAdmission: dayjs(data.dateOfAdmission),
-        area: "",
-        position: "",
-        gender: "",
-        manufacturingPlantNames: [""],
+        birthdate: data.birthdate ? dayjs(data.birthdate) : null,
+        dateOfAdmission: data.dateOfAdmission
+          ? dayjs(data.dateOfAdmission)
+          : null,
+        area: data.area?.id ? `${data.area.id}` : "",
+        position: data.position?.id ? `${data.position.id}` : "",
+        gender: data.gender?.id ? `${data.gender.id}` : "",
+        manufacturingPlantNames: data.manufacturingPlants.map((mp) => mp.name),
       });
     });
   }, [searchParams]);

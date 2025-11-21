@@ -41,10 +41,16 @@ const catalogs = async () => {
   return data;
 };
 
+const remove = async (id: number) => {
+  const { data } = await api.delete<Employee>(`/${id}`);
+  return data;
+};
+
 export const EmployeesService = {
   findAll,
   create,
   update,
   findOne,
   catalogs,
+  remove,
 };

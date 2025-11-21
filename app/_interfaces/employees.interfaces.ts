@@ -8,7 +8,9 @@ export interface Employee {
   createdAt: Date;
   updatedAt: Date;
   area: Area;
-  position: Area | null;
+  position: Area;
+  gender: Area;
+  manufacturingPlants: ManufacturingPlant[];
 }
 
 interface Area {

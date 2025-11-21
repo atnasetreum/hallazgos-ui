@@ -50,7 +50,7 @@ export const stringToDateWithTime = (date: string | Date) =>
 
 // Format 05 - January - 2024
 export const stringToDate = (date: string | Date) =>
-  moment(date).format("DD [ - ] MMMM [ - ] YYYY");
+  moment(date).format("DD MMMM YYYY");
 
 export const durantionToTime = (startTime: Date, end: Date) => {
   const duration = moment.duration(moment(end).diff(moment(startTime)));

@@ -154,7 +154,7 @@ export default function DialogCreateEpp({ open, create }: Props) {
           <Grid item xs={12} md={6} lg={2}>
             <SelectDefault
               data={employees}
-              label="Empleado"
+              label="Colaborador"
               value={form.employee}
               onChange={(e) => setForm({ ...form, employee: e.target.value })}
             />

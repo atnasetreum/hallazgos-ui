@@ -28,6 +28,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import FolderSharedIcon from "@mui/icons-material/FolderShared";
+import FactCheckIcon from "@mui/icons-material/FactCheck";
 
 import { useCategoriesStore, useUserSessionStore } from "@store";
 import { ROLE_ADMINISTRADOR } from "@shared/constants";
@@ -107,6 +108,7 @@ export const MainListItems = () => {
         title="Hallazgos"
         icon={<AssignmentIcon />}
       />
+      <CreateLink url="/ics" title="ICS" icon={<FactCheckIcon />} />
       {isAdmin && (
         <>
           <Tooltip title="Configuraciones" placement="right">

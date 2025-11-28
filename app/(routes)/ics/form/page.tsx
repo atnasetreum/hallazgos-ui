@@ -33,7 +33,7 @@ const IcsFormPage = () => {
   const [image, setImage] = useState<string>("");
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
   const [form, setForm] = useState<{
-    numberPeopleObserved: string;
+    totalPeople: string;
     description: string;
     manufacturingPlant: string;
     ruleOfLife: string;
@@ -41,7 +41,7 @@ const IcsFormPage = () => {
     areaOfBehavior: string;
     employees: string[];
   }>({
-    numberPeopleObserved: "",
+    totalPeople: "",
     description: "",
     manufacturingPlant: "",
     ruleOfLife: "",
@@ -63,18 +63,19 @@ const IcsFormPage = () => {
 
   const save = () => {
     const manufacturingPlantId = form.manufacturingPlant;
-    const numberPeopleObservedClean = form.numberPeopleObserved.trim();
+    const totalPeopleClean = form.totalPeople.trim();
     const ruleOfLifeId = form.ruleOfLife;
     const standardOfBehaviorId = form.standardOfBehavior;
     const areaOfBehaviorId = form.areaOfBehavior;
     const employeesIds = form.employees.map((id) => Number(id));
+    const sizeEmployees = employeesIds.length;
 
     if (!manufacturingPlantId) {
       toast.error("La planta de manufactura es obligatoria");
       return;
     }
 
-    if (!numberPeopleObservedClean) {
+    if (!totalPeopleClean) {
       toast.error("El número de personas observadas es obligatorio");
       return;
     }
@@ -84,8 +85,15 @@ const IcsFormPage = () => {
       return;
     }
 
-    if (!employeesIds.length) {
+    if (!sizeEmployees) {
       toast.error("Debe seleccionar al menos un colaborador");
+      return;
+    }
+
+    if (Number(totalPeopleClean) < sizeEmployees) {
+      toast.error(
+        "El número de personas totales no puede ser menor al número de colaboradores que no cumplen con el estándar"
+      );
       return;
     }
 
@@ -96,7 +104,7 @@ const IcsFormPage = () => {
     const formData = new FormData();
 
     formData.append("manufacturingPlantId", manufacturingPlantId);
-    formData.append("numberPeopleObserved", numberPeopleObservedClean);
+    formData.append("totalPeople", totalPeopleClean);
     formData.append("ruleOfLifeId", ruleOfLifeId);
     if (standardOfBehaviorId) {
       formData.append("standardOfBehaviorId", standardOfBehaviorId);
@@ -148,7 +156,7 @@ const IcsFormPage = () => {
 
   const isValidateForm = useMemo(
     () =>
-      !form.numberPeopleObserved?.trim() ||
+      !form.totalPeople?.trim() ||
       !form.manufacturingPlant ||
       !form.ruleOfLife ||
       !form.employees.length,
@@ -163,7 +171,7 @@ const IcsFormPage = () => {
     IcsService.findOne(id).then((data) => {
       console.log({ data });
       /* setForm({
-        numberPeopleObserved: `${data.numberPeopleObserved}`,
+        totalPeople: `${data.totalPeople}`,
       }); */
     });
   }, [searchParams]);
@@ -273,9 +281,9 @@ const IcsFormPage = () => {
           <Paper>
             <TextField
               fullWidth
-              label="Número de personas observadas *"
+              label="Personas totales *"
               variant="outlined"
-              value={form.numberPeopleObserved}
+              value={form.totalPeople}
               autoComplete="off"
               type="number"
               inputProps={{ min: 1, step: 1 }}
@@ -295,7 +303,7 @@ const IcsFormPage = () => {
                 if (val === "" || (!Number.isNaN(num) && num > 0)) {
                   setForm({
                     ...form,
-                    numberPeopleObserved: val,
+                    totalPeople: val,
                   });
                 }
               }}
@@ -325,7 +333,10 @@ const IcsFormPage = () => {
                   );
                 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Colaboradores *" />
+                  <TextField
+                    {...params}
+                    label="Personas que no cumplen con el estándar *"
+                  />
                 )}
                 value={employees.filter((emp) =>
                   form.employees.includes(String(emp.id))

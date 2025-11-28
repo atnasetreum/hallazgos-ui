@@ -2,7 +2,9 @@ export interface ICSData {
   id: number;
   description: string;
   imgEvidence: string;
-  numberPeopleObserved: number;
+  totalPeople: number;
+  totalCorrectPeople: number;
+  totalIncorrectPeople: number;
   icsPercentage: number;
   isActive: boolean;
   createdAt: Date;

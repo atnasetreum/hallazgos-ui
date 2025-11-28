@@ -26,8 +26,9 @@ const columns = [
   "Regla de vida",
   "Estandar de comportamiento",
   "Área al que aplica",
-  "Número de comportamientos seguros",
-  "Número de personas observadas",
+  "Personas totales",
+  "Personas cumpliendo el estándar",
+  "Personas no cumpliendo el estándar",
   "Índice de comportamiento seguro (%)",
   //"Fecha de creación",
   "Acciones",
@@ -64,8 +65,9 @@ export default function TableIcs({ rows, getData }: Props) {
               {row.standardOfBehavior?.name || ""}
             </StyledTableCell>
             <StyledTableCell>{row.areaOfBehavior?.name || ""}</StyledTableCell>
-            <StyledTableCell>{row.numberPeopleObserved}</StyledTableCell>
-            <StyledTableCell>{row.employees.length}</StyledTableCell>
+            <StyledTableCell>{row.totalPeople}</StyledTableCell>
+            <StyledTableCell>{row.totalCorrectPeople}</StyledTableCell>
+            <StyledTableCell>{row.totalIncorrectPeople}</StyledTableCell>
             <StyledTableCell>{row.icsPercentage}%</StyledTableCell>
             {/* <StyledTableCell style={{ minWidth: 180 }}>
               {row.createdAt ? stringToDateWithTime(row.createdAt) : ""}

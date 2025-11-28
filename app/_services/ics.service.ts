@@ -11,7 +11,7 @@ const api = axiosWrapper({
 
 interface Payload {
   manufacturingPlantId: string;
-  numberPeopleObserved: number;
+  totalPeople: number;
   rouleOfLifeId: string;
   standardOfBehaviorId: string;
   areaOfBehaviorId: string;

@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
 
 //import { notify, stringToDateWithTime } from "@shared/utils";
-import { notify, stringToDateWithTime } from "@shared/utils";
+import { notify } from "@shared/utils";
 import { ICSData } from "@interfaces";
 import TableDefault, {
   StyledTableCell,

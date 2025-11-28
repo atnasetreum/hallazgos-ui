@@ -17,7 +17,7 @@ import Typography from "@mui/material/Typography";
 import LoadingLinear from "@shared/components/LoadingLinear";
 import { EmployeesService } from "@services";
 import { Employee } from "@interfaces";
-import FiltersUsers, {
+import FiltersEmployees, {
   type IFiltersEmployees,
 } from "./_components/FiltersEmployees";
 import { useTheme } from "@mui/material/styles";
@@ -84,7 +84,7 @@ const EmployeesPage = () => {
         </Toolbar>
       </Grid>
       <Grid item xs={12} sm={12} md={12}>
-        <FiltersUsers
+        <FiltersEmployees
           filters={filters}
           setFilters={setFilters}
           count={data.length}

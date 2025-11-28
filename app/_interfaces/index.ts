@@ -25,3 +25,4 @@ export * from "./userSession.interfaces";
 export * from "./users.interfaces";
 export * from "./working-days.interfaces";
 export * from "./zones.interfaces";
+export * from "./ics.interfaces";

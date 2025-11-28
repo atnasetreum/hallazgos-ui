@@ -25,3 +25,4 @@ export * from "./types-of-events.service";
 export * from "./users.service";
 export * from "./working-days.service";
 export * from "./zones.service";
+export * from "./ics.service";

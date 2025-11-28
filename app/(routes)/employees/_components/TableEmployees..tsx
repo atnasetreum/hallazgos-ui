@@ -40,7 +40,7 @@ export default function TableEmployees({ rows, getData }: Props) {
     setIsLoading(true);
     EmployeesService.remove(id)
       .then(() => {
-        notify("Usuario eliminado correctamente", true);
+        notify("Colaborador eliminado correctamente", true);
         getData();
       })
       .finally(() => setIsLoading(false));

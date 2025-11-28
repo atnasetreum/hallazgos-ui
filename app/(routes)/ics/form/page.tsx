@@ -1,0 +1,386 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+
+import Grid from "@mui/material/Grid";
+import LoadingButton from "@mui/lab/LoadingButton";
+import SaveIcon from "@mui/icons-material/Save";
+import Button from "@mui/material/Button";
+import CloseIcon from "@mui/icons-material/Close";
+import { toast } from "sonner";
+import Checkbox from "@mui/material/Checkbox";
+import Autocomplete from "@mui/material/Autocomplete";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import { v4 as uuidv4 } from "uuid";
+
+import { EmployeesService, IcsService } from "@services";
+import { CatalogICS, Employee } from "@interfaces";
+import SelectDefault from "@components/SelectDefault";
+import { Paper, SelectChangeEvent, TextField } from "@mui/material";
+import { useUserSessionStore } from "@store";
+
+const IcsFormPage = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [idCurrent, setIdCurrent] = useState<number>(0);
+  const [catalogs, setCatalogs] = useState<CatalogICS[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [form, setForm] = useState<{
+    numberPeopleObserved: string;
+    description: string;
+    manufacturingPlant: string;
+    ruleOfLife: string;
+    standardOfBehavior: string;
+    areaOfBehavior: string;
+    employees: string[];
+  }>({
+    numberPeopleObserved: "",
+    description: "",
+    manufacturingPlant: "",
+    ruleOfLife: "",
+    standardOfBehavior: "",
+    areaOfBehavior: "",
+    employees: [],
+  });
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const manufacturingPlants = useUserSessionStore(
+    (state) => state.manufacturingPlants
+  );
+
+  useEffect(() => {
+    IcsService.catalogs().then((data) => setCatalogs(data));
+  }, []);
+
+  const save = () => {
+    const manufacturingPlantId = form.manufacturingPlant;
+    const numberPeopleObservedClean = form.numberPeopleObserved.trim();
+    const ruleOfLifeId = form.ruleOfLife;
+    const standardOfBehaviorId = form.standardOfBehavior;
+    const areaOfBehaviorId = form.areaOfBehavior;
+    const employeesIds = form.employees.map((id) => Number(id));
+
+    if (!manufacturingPlantId) {
+      toast.error("La planta de manufactura es obligatoria");
+      return;
+    }
+
+    if (!numberPeopleObservedClean) {
+      toast.error("El número de personas observadas es obligatorio");
+      return;
+    }
+
+    if (!ruleOfLifeId) {
+      toast.error("La regla de vida es obligatoria");
+      return;
+    }
+
+    if (!employeesIds.length) {
+      toast.error("Debe seleccionar al menos un colaborador");
+      return;
+    }
+
+    setIsLoading(true);
+
+    /* const payload = {
+      manufacturingPlantId,
+      numberPeopleObserved: Number(numberPeopleObservedClean),
+      ruleOfLifeId,
+      standardOfBehaviorId,
+      areaOfBehaviorId,
+      employeesIds,
+    }; */
+
+    const formData = new FormData();
+
+    formData.append("manufacturingPlantId", manufacturingPlantId);
+    formData.append("numberPeopleObserved", numberPeopleObservedClean);
+    formData.append("ruleOfLifeId", ruleOfLifeId);
+    if (standardOfBehaviorId) {
+      formData.append("standardOfBehaviorId", standardOfBehaviorId);
+    }
+    if (areaOfBehaviorId) {
+      formData.append("areaOfBehaviorId", areaOfBehaviorId);
+    }
+
+    employeesIds.forEach((id, idx) =>
+      formData.append(`employeesIds[${idx}]`, String(id))
+    );
+
+    // si tu backend espera un JSON, usar en su lugar:
+    // formData.append("employeesIds", JSON.stringify(employeesIds));
+
+    const uuid = uuidv4();
+
+    console.log({ uuid });
+
+    /* if (image) {
+      formData.append("file", dataURLtoFile(image, `${uuid}-evidence.png`));
+    } else if (attachedFile) {
+      const extension = attachedFile.name.split(".").pop();
+
+      const nameWithUuid = `${uuid}-evidence.${extension}`;
+
+      formData.append("file", attachedFile, nameWithUuid);
+    } */
+
+    if (!idCurrent) {
+      IcsService.create(formData)
+        .then(() => {
+          toast.success("Ics creado correctamente");
+          cancel();
+        })
+        .finally(() => setIsLoading(false));
+    }
+    /* else {
+      IcsService.update(idCurrent, payload)
+        .then(() => {
+          toast.success("Ics actualizado correctamente");
+          cancel();
+        })
+        .finally(() => setIsLoading(false));
+    } */
+  };
+
+  const cancel = () => {
+    router.push("/ics");
+  };
+
+  const isValidateForm = useMemo(
+    () => !form.numberPeopleObserved?.trim() || !form.manufacturingPlant,
+    [form]
+  );
+
+  useEffect(() => {
+    const id = Number(searchParams.get("id") || 0);
+    if (!id) return;
+
+    setIdCurrent(id);
+    IcsService.findOne(id).then((data) => {
+      console.log({ data });
+      /* setForm({
+        numberPeopleObserved: `${data.numberPeopleObserved}`,
+      }); */
+    });
+  }, [searchParams]);
+
+  const onChangeSelect = (event: SelectChangeEvent<string>) => {
+    const { name, value } = event.target;
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  };
+
+  useEffect(() => {
+    setForm((prev) => ({
+      ...prev,
+      standardOfBehavior: "",
+      areaOfBehavior: "",
+    }));
+  }, [form.ruleOfLife]);
+
+  useEffect(() => {
+    setForm((prev) => ({
+      ...prev,
+      areaOfBehavior: "",
+    }));
+  }, [form.standardOfBehavior]);
+
+  useEffect(() => {
+    if (form.manufacturingPlant) {
+      const manufacturingPlantId = form.manufacturingPlant;
+      EmployeesService.findAll({
+        manufacturingPlantId: Number(manufacturingPlantId),
+      }).then(setEmployees);
+
+      setForm((prev) => ({
+        ...prev,
+        employees: [],
+      }));
+    }
+  }, [form.manufacturingPlant]);
+
+  return (
+    <>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6} md={3}>
+          <SelectDefault
+            data={manufacturingPlants}
+            label="Planta *"
+            value={form.manufacturingPlant}
+            onChange={onChangeSelect}
+            name="manufacturingPlant"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <SelectDefault
+            data={catalogs || []}
+            label="Regla de vida *"
+            value={form.ruleOfLife}
+            onChange={onChangeSelect}
+            name="ruleOfLife"
+          />
+        </Grid>
+        {(
+          catalogs.find((cat) => Number(cat.id) === Number(form.ruleOfLife))
+            ?.standards || []
+        ).length > 0 && (
+          <Grid item xs={12} sm={6} md={3}>
+            <SelectDefault
+              data={
+                catalogs.find(
+                  (cat) => Number(cat.id) === Number(form.ruleOfLife)
+                )?.standards || []
+              }
+              label="Estandar de comportamiento *"
+              value={form.standardOfBehavior}
+              onChange={onChangeSelect}
+              name="standardOfBehavior"
+            />
+          </Grid>
+        )}
+        {(
+          (
+            catalogs.find((cat) => Number(cat.id) === Number(form.ruleOfLife))
+              ?.standards || []
+          ).find((cat) => Number(cat.id) === Number(form.standardOfBehavior))
+            ?.areas || []
+        ).length > 0 && (
+          <Grid item xs={12} sm={6} md={3}>
+            <SelectDefault
+              data={
+                (
+                  catalogs.find(
+                    (cat) => Number(cat.id) === Number(form.ruleOfLife)
+                  )?.standards || []
+                ).find(
+                  (cat) => Number(cat.id) === Number(form.standardOfBehavior)
+                )?.areas || []
+              }
+              label="Área *"
+              value={form.areaOfBehavior}
+              onChange={onChangeSelect}
+              name="areaOfBehavior"
+            />
+          </Grid>
+        )}
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper>
+            <TextField
+              fullWidth
+              label="Número de personas observadas *"
+              variant="outlined"
+              value={form.numberPeopleObserved}
+              autoComplete="off"
+              type="number"
+              inputProps={{ min: 1, step: 1 }}
+              onKeyDown={(evt) => {
+                const forbidden = ["e", "E", "-", "+"];
+                if (forbidden.includes(evt.key)) evt.preventDefault();
+              }}
+              onPaste={(e) => {
+                const text = e.clipboardData.getData("text");
+                if (!/^\d+$/.test(text) || Number(text) <= 0)
+                  e.preventDefault();
+              }}
+              onChange={(e) => {
+                const val = e.target.value;
+                const num = Number(val);
+                // allow empty (so user can clear) or only positive numbers (>0)
+                if (val === "" || (!Number.isNaN(num) && num > 0)) {
+                  setForm({
+                    ...form,
+                    numberPeopleObserved: val,
+                  });
+                }
+              }}
+            />
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          {!!employees.length ? (
+            <Paper>
+              <Autocomplete
+                multiple
+                options={employees}
+                disableCloseOnSelect
+                getOptionLabel={(option) => option.name}
+                renderOption={(props, option, { selected }) => {
+                  const { key, ...optionProps } = props;
+                  return (
+                    <li key={key} {...optionProps}>
+                      <Checkbox
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.name}
+                    </li>
+                  );
+                }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Colaboradores *" />
+                )}
+                value={employees.filter((emp) =>
+                  form.employees.includes(String(emp.id))
+                )}
+                onChange={(_, newValue) => {
+                  setForm({
+                    ...form,
+                    employees: newValue.map((emp) => String(emp.id)),
+                  });
+                }}
+              />
+            </Paper>
+          ) : form.manufacturingPlant && !employees.length ? (
+            <p>No hay colaboradores disponibles</p>
+          ) : (
+            <p>Seleccione una planta</p>
+          )}
+        </Grid>
+      </Grid>
+      <Grid
+        container
+        spacing={2}
+        alignContent={"center"}
+        justifyContent={"center"}
+        sx={{ marginTop: 2 }}
+      >
+        <Grid item xs={12} sm={3} md={3}>
+          <Button
+            variant="contained"
+            color="error"
+            fullWidth
+            startIcon={<CloseIcon />}
+            onClick={cancel}
+          >
+            Cancelar
+          </Button>
+        </Grid>
+        <Grid item xs={12} sm={3} md={3}>
+          <LoadingButton
+            loading={isLoading}
+            loadingPosition="start"
+            startIcon={<SaveIcon />}
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={save}
+            disabled={isValidateForm || isLoading}
+          >
+            Guardar
+          </LoadingButton>
+        </Grid>
+      </Grid>
+    </>
+  );
+};
+
+export default IcsFormPage;

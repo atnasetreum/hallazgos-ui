@@ -22,12 +22,16 @@ import { CatalogICS, Employee } from "@interfaces";
 import SelectDefault from "@components/SelectDefault";
 import { Paper, SelectChangeEvent, TextField } from "@mui/material";
 import { useUserSessionStore } from "@store";
+import ImageORCamera from "@shared/components/ImageORCamera";
+import { dataURLtoFile } from "@shared/utils";
 
 const IcsFormPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [idCurrent, setIdCurrent] = useState<number>(0);
   const [catalogs, setCatalogs] = useState<CatalogICS[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [image, setImage] = useState<string>("");
+  const [attachedFile, setAttachedFile] = useState<File | null>(null);
   const [form, setForm] = useState<{
     numberPeopleObserved: string;
     description: string;
@@ -85,16 +89,9 @@ const IcsFormPage = () => {
       return;
     }
 
-    setIsLoading(true);
+    const descriptionClean = form.description.trim();
 
-    /* const payload = {
-      manufacturingPlantId,
-      numberPeopleObserved: Number(numberPeopleObservedClean),
-      ruleOfLifeId,
-      standardOfBehaviorId,
-      areaOfBehaviorId,
-      employeesIds,
-    }; */
+    setIsLoading(true);
 
     const formData = new FormData();
 
@@ -107,19 +104,17 @@ const IcsFormPage = () => {
     if (areaOfBehaviorId) {
       formData.append("areaOfBehaviorId", areaOfBehaviorId);
     }
+    if (descriptionClean) {
+      formData.append("description", descriptionClean);
+    }
 
     employeesIds.forEach((id, idx) =>
       formData.append(`employeesIds[${idx}]`, String(id))
     );
 
-    // si tu backend espera un JSON, usar en su lugar:
-    // formData.append("employeesIds", JSON.stringify(employeesIds));
-
     const uuid = uuidv4();
 
-    console.log({ uuid });
-
-    /* if (image) {
+    if (image) {
       formData.append("file", dataURLtoFile(image, `${uuid}-evidence.png`));
     } else if (attachedFile) {
       const extension = attachedFile.name.split(".").pop();
@@ -127,7 +122,7 @@ const IcsFormPage = () => {
       const nameWithUuid = `${uuid}-evidence.${extension}`;
 
       formData.append("file", attachedFile, nameWithUuid);
-    } */
+    }
 
     if (!idCurrent) {
       IcsService.create(formData)
@@ -152,7 +147,11 @@ const IcsFormPage = () => {
   };
 
   const isValidateForm = useMemo(
-    () => !form.numberPeopleObserved?.trim() || !form.manufacturingPlant,
+    () =>
+      !form.numberPeopleObserved?.trim() ||
+      !form.manufacturingPlant ||
+      !form.ruleOfLife ||
+      !form.employees.length,
     [form]
   );
 
@@ -342,9 +341,31 @@ const IcsFormPage = () => {
           ) : form.manufacturingPlant && !employees.length ? (
             <p>No hay colaboradores disponibles</p>
           ) : (
-            <p>Seleccione una planta</p>
+            <p>Seleccione una planta, para ver los colaboradores.</p>
           )}
         </Grid>
+        <Grid item xs={12} sm={6} md={6}>
+          <Paper sx={{ p: 2 }}>
+            <TextField
+              id="description-multiline"
+              multiline
+              rows={4}
+              variant="standard"
+              fullWidth
+              value={form.description}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
+              label={"Descripción (opcional)"}
+            />
+          </Paper>
+        </Grid>
+        <ImageORCamera
+          setImage={setImage}
+          image={image}
+          setAttachedFile={setAttachedFile}
+          attachedFile={attachedFile}
+        />
       </Grid>
       <Grid
         container

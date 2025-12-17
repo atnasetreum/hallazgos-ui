@@ -571,7 +571,7 @@ function ScreenEdition({
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Guia de entrenamiento
+              Guía de entrenamiento
             </Typography>
             {isLoading ? (
               <Box sx={{ display: "flex" }}>

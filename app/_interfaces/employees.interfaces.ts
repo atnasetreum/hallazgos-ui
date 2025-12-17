@@ -1,3 +1,5 @@
+import { TrainingGuideEmployee } from "./training-guides.interfaces";
+
 export interface Employee {
   id: number;
   code: number;
@@ -11,6 +13,7 @@ export interface Employee {
   position: Area;
   gender: Area;
   manufacturingPlants: ManufacturingPlant[];
+  trainingGuides: TrainingGuideEmployee[];
 }
 
 interface Area {

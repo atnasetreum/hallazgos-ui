@@ -8,6 +8,8 @@ import { useTheme } from "@mui/material/styles";
 export interface IFiltersEmployees {
   manufacturingPlantId?: number;
   name?: string;
+  positionId?: number;
+  assignedUserId?: number;
 }
 
 interface Props {

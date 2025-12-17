@@ -168,13 +168,13 @@ export const MainListItems = () => {
           </Collapse>
           <CreateLink url="/epp" title="EPP" icon={<DescriptionIcon />} />
           <CreateLink url="/ciael" title="CIAEL" icon={<WarningIcon />} />
-          <CreateLink
-            url="/training-guide"
-            title="Guías de entrenamiento"
-            icon={<ContentPasteGoIcon />}
-          />
         </>
       )}
+      <CreateLink
+        url="/training-guide"
+        title="Guías de entrenamiento"
+        icon={<ContentPasteGoIcon />}
+      />
     </>
   );
 };

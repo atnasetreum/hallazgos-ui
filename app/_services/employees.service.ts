@@ -11,11 +11,18 @@ interface Payload {
   name: string;
 }
 
-const findAll = async ({ manufacturingPlantId, name }: IFiltersEmployees) => {
+const findAll = async ({
+  manufacturingPlantId,
+  positionId,
+  name,
+  assignedUserId,
+}: IFiltersEmployees) => {
   const { data } = await api.get<Employee[]>("", {
     params: {
       ...(manufacturingPlantId && { manufacturingPlantId }),
       ...(name && { name }),
+      ...(positionId && { positionId }),
+      ...(assignedUserId && { assignedUserId }),
     },
   });
   return data;

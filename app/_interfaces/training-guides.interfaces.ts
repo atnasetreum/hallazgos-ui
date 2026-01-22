@@ -1,3 +1,6 @@
+import { ManufacturingPlant } from "./manufacturing-plants.interfaces";
+import { User } from "./users.interfaces";
+
 export interface ResponseTrainingGuide {
   trainingGuide: TrainingGuide;
   trainingGuideEmployee: TrainingGuideEmployee | null;
@@ -32,18 +35,20 @@ interface Position {
   updatedAt: Date;
 }
 
-interface Topic {
+export interface Topic {
   id: number;
   name: string;
   duration: number;
   typeOfEvaluation: string;
   isActive: boolean;
+  createdBy: User;
   createdAt: Date;
+  updatedBy: User | null;
   updatedAt: Date;
-  responsibles: Responsible[];
+  manufacturingPlants: ManufacturingPlant[];
 }
 
-interface Responsible {
+/* interface Responsible {
   id: number;
   code: string;
   name: string;
@@ -52,7 +57,7 @@ interface Responsible {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
-}
+} */
 
 export interface TrainingGuideEmployee {
   id: number;
@@ -78,4 +83,47 @@ interface Evaluation {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface ConfigTg {
+  id: number;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  topics: TopicElement[];
+  position: BasicData;
+  manufacturingPlant: BasicData;
+  areaManager: BasicData;
+  humanResourceManager: BasicData;
+  createdBy: CreatedBy;
+  updatedBy: CreatedBy | null;
+}
+
+export interface BasicData {
+  id: number;
+  name: string;
+}
+
+interface CreatedBy {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface TopicElement {
+  id: number;
+  order: number;
+  topic: TopicTopic;
+  responsibles: BasicData[];
+}
+
+interface TopicTopic {
+  id: number;
+  name: string;
+  duration: number;
+  typeOfEvaluation: string;
 }

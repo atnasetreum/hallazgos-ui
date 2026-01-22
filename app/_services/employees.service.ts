@@ -1,6 +1,6 @@
 import { IFiltersEmployees } from "@routes/employees/_components/FiltersEmployees";
+import { BasicData, CatalogEmployee, Employee } from "@interfaces";
 import axiosWrapper from "./axiosWrapper";
-import { CatalogEmployee, Employee } from "@interfaces";
 
 const api = axiosWrapper({
   baseURL: "/employees",
@@ -53,6 +53,11 @@ const remove = async (id: number) => {
   return data;
 };
 
+const findPositions = async () => {
+  const { data } = await api.get<BasicData[]>(`/positions`);
+  return data;
+};
+
 export const EmployeesService = {
   findAll,
   create,
@@ -60,4 +65,5 @@ export const EmployeesService = {
   findOne,
   catalogs,
   remove,
+  findPositions,
 };

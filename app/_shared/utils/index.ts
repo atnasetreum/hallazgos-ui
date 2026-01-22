@@ -1,7 +1,5 @@
+import moment from "moment-timezone";
 import { toast } from "sonner";
-import moment from "moment";
-
-import "moment/locale/es";
 
 export const nowDateWithTime = () => moment().format("DD/MM/YYYY h:mm a");
 
@@ -45,8 +43,9 @@ export const baseUrlImage = (image: string, path?: string) => {
   return `${process.env.NEXT_PUBLIC_URL_API_RAW}${path}${image}`;
 };
 
-export const stringToDateWithTime = (date: string | Date) =>
-  moment(date).format("DD/MM/YYYY h:mm a");
+export const stringToDateWithTime = (date: string | Date) => {
+  return moment(date).format("DD/MM/YYYY h:mm a");
+};
 
 // Format 05 - January - 2024
 export const stringToDate = (date: string | Date) =>

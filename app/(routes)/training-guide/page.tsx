@@ -166,15 +166,23 @@ function Row(props: {
     return percentageValue;
   };
 
+  const currentTrainingGuide = useMemo(() => {
+    return row.trainingGuides.find((tg) => tg.position.id === row.position.id);
+  }, [row]);
+
   const percentage = useMemo(() => {
     let percentageValue = 0;
 
     if (row.trainingGuides.length > 0) {
-      percentageValue = calculatePercentage(row.trainingGuides[0]);
+      if (!currentTrainingGuide) {
+        return percentageValue;
+      }
+
+      percentageValue = calculatePercentage(currentTrainingGuide);
     }
 
     return percentageValue;
-  }, [row]);
+  }, [row, currentTrainingGuide]);
 
   return (
     <>
@@ -201,24 +209,21 @@ function Row(props: {
         <StyledTableCell>{row.position.name}</StyledTableCell>
         <StyledTableCell>{`${percentage}%`}</StyledTableCell>
         <StyledTableCell>
-          {row.trainingGuides.length === 0 ? null : row.trainingGuides[0]
-              .signatureEmployee ? (
+          {!currentTrainingGuide ? null : currentTrainingGuide.signatureEmployee ? (
             <DoneIcon style={{ fill: "green" }} />
           ) : (
             <ClearIcon color="error" />
           )}
         </StyledTableCell>
         <StyledTableCell>
-          {row.trainingGuides.length === 0 ? null : row.trainingGuides[0]
-              .signatureAreaManager ? (
+          {!currentTrainingGuide ? null : currentTrainingGuide.signatureAreaManager ? (
             <DoneIcon style={{ fill: "green" }} />
           ) : (
             <ClearIcon color="error" />
           )}
         </StyledTableCell>
         <StyledTableCell>
-          {row.trainingGuides.length === 0 ? null : row.trainingGuides[0]
-              .signatureHumanResourceManager ? (
+          {!currentTrainingGuide ? null : currentTrainingGuide.signatureHumanResourceManager ? (
             <DoneIcon style={{ fill: "green" }} />
           ) : (
             <ClearIcon color="error" />
@@ -474,19 +479,21 @@ function ScreenEdition({
     }
   }, [evaluations, evaluationsInitial]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setOpen();
-  };
+  }, [setOpen]);
 
   useEffect(() => {
     TrainingGuidesService.findCurrentData(
       currentEmployee.position.id,
       currentEmployee.id
-    ).then((data) => {
-      console.log(data);
-      setResponseTrainingGuide(data);
-    });
-  }, [currentEmployee]);
+    )
+      .then((data) => {
+        console.log(data);
+        setResponseTrainingGuide(data);
+      })
+      .catch(() => handleClose());
+  }, [currentEmployee, handleClose]);
 
   const saveTrainingGuide = () => {
     if (!responseTrainingGuide?.trainingGuide) return;
@@ -1074,7 +1081,6 @@ const TrainingGuidePage = () => {
     setIsLoading(true);
     EmployeesService.findAll({
       manufacturingPlantId: Number(filters.manufacturingPlantId || 0),
-      positionId: 8,
       name: filters.name,
       ...(!emailsEditors.includes(email) && { assignedUserId: userSessionId }),
     })

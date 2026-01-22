@@ -1,6 +1,6 @@
 import { type Dayjs } from "dayjs";
 
-import { ResponseTrainingGuide } from "@interfaces";
+import { ResponseTrainingGuide, Topic } from "@interfaces";
 import axiosWrapper from "./axiosWrapper";
 
 const api = axiosWrapper({
@@ -66,9 +66,15 @@ const downloadFile = async (id: number) => {
   return "ok";
 };
 
+const findAllTopics = async () => {
+  const { data } = await api.get<Topic[]>("/topics");
+  return data;
+};
+
 export const TrainingGuidesService = {
   findCurrentData,
   saveTrainingGuide,
   saveSignature,
   downloadFile,
+  findAllTopics,
 };

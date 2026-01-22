@@ -164,6 +164,18 @@ export const MainListItems = () => {
                 title="Procesos"
                 icon={<AccountTreeIcon />}
               />
+              <CreateLink
+                nested
+                url="/topics-tg"
+                title="Temas - G. Entr."
+                icon={<ContentPasteGoIcon />}
+              />
+              <CreateLink
+                nested
+                url="/config-tg"
+                title="Config - G. Entr."
+                icon={<ContentPasteGoIcon />}
+              />
             </List>
           </Collapse>
           <CreateLink url="/epp" title="EPP" icon={<DescriptionIcon />} />
@@ -172,7 +184,7 @@ export const MainListItems = () => {
       )}
       <CreateLink
         url="/training-guide"
-        title="Guías de entrenamiento"
+        title="G. Entr."
         icon={<ContentPasteGoIcon />}
       />
     </>

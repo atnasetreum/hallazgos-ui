@@ -54,7 +54,7 @@ const IcsFormPage = () => {
   const searchParams = useSearchParams();
 
   const manufacturingPlants = useUserSessionStore(
-    (state) => state.manufacturingPlants
+    (state) => state.manufacturingPlants,
   );
 
   useEffect(() => {
@@ -92,7 +92,7 @@ const IcsFormPage = () => {
 
     if (Number(totalPeopleClean) < sizeEmployees) {
       toast.error(
-        "El número de personas totales no puede ser menor al número de colaboradores que no cumplen con el estándar"
+        "El número de personas totales no puede ser menor al número de colaboradores que no cumplen con el estándar",
       );
       return;
     }
@@ -117,7 +117,7 @@ const IcsFormPage = () => {
     }
 
     employeesIds.forEach((id, idx) =>
-      formData.append(`employeesIds[${idx}]`, String(id))
+      formData.append(`employeesIds[${idx}]`, String(id)),
     );
 
     const uuid = uuidv4();
@@ -160,7 +160,7 @@ const IcsFormPage = () => {
       !form.manufacturingPlant ||
       !form.ruleOfLife ||
       !form.employees.length,
-    [form]
+    [form],
   );
 
   useEffect(() => {
@@ -242,7 +242,7 @@ const IcsFormPage = () => {
             <SelectDefault
               data={
                 catalogs.find(
-                  (cat) => Number(cat.id) === Number(form.ruleOfLife)
+                  (cat) => Number(cat.id) === Number(form.ruleOfLife),
                 )?.standards || []
               }
               label="Estandar de comportamiento *"
@@ -264,10 +264,10 @@ const IcsFormPage = () => {
               data={
                 (
                   catalogs.find(
-                    (cat) => Number(cat.id) === Number(form.ruleOfLife)
+                    (cat) => Number(cat.id) === Number(form.ruleOfLife),
                   )?.standards || []
                 ).find(
-                  (cat) => Number(cat.id) === Number(form.standardOfBehavior)
+                  (cat) => Number(cat.id) === Number(form.standardOfBehavior),
                 )?.areas || []
               }
               label="Área *"
@@ -299,7 +299,6 @@ const IcsFormPage = () => {
               onChange={(e) => {
                 const val = e.target.value;
                 const num = Number(val);
-                // allow empty (so user can clear) or only positive numbers (>0)
                 if (val === "" || (!Number.isNaN(num) && num > 0)) {
                   setForm({
                     ...form,
@@ -339,7 +338,7 @@ const IcsFormPage = () => {
                   />
                 )}
                 value={employees.filter((emp) =>
-                  form.employees.includes(String(emp.id))
+                  form.employees.includes(String(emp.id)),
                 )}
                 onChange={(_, newValue) => {
                   setForm({

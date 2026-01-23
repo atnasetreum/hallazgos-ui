@@ -6,7 +6,18 @@ const api = axiosWrapper({
   baseURL: "/configs-tg",
 });
 
-const create = async (payload: Partial<ConfigTg>) => {
+interface Payload {
+  manufacturingPlantId: number;
+  positionId: number;
+  areaManagerId: number;
+  humanResourceManagerId: number;
+  topics: {
+    id: number;
+    responsibleIds: number[];
+  }[];
+}
+
+const create = async (payload: Partial<Payload>) => {
   const { data } = await api.post<ConfigTg>(``, payload);
   return data;
 };
@@ -29,7 +40,7 @@ const findOne = async (id: number) => {
   return data;
 };
 
-const update = async (id: number, payload: Partial<ConfigTg>) => {
+const update = async (id: number, payload: Partial<Payload>) => {
   const { data } = await api.patch<ConfigTg>(`/${id}`, payload);
   return data;
 };

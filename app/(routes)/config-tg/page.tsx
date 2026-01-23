@@ -35,7 +35,6 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 
 import TablePaginationActions from "@shared/components/TablePaginationActions";
-import { ConfigTgService, EmployeesService, TopicsService } from "@services";
 import { Transition } from "@routes/hallazgos/_components/EvidencePreview";
 import LoadingLinear from "@shared/components/LoadingLinear";
 import SelectDefault from "@components/SelectDefault";
@@ -46,11 +45,17 @@ import {
   StyledTableRow,
 } from "@shared/components/TableDefault";
 import {
+  ConfigTgService,
+  EmployeesService,
+  TopicsService,
+  UsersService,
+} from "@services";
+import {
   BasicData,
   ConfigTg,
-  Employee,
   ManufacturingPlant,
   Topic,
+  User,
 } from "@interfaces";
 
 export interface IFiltersConfigTg {
@@ -71,7 +76,7 @@ const ScreenForm = ({
   currentId: number;
   closeDialog: () => void;
 }) => {
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [topicId, setTopicId] = useState<string>("");
   const [currentEmployees, setCurrentEmployees] = useState<string[]>([]);
@@ -84,7 +89,7 @@ const ScreenForm = ({
     topics: {
       id: number;
       topic: Topic;
-      responsibles: Employee[];
+      responsibles: User[];
     }[];
   }>({
     positionId: "",
@@ -105,19 +110,40 @@ const ScreenForm = ({
       return;
     }
 
+    if (!form.areaManagerId) {
+      toast.error("Debe seleccionar un jefe de área");
+      return;
+    }
+
+    if (!form.humanResourceManagerId) {
+      toast.error("Debe seleccionar un jefe de RRHH");
+      return;
+    }
+
+    if (!form.topics.length) {
+      toast.error("Debe agregar al menos un tema");
+      return;
+    }
+
     const payload = {
       manufacturingPlantId: Number(form.manufacturingPlantId),
       positionId: Number(form.positionId),
+      areaManagerId: Number(form.areaManagerId),
+      humanResourceManagerId: Number(form.humanResourceManagerId),
+      topics: form.topics.map((t) => ({
+        id: t.id,
+        responsibleIds: t.responsibles.map((r) => r.id),
+      })),
     };
 
     if (!currentId) {
       ConfigTgService.create(payload).then(() => {
-        toast.success("Tema creado correctamente");
+        toast.success("Configuración creada correctamente");
         closeDialog();
       });
     } else {
       ConfigTgService.update(currentId, payload).then(() => {
-        toast.success("Tema actualizado correctamente");
+        toast.success("Configuración actualizada correctamente");
         closeDialog();
       });
     }
@@ -137,10 +163,15 @@ const ScreenForm = ({
 
     ConfigTgService.findOne(currentId).then((data) => {
       setForm({
-        name: data.name,
-        duration: String(data.duration),
-        typeOfEvaluation: data.typeOfEvaluation,
-        manufacturingPlantNames: data.manufacturingPlants.map((mp) => mp.name),
+        positionId: String(data.position.id),
+        manufacturingPlantId: String(data.manufacturingPlant.id),
+        areaManagerId: String(data.areaManager.id),
+        humanResourceManagerId: String(data.humanResourceManager.id),
+        topics: data.topics.map((t) => ({
+          id: t.topic.id,
+          topic: t.topic,
+          responsibles: t.responsibles,
+        })),
       });
     });
   }, [currentId]);
@@ -157,9 +188,9 @@ const ScreenForm = ({
 
   useEffect(() => {
     if (manufacturingPlantId) {
-      EmployeesService.findAll({
-        manufacturingPlantId,
-      }).then(setEmployees);
+      UsersService.findAll({
+        manufacturingPlantId: manufacturingPlantId.toString(),
+      }).then(setUsers);
       TopicsService.findAll({ manufacturingPlantId }).then(setTopics);
       if (!currentId) {
         setForm((prev) => ({
@@ -189,6 +220,9 @@ const ScreenForm = ({
           >
             <CloseIcon />
           </IconButton>
+          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+            {!currentId ? "Nuevo" : "Editar"}
+          </Typography>
           <Button autoFocus color="inherit" onClick={() => handleClose(true)}>
             Guardar
           </Button>
@@ -225,7 +259,7 @@ const ScreenForm = ({
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
               <SelectDefault
-                data={employees}
+                data={users}
                 label="Jefe de área"
                 value={form.areaManagerId}
                 onChange={(e) => {
@@ -234,9 +268,9 @@ const ScreenForm = ({
                     areaManagerId: e.target.value,
                   });
                 }}
-                validationEmpty={!employees.length ? true : false}
+                validationEmpty={!users.length ? true : false}
                 helperText={
-                  !employees.length
+                  !users.length
                     ? "No hay colaboradores disponibles para la planta seleccionada"
                     : ""
                 }
@@ -244,7 +278,7 @@ const ScreenForm = ({
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
               <SelectDefault
-                data={employees}
+                data={users}
                 label="Jefe de RRHH"
                 value={form.humanResourceManagerId}
                 onChange={(e) => {
@@ -253,9 +287,9 @@ const ScreenForm = ({
                     humanResourceManagerId: e.target.value,
                   });
                 }}
-                validationEmpty={!employees.length ? true : false}
+                validationEmpty={!users.length ? true : false}
                 helperText={
-                  !employees.length
+                  !users.length
                     ? "No hay colaboradores disponibles para la planta seleccionada"
                     : ""
                 }
@@ -284,11 +318,11 @@ const ScreenForm = ({
                     />
                   </Grid>
                   <Grid item xs={12} sm={6} md={6}>
-                    {!!employees.length ? (
+                    {!!users.length ? (
                       <Paper>
                         <Autocomplete
                           multiple
-                          options={employees}
+                          options={users}
                           disableCloseOnSelect
                           getOptionLabel={(option) => option.name}
                           renderOption={(props, option, { selected }) => {
@@ -312,7 +346,7 @@ const ScreenForm = ({
                           renderInput={(params) => (
                             <TextField {...params} label="Responsables" />
                           )}
-                          value={employees.filter((emp) =>
+                          value={users.filter((emp) =>
                             currentEmployees.includes(String(emp.id)),
                           )}
                           onChange={(_, newValue) => {
@@ -351,7 +385,7 @@ const ScreenForm = ({
                               topic: topics.find(
                                 (t) => t.id === Number(topicId),
                               )!,
-                              responsibles: employees.filter((emp) =>
+                              responsibles: users.filter((emp) =>
                                 currentEmployees.includes(String(emp.id)),
                               ),
                             },
@@ -369,13 +403,14 @@ const ScreenForm = ({
                       <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
                           <StyledTableRow>
+                            <StyledTableCell>Orden</StyledTableCell>
                             <StyledTableCell>Tema</StyledTableCell>
                             <StyledTableCell>Responsables</StyledTableCell>
                             <StyledTableCell>Eliminar</StyledTableCell>
                           </StyledTableRow>
                         </TableHead>
                         <TableBody>
-                          {form.topics.map((row) => (
+                          {form.topics.map((row, idx) => (
                             <StyledTableRow
                               key={row.id}
                               sx={{
@@ -385,6 +420,9 @@ const ScreenForm = ({
                               }}
                             >
                               <StyledTableCell component="th" scope="row">
+                                {idx + 1}
+                              </StyledTableCell>
+                              <StyledTableCell>
                                 {row.topic.name}
                               </StyledTableCell>
                               <StyledTableCell>
@@ -651,13 +689,13 @@ export default function TopicTg() {
                             onClick={() =>
                               toast("¡ Confirmar eliminación !", {
                                 position: "top-center",
-                                description: ` ¿Está seguro de eliminar el tema "${row.name}"?`,
+                                description: `¿Está seguro de eliminar?`,
                                 action: {
                                   label: "Confirmar",
                                   onClick: () =>
                                     ConfigTgService.remove(row.id).then(() => {
                                       toast.success(
-                                        "Tema eliminado correctamente",
+                                        "Configuración eliminada correctamente",
                                       );
                                       getData();
                                     }),

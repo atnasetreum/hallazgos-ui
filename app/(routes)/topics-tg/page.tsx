@@ -491,7 +491,7 @@ export default function TopicTg() {
                             onClick={() =>
                               toast("¡ Confirmar eliminación !", {
                                 position: "top-center",
-                                description: ` ¿Está seguro de eliminar el tema "${row.name}"?`,
+                                description: `¿Está seguro de eliminar el tema "${row.name}"?`,
                                 action: {
                                   label: "Confirmar",
                                   onClick: () =>

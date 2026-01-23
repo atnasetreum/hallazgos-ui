@@ -93,8 +93,8 @@ export interface ConfigTg {
   topics: TopicElement[];
   position: BasicData;
   manufacturingPlant: BasicData;
-  areaManager: BasicData;
-  humanResourceManager: BasicData;
+  areaManager: User;
+  humanResourceManager: User;
   createdBy: CreatedBy;
   updatedBy: CreatedBy | null;
 }
@@ -117,13 +117,6 @@ interface CreatedBy {
 interface TopicElement {
   id: number;
   order: number;
-  topic: TopicTopic;
-  responsibles: BasicData[];
-}
-
-interface TopicTopic {
-  id: number;
-  name: string;
-  duration: number;
-  typeOfEvaluation: string;
+  topic: Topic;
+  responsibles: User[];
 }

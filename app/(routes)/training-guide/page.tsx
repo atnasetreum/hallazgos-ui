@@ -65,7 +65,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import TablePaginationActions from "@shared/components/TablePaginationActions";
 import { Transition } from "@routes/hallazgos/_components/EvidencePreview";
 import { EmployeesService, TrainingGuidesService } from "@services";
-import { Employee, ResponseTrainingGuide } from "@interfaces";
+import {
+  Employee,
+  ResponseTrainingGuide,
+  TypesOfEvaluations,
+} from "@interfaces";
 import LoadingLinear from "@shared/components/LoadingLinear";
 import { notify, stringToDateWithTime } from "@shared/utils";
 import SelectDefault from "@components/SelectDefault";
@@ -74,6 +78,7 @@ import {
   StyledTableRow,
   StyledTableCell,
 } from "@shared/components/TableDefault";
+import { useSearchParams } from "next/navigation";
 
 const emailsEditors = ["ggarcia@hadamexico.com", "eduardo-266@hotmail.com"];
 
@@ -685,7 +690,7 @@ function ScreenEdition({
 
                         setSignatureUser({
                           userId: id,
-                          type: "user",
+                          type: "employee",
                         });
                       }}
                     >
@@ -889,7 +894,8 @@ function ScreenEdition({
                                     updated[idx].date = newValue;
                                     if (
                                       !updated[idx].evaluation &&
-                                      row.typeOfEvaluation === "boolean"
+                                      row.topic.typeOfEvaluation ===
+                                        TypesOfEvaluations.BOOLEAN
                                     ) {
                                       updated[idx].evaluation = "false";
                                     }
@@ -914,7 +920,8 @@ function ScreenEdition({
                             .join(" / ")}
                         </StyledTableCell>
                         <StyledTableCell>
-                          {row.typeOfEvaluation === "boolean" ? (
+                          {row.topic.typeOfEvaluation ===
+                          TypesOfEvaluations.BOOLEAN ? (
                             <FormGroup>
                               <Stack
                                 direction="row"
@@ -1005,6 +1012,9 @@ const TrainingGuidePage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentEmployee, setCurrentEmployee] = useState<Employee>();
 
+  const searchParams = useSearchParams();
+  const employeeName = searchParams.get("employee");
+
   const [filters, setFilters] = useState<{
     name: string;
     manufacturingPlantId: string;
@@ -1052,6 +1062,12 @@ const TrainingGuidePage = () => {
   useEffect(() => {
     getData();
   }, [getData, filters]);
+
+  useEffect(() => {
+    if (employeeName) {
+      setFilters((prev) => ({ ...prev, name: employeeName }));
+    }
+  }, [employeeName]);
 
   return (
     <>

@@ -1,6 +1,11 @@
 import { ManufacturingPlant } from "./manufacturing-plants.interfaces";
 import { User } from "./users.interfaces";
 
+export enum TypesOfEvaluations {
+  BOOLEAN = "BOOLEAN",
+  NUMERIC = "NUMERIC",
+}
+
 export interface ResponseTrainingGuide {
   configTg: TrainingGuide;
   trainingGuide: TrainingGuideEmployee | null;
@@ -48,9 +53,10 @@ export interface Topic {
   updatedAt: Date;
   manufacturingPlants: ManufacturingPlant[];
   topic: Topic;
+  responsibles: Responsible[];
 }
 
-/* interface Responsible {
+interface Responsible {
   id: number;
   code: string;
   name: string;
@@ -59,7 +65,7 @@ export interface Topic {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
-} */
+}
 
 export interface TrainingGuideEmployee {
   id: number;

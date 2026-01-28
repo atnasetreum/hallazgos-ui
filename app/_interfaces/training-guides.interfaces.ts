@@ -53,18 +53,7 @@ export interface Topic {
   updatedAt: Date;
   manufacturingPlants: ManufacturingPlant[];
   topic: Topic;
-  responsibles: Responsible[];
-}
-
-interface Responsible {
-  id: number;
-  code: string;
-  name: string;
-  birthdate: Date | null;
-  dateOfAdmission: Date | null;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  responsibles: User[];
 }
 
 export interface TrainingGuideEmployee {

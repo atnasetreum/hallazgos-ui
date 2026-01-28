@@ -89,6 +89,7 @@ export default function TableEvidences({
         "mruiz@hadamexico.com",
         "arodriguez@hadamexico.com",
         "esanchez@hadamexico.com",
+        "cseguridad@hadainternational.com",
       ].includes(email)
     ) {
       return true;
@@ -165,8 +166,8 @@ export default function TableEvidences({
                   row.status === STATUS_OPEN
                     ? "warning"
                     : row.status === STATUS_CLOSED
-                    ? "success"
-                    : "error"
+                      ? "success"
+                      : "error"
                 }
               />
             </StyledTableCell>

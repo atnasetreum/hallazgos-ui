@@ -32,7 +32,6 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
-import AddIcon from "@mui/icons-material/Add";
 import Dialog from "@mui/material/Dialog";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -61,10 +60,12 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import SignatureCanvas from "react-signature-canvas";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
+import SearchIcon from "@mui/icons-material/Search";
 
 import TablePaginationActions from "@shared/components/TablePaginationActions";
 import { Transition } from "@routes/hallazgos/_components/EvidencePreview";
 import { EmployeesService, TrainingGuidesService } from "@services";
+import { Employee, ResponseTrainingGuide } from "@interfaces";
 import LoadingLinear from "@shared/components/LoadingLinear";
 import { notify, stringToDateWithTime } from "@shared/utils";
 import SelectDefault from "@components/SelectDefault";
@@ -73,11 +74,6 @@ import {
   StyledTableRow,
   StyledTableCell,
 } from "@shared/components/TableDefault";
-import {
-  Employee,
-  ResponseTrainingGuide,
-  TrainingGuideEmployee,
-} from "@interfaces";
 
 const emailsEditors = ["ggarcia@hadamexico.com", "eduardo-266@hotmail.com"];
 
@@ -96,7 +92,7 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
       transform: "translateX(22px)",
       "& .MuiSwitch-thumb:before": {
         backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 20 20"><path fill="${encodeURIComponent(
-          "#fff"
+          "#fff",
         )}" d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"/></svg>')`,
       },
       "& + .MuiSwitch-track": {
@@ -119,7 +115,7 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
       backgroundRepeat: "no-repeat",
       backgroundPosition: "center",
       backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 20 20"><path fill="${encodeURIComponent(
-        "#fff"
+        "#fff",
       )}" d="M15.898 4.045c-0.271-0.272-0.715-0.272-0.986 0l-4.71 4.711-4.71-4.711c-0.271-0.272-0.715-0.272-0.986 0s-0.272 0.715 0 0.986l4.711 4.71-4.711 4.711c-0.272 0.271-0.272 0.715 0 0.986s0.715 0.272 0.986 0l4.71-4.711 4.71 4.711c0.271 0.272 0.715 0.272 0.986 0s0.272-0.715 0-0.986l-4.711-4.711 4.711-4.71c0.272-0.271 0.272-0.715 0-0.986z"/></svg>')`,
     },
   },
@@ -137,52 +133,9 @@ function Row(props: {
   const { row, setCurrentEmployee } = props;
   const [open, setOpen] = useState(false);
 
-  const calculatePercentage = (tg: TrainingGuideEmployee) => {
-    let percentageValue = 0;
-
-    let totalTopics = tg.evaluations.length;
-
-    if (!tg.signatureEmployee) {
-      totalTopics++;
-    }
-
-    if (!tg.signatureAreaManager) {
-      totalTopics++;
-    }
-
-    if (!tg.signatureHumanResourceManager) {
-      totalTopics++;
-    }
-
-    const completedTopics = tg.evaluations.filter(
-      (evalItem) =>
-        evalItem.evaluationValue &&
-        evalItem.evaluationValue !== "" &&
-        evalItem.evaluationDate
-    ).length;
-
-    percentageValue = Math.round((completedTopics / totalTopics) * 100);
-
-    return percentageValue;
-  };
-
   const currentTrainingGuide = useMemo(() => {
     return row.trainingGuides.find((tg) => tg.position.id === row.position.id);
   }, [row]);
-
-  const percentage = useMemo(() => {
-    let percentageValue = 0;
-
-    if (row.trainingGuides.length > 0) {
-      if (!currentTrainingGuide) {
-        return percentageValue;
-      }
-
-      percentageValue = calculatePercentage(currentTrainingGuide);
-    }
-
-    return percentageValue;
-  }, [row, currentTrainingGuide]);
 
   return (
     <>
@@ -207,7 +160,13 @@ function Row(props: {
         </StyledTableCell>
         <StyledTableCell>{row.area.name}</StyledTableCell>
         <StyledTableCell>{row.position.name}</StyledTableCell>
-        <StyledTableCell>{`${percentage}%`}</StyledTableCell>
+        <StyledTableCell>
+          {!currentTrainingGuide
+            ? "0%"
+            : currentTrainingGuide.percentageOfCompliance > 0
+              ? `${currentTrainingGuide.percentageOfCompliance}%`
+              : "0%"}
+        </StyledTableCell>
         <StyledTableCell>
           {!currentTrainingGuide ? null : currentTrainingGuide.signatureEmployee ? (
             <DoneIcon style={{ fill: "green" }} />
@@ -235,7 +194,7 @@ function Row(props: {
             size="small"
             onClick={() => setCurrentEmployee(row)}
           >
-            <AddIcon />
+            <SearchIcon />
           </IconButton>
           {/* {row.trainingGuides.length === 0 && (
             <IconButton
@@ -282,7 +241,9 @@ function Row(props: {
                           {historyRow.position.name}
                         </StyledTableCell>
                         <StyledTableCell>
-                          {calculatePercentage(historyRow)}%
+                          {historyRow.percentageOfCompliance > 0
+                            ? `${historyRow.percentageOfCompliance}%`
+                            : "0%"}
                         </StyledTableCell>
                         <StyledTableCell>
                           <SimCardDownloadIcon
@@ -440,33 +401,60 @@ function ScreenEdition({
   useEffect(() => {
     if (responseTrainingGuide) {
       let topics = [];
+      const previousTopics = responseTrainingGuide?.previousTopics || [];
 
-      if (responseTrainingGuide.trainingGuideEmployee) {
-        topics = responseTrainingGuide.trainingGuideEmployee.evaluations;
+      if (responseTrainingGuide.trainingGuide) {
+        topics = responseTrainingGuide.trainingGuide.evaluations;
 
         const data = topics.map((evaluation) => ({
           date: evaluation.evaluationDate
-            ? dayjs(evaluation.evaluationDate)
+            ? dayjs(evaluation.evaluationDate.split("T")[0])
             : null,
           evaluation: evaluation.evaluationValue,
           observations: evaluation.observations,
           topicId: evaluation.topic.id,
         }));
-
         setEvaluations(data);
 
         setStartDate(
-          dayjs(responseTrainingGuide.trainingGuideEmployee.startDate)
+          dayjs(responseTrainingGuide.trainingGuide.startDate.split("T")[0]),
         );
       } else {
-        topics = responseTrainingGuide?.trainingGuide?.topics;
+        topics = responseTrainingGuide?.configTg?.topics;
 
-        const data = topics.map((topic) => ({
-          date: null,
-          evaluation: "",
-          observations: "",
-          topicId: topic.id,
-        }));
+        let data = [];
+
+        if (!previousTopics.length) {
+          data = topics.map((topic) => ({
+            date: null,
+            evaluation: "",
+            observations: "",
+            topicId: topic.topic.id,
+          }));
+        } else {
+          data = topics.map((topic) => {
+            const previousTopic = previousTopics.find(
+              (prevTopic) => prevTopic.id === topic.id,
+            );
+            if (previousTopic) {
+              return {
+                date: previousTopic.evaluationDate
+                  ? dayjs(previousTopic.evaluationDate)
+                  : null,
+                evaluation: previousTopic.evaluationValue,
+                observations: previousTopic.observations,
+                topicId: topic.topic.id,
+              };
+            } else {
+              return {
+                date: null,
+                evaluation: "",
+                observations: "",
+                topicId: topic.topic.id,
+              };
+            }
+          });
+        }
 
         setEvaluations(data);
       }
@@ -484,19 +472,17 @@ function ScreenEdition({
   }, [setOpen]);
 
   useEffect(() => {
-    TrainingGuidesService.findCurrentData(
-      currentEmployee.position.id,
-      currentEmployee.id
-    )
-      .then((data) => {
-        console.log(data);
-        setResponseTrainingGuide(data);
-      })
+    TrainingGuidesService.findCurrentData({
+      positionId: currentEmployee.position.id,
+      employeeId: currentEmployee.id,
+      manufacturingPlantId: currentEmployee.manufacturingPlants[0].id,
+    })
+      .then(setResponseTrainingGuide)
       .catch(() => handleClose());
   }, [currentEmployee, handleClose]);
 
   const saveTrainingGuide = () => {
-    if (!responseTrainingGuide?.trainingGuide) return;
+    if (!responseTrainingGuide?.configTg) return;
 
     if (!startDate) {
       notify("La fecha de inicio del entrenamiento es obligatoria", false);
@@ -504,21 +490,21 @@ function ScreenEdition({
     }
 
     const evaluationsPendingDate = evaluations.filter(
-      (evalItem) => !evalItem.date && evalItem.evaluation !== ""
+      (evalItem) => !evalItem.date && evalItem.evaluation !== "",
     );
 
     const evaluationsPendingValue = evaluations.filter(
-      (evalItem) => evalItem.evaluation === "" && evalItem.date
+      (evalItem) => evalItem.evaluation === "" && evalItem.date,
     );
 
     if (evaluationsPendingDate.length > 0) {
       notify(
         `Existen evaluaciones sin fecha asignada, referencia fila: ${
           evaluations.findIndex(
-            (evalItem) => !evalItem.date && evalItem.evaluation !== ""
+            (evalItem) => !evalItem.date && evalItem.evaluation !== "",
           ) + 1
         }`,
-        false
+        false,
       );
       return;
     }
@@ -527,35 +513,48 @@ function ScreenEdition({
       notify(
         `Existen evaluaciones sin valor asignado, referencia fila: ${
           evaluations.findIndex(
-            (evalItem) => evalItem.evaluation === "" && evalItem.date
+            (evalItem) => evalItem.evaluation === "" && evalItem.date,
           ) + 1
         }`,
-        false
+        false,
       );
       return;
     }
 
     setIsLoading(true);
 
-    TrainingGuidesService.saveTrainingGuide({
+    const payload = {
+      manufacturingPlantId: currentEmployee.manufacturingPlants[0].id,
       startDate,
       positionId: currentEmployee.position.id,
       employeeId: currentEmployee.id,
       evaluations,
-      areaTgeId: responseTrainingGuide.trainingGuide.areaManager.id,
+      areaTgeId: responseTrainingGuide.configTg.areaManager.id,
       humanResourceTgeId:
-        responseTrainingGuide.trainingGuide.humanResourceManager.id,
-    }).then(() => {
-      notify("Guía de entrenamiento guardada correctamente", true);
-      handleClose();
-    });
+        responseTrainingGuide.configTg.humanResourceManager.id,
+    };
+
+    if (!responseTrainingGuide.trainingGuide) {
+      TrainingGuidesService.create(payload).then(() => {
+        notify("Guía de entrenamiento creada correctamente", true);
+        handleClose();
+      });
+    } else {
+      TrainingGuidesService.update(
+        responseTrainingGuide.trainingGuide.id,
+        payload,
+      ).then(() => {
+        notify("Guía de entrenamiento actualizada correctamente", true);
+        handleClose();
+      });
+    }
   };
 
   return (
     <>
-      {signatureUser && responseTrainingGuide?.trainingGuideEmployee && (
+      {signatureUser && responseTrainingGuide?.trainingGuide && (
         <SignatureDialog
-          currentId={responseTrainingGuide.trainingGuideEmployee.id}
+          currentId={responseTrainingGuide.trainingGuide.id}
           signatureUser={signatureUser}
           setOpen={() => setSignatureUser(undefined)}
           handleClose={handleClose}
@@ -631,49 +630,12 @@ function ScreenEdition({
                 <ListItemButton>
                   <ListItemText
                     primary={
-                      !responseTrainingGuide?.trainingGuideEmployee
+                      !responseTrainingGuide?.trainingGuide
                         ? "0%"
-                        : responseTrainingGuide.trainingGuideEmployee
-                            .evaluations.length === 0
-                        ? "0%"
-                        : (() => {
-                            let totalTopics =
-                              responseTrainingGuide.trainingGuideEmployee
-                                .evaluations.length;
-
-                            if (
-                              !responseTrainingGuide.trainingGuideEmployee
-                                .signatureEmployee
-                            ) {
-                              totalTopics++;
-                            }
-
-                            if (
-                              !responseTrainingGuide.trainingGuideEmployee
-                                .signatureAreaManager
-                            ) {
-                              totalTopics++;
-                            }
-
-                            if (
-                              !responseTrainingGuide.trainingGuideEmployee
-                                .signatureHumanResourceManager
-                            ) {
-                              totalTopics++;
-                            }
-
-                            const completedTopics =
-                              responseTrainingGuide.trainingGuideEmployee.evaluations.filter(
-                                (evalItem) =>
-                                  evalItem.evaluationValue &&
-                                  evalItem.evaluationValue !== "" &&
-                                  evalItem.evaluationDate
-                              ).length;
-                            const percentage = Math.round(
-                              (completedTopics / totalTopics) * 100
-                            );
-                            return `${percentage}%`;
-                          })()
+                        : responseTrainingGuide.trainingGuide
+                              .percentageOfCompliance > 0
+                          ? `${responseTrainingGuide.trainingGuide.percentageOfCompliance}%`
+                          : "0%"
                     }
                     secondary="Porcentaje de cumplimiento"
                   />
@@ -711,7 +673,7 @@ function ScreenEdition({
                     <ListItemButton
                       onClick={() => {
                         if (
-                          responseTrainingGuide?.trainingGuideEmployee
+                          responseTrainingGuide?.trainingGuide
                             ?.signatureEmployee ||
                           !emailsEditors.includes(email)
                         )
@@ -736,7 +698,7 @@ function ScreenEdition({
                               gap: 1,
                             }}
                           >
-                            {!responseTrainingGuide?.trainingGuideEmployee
+                            {!responseTrainingGuide?.trainingGuide
                               ?.signatureEmployee ? (
                               <WatchLaterIcon color="warning" />
                             ) : (
@@ -756,17 +718,16 @@ function ScreenEdition({
                     <ListItemButton
                       onClick={() => {
                         if (
-                          responseTrainingGuide?.trainingGuideEmployee
+                          responseTrainingGuide?.trainingGuide
                             ?.signatureAreaManager ||
                           userSessionId !==
-                            responseTrainingGuide?.trainingGuideEmployee
-                              ?.areaManager?.id
+                            responseTrainingGuide?.trainingGuide?.areaManager
+                              ?.id
                         )
                           return;
 
                         const id =
-                          responseTrainingGuide?.trainingGuideEmployee
-                            ?.areaManager?.id;
+                          responseTrainingGuide?.trainingGuide?.areaManager?.id;
 
                         if (!id) return;
 
@@ -785,14 +746,14 @@ function ScreenEdition({
                               gap: 1,
                             }}
                           >
-                            {!responseTrainingGuide?.trainingGuideEmployee
+                            {!responseTrainingGuide?.trainingGuide
                               ?.signatureAreaManager ? (
                               <WatchLaterIcon color="warning" />
                             ) : (
                               <CheckCircleIcon style={{ fill: "green" }} />
                             )}
                             {
-                              responseTrainingGuide?.trainingGuide.areaManager
+                              responseTrainingGuide?.trainingGuide?.areaManager
                                 .name
                             }
                           </Box>
@@ -808,16 +769,16 @@ function ScreenEdition({
                     <ListItemButton
                       onClick={() => {
                         if (
-                          responseTrainingGuide?.trainingGuideEmployee
+                          responseTrainingGuide?.trainingGuide
                             ?.signatureHumanResourceManager ||
                           userSessionId !==
-                            responseTrainingGuide?.trainingGuideEmployee
+                            responseTrainingGuide?.trainingGuide
                               ?.humanResourceManager?.id
                         )
                           return;
 
                         const id =
-                          responseTrainingGuide?.trainingGuideEmployee
+                          responseTrainingGuide?.trainingGuide
                             ?.humanResourceManager?.id;
 
                         if (!id) return;
@@ -837,7 +798,7 @@ function ScreenEdition({
                               gap: 1,
                             }}
                           >
-                            {!responseTrainingGuide?.trainingGuideEmployee
+                            {!responseTrainingGuide?.trainingGuide
                               ?.signatureHumanResourceManager ? (
                               <WatchLaterIcon color="warning" />
                             ) : (
@@ -845,7 +806,7 @@ function ScreenEdition({
                             )}
                             {
                               responseTrainingGuide?.trainingGuide
-                                .humanResourceManager.name
+                                ?.humanResourceManager.name
                             }
                           </Box>
                         }
@@ -902,10 +863,10 @@ function ScreenEdition({
                   </StyledTableRow>
                 </TableHead>
                 <TableBody>
-                  {responseTrainingGuide?.trainingGuide?.topics?.map(
-                    (row, idx) => (
+                  {responseTrainingGuide?.configTg?.topics?.map((row, idx) => {
+                    return (
                       <StyledTableRow
-                        key={row.name}
+                        key={row.topic.name}
                         sx={{
                           "&:last-child td, &:last-child th": { border: 0 },
                         }}
@@ -913,7 +874,7 @@ function ScreenEdition({
                         <StyledTableCell component="th" scope="row">
                           {idx + 1}
                         </StyledTableCell>
-                        <StyledTableCell>{row.name}</StyledTableCell>
+                        <StyledTableCell>{row.topic.name}</StyledTableCell>
                         <StyledTableCell>
                           <Paper>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -1025,8 +986,8 @@ function ScreenEdition({
                           </Paper>
                         </StyledTableCell>
                       </StyledTableRow>
-                    )
-                  )}
+                    );
+                  })}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -1065,13 +1026,13 @@ const TrainingGuidePage = () => {
 
   const handleChangePage = (
     _: MouseEvent<HTMLButtonElement> | null,
-    newPage: number
+    newPage: number,
   ) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -1208,7 +1169,7 @@ const TrainingGuidePage = () => {
                       "Firma colaborador",
                       "Firma jefe de área",
                       "Firma jefe RH",
-                      "Acciones",
+                      "Detalles",
                     ].map((column) => (
                       <StyledTableCell key={column}>{column}</StyledTableCell>
                     ))}
@@ -1218,7 +1179,7 @@ const TrainingGuidePage = () => {
                   {(rowsPerPage > 0
                     ? employees.slice(
                         page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
+                        page * rowsPerPage + rowsPerPage,
                       )
                     : employees
                   ).map((row) => (

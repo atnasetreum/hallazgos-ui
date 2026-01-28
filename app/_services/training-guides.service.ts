@@ -7,14 +7,23 @@ const api = axiosWrapper({
   baseURL: "/training-guides",
 });
 
-const findCurrentData = async (positionId: number, employeeId: number) => {
+const findCurrentData = async ({
+  positionId,
+  employeeId,
+  manufacturingPlantId,
+}: {
+  positionId: number;
+  employeeId: number;
+  manufacturingPlantId: number;
+}) => {
   const { data } = await api.get<ResponseTrainingGuide>(
-    `/position/${positionId}/employee/${employeeId}`
+    `/position/${positionId}/employee/${employeeId}/manufacturingPlant/${manufacturingPlantId}`,
   );
   return data;
 };
 
-const saveTrainingGuide = async (payload: {
+const create = async (payload: {
+  manufacturingPlantId: number;
   startDate: Dayjs;
   evaluations: {
     date: Dayjs | null;
@@ -27,7 +36,7 @@ const saveTrainingGuide = async (payload: {
   areaTgeId: number;
   humanResourceTgeId: number;
 }) => {
-  const { data } = await api.post("/training-guide-employee", payload);
+  const { data } = await api.post("", payload);
   return data;
 };
 
@@ -40,10 +49,7 @@ const saveSignature = async ({
   type: string;
   id: number;
 }) => {
-  const { data } = await api.post(
-    `/training-guide-employee/signature/${id}`,
-    payload
-  );
+  const { data } = await api.post(`/signature/${id}`, payload);
   return data;
 };
 
@@ -71,9 +77,31 @@ const findAllTopics = async () => {
   return data;
 };
 
+const update = async (
+  id: number,
+  payload: {
+    manufacturingPlantId: number;
+    startDate: Dayjs;
+    evaluations: {
+      date: Dayjs | null;
+      evaluation: string;
+      observations: string;
+      topicId: number;
+    }[];
+    positionId: number;
+    employeeId: number;
+    areaTgeId: number;
+    humanResourceTgeId: number;
+  },
+) => {
+  const { data } = await api.patch(`/${id}`, payload);
+  return data;
+};
+
 export const TrainingGuidesService = {
   findCurrentData,
-  saveTrainingGuide,
+  create,
+  update,
   saveSignature,
   downloadFile,
   findAllTopics,

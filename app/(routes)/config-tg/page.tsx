@@ -192,14 +192,13 @@ const ScreenForm = ({
         manufacturingPlantId: manufacturingPlantId.toString(),
       }).then(setUsers);
       TopicsService.findAll({ manufacturingPlantId }).then(setTopics);
-      if (!currentId) {
-        setForm((prev) => ({
-          ...prev,
-          areaManagerId: "",
-          humanResourceManagerId: "",
-          topics: [],
-        }));
-      }
+
+      setForm((prev) => ({
+        ...prev,
+        areaManagerId: "",
+        humanResourceManagerId: "",
+        topics: [],
+      }));
     }
   }, [manufacturingPlantId, currentId]);
 
@@ -300,12 +299,17 @@ const ScreenForm = ({
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6} md={6}>
                     <SelectDefault
-                      data={topics.map((topic) => ({
-                        ...topic,
-                        name:
-                          topic.name.slice(0, 70) +
-                          (topic.name.length > 70 ? "..." : ""),
-                      }))}
+                      data={topics
+                        .map((topic) => ({
+                          ...topic,
+                          name:
+                            topic.name.slice(0, 70) +
+                            (topic.name.length > 70 ? "..." : ""),
+                        }))
+                        .filter(
+                          (topic) =>
+                            !form.topics.find((t) => t.id === topic.id),
+                        )}
                       label="Temas"
                       value={topicId}
                       onChange={(e) => setTopicId(e.target.value)}

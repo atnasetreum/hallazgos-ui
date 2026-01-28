@@ -2,8 +2,9 @@ import { ManufacturingPlant } from "./manufacturing-plants.interfaces";
 import { User } from "./users.interfaces";
 
 export interface ResponseTrainingGuide {
-  trainingGuide: TrainingGuide;
-  trainingGuideEmployee: TrainingGuideEmployee | null;
+  configTg: TrainingGuide;
+  trainingGuide: TrainingGuideEmployee | null;
+  previousTopics: Evaluation[];
 }
 
 interface TrainingGuide {
@@ -46,6 +47,7 @@ export interface Topic {
   updatedBy: User | null;
   updatedAt: Date;
   manufacturingPlants: ManufacturingPlant[];
+  topic: Topic;
 }
 
 /* interface Responsible {
@@ -61,7 +63,7 @@ export interface Topic {
 
 export interface TrainingGuideEmployee {
   id: number;
-  startDate: Date;
+  startDate: string;
   signatureEmployee: null;
   signatureAreaManager: null;
   signatureHumanResourceManager: null;
@@ -72,11 +74,12 @@ export interface TrainingGuideEmployee {
   areaManager: Manager;
   humanResourceManager: Manager;
   position: Position;
+  percentageOfCompliance: number;
 }
 
 interface Evaluation {
   id: number;
-  evaluationDate: Date | null;
+  evaluationDate: string | null;
   evaluationValue: string;
   observations: string;
   topic: Topic;
@@ -90,7 +93,7 @@ export interface ConfigTg {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
-  topics: TopicElement[];
+  topics: Topic[];
   position: BasicData;
   manufacturingPlant: BasicData;
   areaManager: User;
@@ -112,11 +115,4 @@ interface CreatedBy {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
-}
-
-interface TopicElement {
-  id: number;
-  order: number;
-  topic: Topic;
-  responsibles: User[];
 }

@@ -177,6 +177,19 @@ const ScreenForm = ({
         <Grid container spacing={2}>
           <Grid item xs={12} sm={12} md={12}>
             <Paper>
+              <MultiSelectManufacturingPlants
+                values={form.manufacturingPlantNames}
+                onChange={(values) => {
+                  setForm({
+                    ...form,
+                    manufacturingPlantNames: values,
+                  });
+                }}
+              />
+            </Paper>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12}>
+            <Paper>
               <TextField
                 multiline
                 rows={4}
@@ -239,23 +252,10 @@ const ScreenForm = ({
                     });
                   }}
                 >
-                  <MenuItem value="BOOLEAN">Aprobado / Reprobado</MenuItem>
                   <MenuItem value="NUMERIC">Numérico</MenuItem>
+                  <MenuItem value="BOOLEAN">Aprobado / Reprobado</MenuItem>
                 </Select>
               </FormControl>
-            </Paper>
-          </Grid>
-          <Grid item xs={12} sm={12} md={12}>
-            <Paper>
-              <MultiSelectManufacturingPlants
-                values={form.manufacturingPlantNames}
-                onChange={(values) => {
-                  setForm({
-                    ...form,
-                    manufacturingPlantNames: values,
-                  });
-                }}
-              />
             </Paper>
           </Grid>
         </Grid>

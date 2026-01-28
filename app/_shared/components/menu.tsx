@@ -160,15 +160,15 @@ export const MainListItems = () => {
               />
               <CreateLink
                 nested
-                url="/processes"
-                title="Procesos"
-                icon={<AccountTreeIcon />}
-              />
-              <CreateLink
-                nested
                 url="/topics-tg"
                 title="Temas - G. Entr."
                 icon={<ContentPasteGoIcon />}
+              />
+              <CreateLink
+                nested
+                url="/processes"
+                title="Procesos2"
+                icon={<AccountTreeIcon />}
               />
               <CreateLink
                 nested

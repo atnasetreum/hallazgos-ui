@@ -439,12 +439,13 @@ function ScreenEdition({
         } else {
           data = topics.map((topic) => {
             const previousTopic = previousTopics.find(
-              (prevTopic) => prevTopic.id === topic.id,
+              (prevTopic) =>
+                Number(prevTopic.topic.id) === Number(topic.topic.id),
             );
             if (previousTopic) {
               return {
                 date: previousTopic.evaluationDate
-                  ? dayjs(previousTopic.evaluationDate)
+                  ? dayjs(previousTopic.evaluationDate.split("T")[0])
                   : null,
                 evaluation: previousTopic.evaluationValue,
                 observations: previousTopic.observations,

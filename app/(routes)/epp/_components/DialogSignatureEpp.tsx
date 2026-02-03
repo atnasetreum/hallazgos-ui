@@ -7,6 +7,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 import SignatureCanvas from "react-signature-canvas";
 
 import { Transition } from "@routes/hallazgos/_components/EvidencePreview";
@@ -23,6 +25,9 @@ export default function DialogSignatureEpp({
   setSignature,
 }: Props) {
   const sigCanvas = useRef<SignatureCanvas | null>(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const canvasWidth = isMobile ? 300 : 500;
 
   const handleClose = () => {
     setOpen(false);
@@ -67,7 +72,7 @@ export default function DialogSignatureEpp({
             ref={sigCanvas}
             penColor="black"
             canvasProps={{
-              width: 500,
+              width: canvasWidth,
               height: 200,
               style: { width: "100%", height: "100%" },
             }}
@@ -82,24 +87,6 @@ export default function DialogSignatureEpp({
           </Button>
         </Box>
       </Paper>
-
-      {/*  <div style={{ width: "100%", border: "1px solid #ccc" }}>
-        <SignatureCanvas
-          ref={sigCanvas}
-          canvasProps={{
-            width: canvasWidth,
-            height: canvasHeight,
-            className: "sigCanvas",
-          }}
-          penColor="black"
-          minWidth={1}
-          maxWidth={3}
-        />
-        <div>
-          <button onClick={clearSignature}>Clear</button>
-          <button onClick={saveSignature}>Save Signature</button>
-        </div>
-      </div> */}
     </Dialog>
   );
 }

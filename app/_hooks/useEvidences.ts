@@ -133,14 +133,14 @@ export const useEvidences = () => {
   const handleFindEvidences = (filters: FiltersEvidences) => {
     const variables = {
       ...(filters.manufacturingPlantId && {
-        manufacturingPlantId: filters.manufacturingPlantId,
+        manufacturingPlantId: Number(filters.manufacturingPlantId),
       }),
-      ...(filters.mainTypeId && { mainTypeId: filters.mainTypeId }),
+      ...(filters.mainTypeId && { mainTypeId: Number(filters.mainTypeId) }),
       ...(filters.secondaryType && {
-        secondaryTypeId: filters.secondaryType,
+        secondaryTypeId: Number(filters.secondaryType),
       }),
-      ...(filters.zone && { zoneId: filters.zone }),
-      ...(filters.process && { processId: filters.process }),
+      ...(filters.zone && { zoneId: Number(filters.zone) }),
+      ...(filters.process && { processId: Number(filters.process) }),
       ...(filters.state && { status: filters.state }),
     };
 

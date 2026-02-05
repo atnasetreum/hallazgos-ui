@@ -32,7 +32,7 @@ import {
   StyledTableCell,
 } from "@shared/components/TableDefault";
 
-const colSpan = 3;
+const colSpan = 2;
 
 function Row(props: { row: Hds }) {
   const { row } = props;
@@ -40,9 +40,8 @@ function Row(props: { row: Hds }) {
   return (
     <StyledTableRow sx={{ "& > *": { borderBottom: "unset" } }}>
       <StyledTableCell component="th" scope="row">
-        {row.id}
+        {row.name}
       </StyledTableCell>
-      <StyledTableCell>{row.name}</StyledTableCell>
       <StyledTableCell>
         <IconButton
           aria-label="expand row"
@@ -180,7 +179,7 @@ const HdsPage = () => {
             <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
               <TableHead>
                 <StyledTableRow>
-                  {["ID", "Nombre", "Visualizar archivo"].map((column) => (
+                  {["Nombre", "Visualizar archivo"].map((column) => (
                     <StyledTableCell key={column}>{column}</StyledTableCell>
                   ))}
                 </StyledTableRow>

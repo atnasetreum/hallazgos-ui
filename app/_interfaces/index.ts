@@ -11,6 +11,7 @@ export * from "./employees.interfaces";
 export * from "./epps.interfaces";
 export * from "./equipments.interfaces";
 export * from "./evicences.interfaces";
+export * from "./hds.interfaces";
 export * from "./ics.interfaces";
 export * from "./machines.interfaces";
 export * from "./main-types.interfaces";

@@ -23,12 +23,13 @@ import Tooltip from "@mui/material/Tooltip";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import DescriptionIcon from "@mui/icons-material/Description";
 import WarningIcon from "@mui/icons-material/Warning";
-import ContentPasteGoIcon from "@mui/icons-material/ContentPasteGo";
+import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import FolderSharedIcon from "@mui/icons-material/FolderShared";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
+import FolderIcon from "@mui/icons-material/Folder";
 
 import { useCategoriesStore, useUserSessionStore } from "@store";
 import { ROLE_ADMINISTRADOR } from "@shared/constants";
@@ -168,13 +169,13 @@ export const MainListItems = () => {
                 nested
                 url="/topics-tg"
                 title="Temas - G. Entr."
-                icon={<ContentPasteGoIcon />}
+                icon={<ContentPasteIcon />}
               />
               <CreateLink
                 nested
                 url="/config-tg"
                 title="Config - G. Entr."
-                icon={<ContentPasteGoIcon />}
+                icon={<ContentPasteIcon />}
               />
             </List>
           </Collapse>
@@ -185,8 +186,9 @@ export const MainListItems = () => {
       <CreateLink
         url="/training-guide"
         title="G. Entr."
-        icon={<ContentPasteGoIcon />}
+        icon={<ContentPasteIcon />}
       />
+      <CreateLink url="/hds" title="HDS" icon={<FolderIcon />} />
     </>
   );
 };

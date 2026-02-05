@@ -13,6 +13,7 @@ export * from "./employees.service";
 export * from "./epp.service";
 export * from "./equipments.service";
 export * from "./evidences.service";
+export * from "./hds.service";
 export * from "./ics.service";
 export * from "./machines.service";
 export * from "./main-types.service";

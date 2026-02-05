@@ -39,10 +39,10 @@ function Row(props: { row: Hds }) {
 
   return (
     <StyledTableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-      <StyledTableCell component="th" scope="row">
+      <StyledTableCell component="th" scope="row" align="center">
         {row.name}
       </StyledTableCell>
-      <StyledTableCell>
+      <StyledTableCell align="center">
         <IconButton
           aria-label="expand row"
           size="small"
@@ -180,7 +180,9 @@ const HdsPage = () => {
               <TableHead>
                 <StyledTableRow>
                   {["Nombre", "Visualizar archivo"].map((column) => (
-                    <StyledTableCell key={column}>{column}</StyledTableCell>
+                    <StyledTableCell key={column} align="center">
+                      {column}
+                    </StyledTableCell>
                   ))}
                 </StyledTableRow>
               </TableHead>

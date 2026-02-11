@@ -178,7 +178,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   const [mode, setMode] = useState<"light" | "dark">("light");
   const [open, setOpen] = useState(false);
 
-  const { id: userId, name, setSession, email } = useUserSessionStore();
+  const { id: userId, name, setSession } = useUserSessionStore();
 
   const toggleDrawer = () => {
     setOpen(!open);

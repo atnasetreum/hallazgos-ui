@@ -162,7 +162,7 @@ const ScreenForm = ({
     if (!currentId) return;
 
     ConfigTgService.findOne(currentId).then((data) => {
-      alert();
+      alert(JSON.stringify(data));
       console.log({ data });
       setForm({
         positionId: String(data.position.id),

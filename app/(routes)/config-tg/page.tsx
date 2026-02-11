@@ -163,16 +163,22 @@ const ScreenForm = ({
 
     ConfigTgService.findOne(currentId).then((data) => {
       setForm({
-        positionId: String(data.position.id),
+        ...form,
         manufacturingPlantId: String(data.manufacturingPlant.id),
-        areaManagerId: String(data.areaManager.id),
-        humanResourceManagerId: String(data.humanResourceManager.id),
-        topics: data.topics.map((t) => ({
-          id: t.topic.id,
-          topic: t.topic,
-          responsibles: t.responsibles,
-        })),
       });
+      setTimeout(() => {
+        setForm({
+          ...form,
+          positionId: String(data.position.id),
+          areaManagerId: String(data.areaManager.id),
+          humanResourceManagerId: String(data.humanResourceManager.id),
+          topics: data.topics.map((t) => ({
+            id: t.topic.id,
+            topic: t.topic,
+            responsibles: t.responsibles,
+          })),
+        });
+      }, 1500);
     });
   }, [currentId]);
 
@@ -194,8 +200,6 @@ const ScreenForm = ({
 
       TopicsService.findAll({ manufacturingPlantId }).then(setTopics);
 
-      if (currentId) return;
-
       setForm((prev) => ({
         ...prev,
         areaManagerId: "",
@@ -203,7 +207,7 @@ const ScreenForm = ({
         topics: [],
       }));
     }
-  }, [manufacturingPlantId, currentId]);
+  }, [manufacturingPlantId]);
 
   return (
     <Dialog

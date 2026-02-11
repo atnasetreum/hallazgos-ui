@@ -168,7 +168,7 @@ const ScreenForm = ({
       });
       setTimeout(() => {
         setForm({
-          ...form,
+          manufacturingPlantId: String(data.manufacturingPlant.id),
           positionId: String(data.position.id),
           areaManagerId: String(data.areaManager.id),
           humanResourceManagerId: String(data.humanResourceManager.id),

@@ -194,6 +194,8 @@ const ScreenForm = ({
 
       TopicsService.findAll({ manufacturingPlantId }).then(setTopics);
 
+      if (currentId) return;
+
       setForm((prev) => ({
         ...prev,
         areaManagerId: "",
@@ -201,7 +203,7 @@ const ScreenForm = ({
         topics: [],
       }));
     }
-  }, [manufacturingPlantId]);
+  }, [manufacturingPlantId, currentId]);
 
   return (
     <Dialog

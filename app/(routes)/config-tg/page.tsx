@@ -162,8 +162,6 @@ const ScreenForm = ({
     if (!currentId) return;
 
     ConfigTgService.findOne(currentId).then((data) => {
-      alert(JSON.stringify(data));
-      console.log({ data });
       setForm({
         positionId: String(data.position.id),
         manufacturingPlantId: String(data.manufacturingPlant.id),
@@ -203,7 +201,7 @@ const ScreenForm = ({
         topics: [],
       }));
     }
-  }, [manufacturingPlantId, currentId]);
+  }, [manufacturingPlantId]);
 
   return (
     <Dialog

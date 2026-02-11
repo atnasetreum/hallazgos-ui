@@ -178,7 +178,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   const [mode, setMode] = useState<"light" | "dark">("light");
   const [open, setOpen] = useState(false);
 
-  const { id: userId, name, setSession } = useUserSessionStore();
+  const { id: userId, name, setSession, email } = useUserSessionStore();
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -203,7 +203,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
         setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
       },
     }),
-    []
+    [],
   );
 
   const lightTheme = createTheme({
@@ -226,7 +226,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
 
   const theme = useMemo(
     () => createTheme(mode === "light" ? lightTheme : darkTheme),
-    [mode, lightTheme, darkTheme]
+    [mode, lightTheme, darkTheme],
   );
 
   useEffect(() => {

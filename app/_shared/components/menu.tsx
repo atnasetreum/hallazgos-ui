@@ -7,11 +7,11 @@ import { usePathname, useRouter } from "next/navigation";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import ListSubheader from "@mui/material/ListSubheader";
+//import ListSubheader from "@mui/material/ListSubheader";
 import List from "@mui/material/List";
 import Collapse from "@mui/material/Collapse";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import BarChartIcon from "@mui/icons-material/BarChart";
+//import BarChartIcon from "@mui/icons-material/BarChart";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import BusinessIcon from "@mui/icons-material/Business";
@@ -74,6 +74,7 @@ export const MainListItems = () => {
   const [openConfig, setOpenConfig] = useState(false);
 
   const role = useUserSessionStore((state) => state.role);
+  const email = useUserSessionStore((state) => state.email);
 
   const { setCategories } = useCategoriesStore();
 
@@ -100,6 +101,9 @@ export const MainListItems = () => {
       setIsAdmin(true);
     }
   }, [role, isAdmin]);
+
+  if (email === "cosmeticostrujillo0023@gmail.com")
+    return <CreateLink url="/hds" title="HDS" icon={<FolderIcon />} />;
 
   return (
     <>
@@ -199,7 +203,7 @@ export const SecondaryListItems = () => {
 
   return (
     <>
-      <ListSubheader component="div" inset>
+      {/* <ListSubheader component="div" inset>
         Reportes
       </ListSubheader>
       <ListItemButton>
@@ -207,7 +211,7 @@ export const SecondaryListItems = () => {
           <BarChartIcon />
         </ListItemIcon>
         <ListItemText primary="BI" />
-      </ListItemButton>
+      </ListItemButton> */}
       <ListItemButton
         onClick={() => {
           AuthService.logout().then(({ message }) => {

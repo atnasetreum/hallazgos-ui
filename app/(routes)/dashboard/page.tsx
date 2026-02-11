@@ -11,6 +11,11 @@ import Grid from "@mui/material/Grid";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 
+import { useUserSessionStore } from "@store";
+import {
+  a11yProps,
+  TabPanel,
+} from "@routes/hallazgos/_components/TabsImageAndLogs";
 import {
   //AccidentRateIndicator,
   EvidencePerMonthChart,
@@ -21,14 +26,12 @@ import {
   TopUsersByPlantChart,
   ZonesChart,
 } from "./_components";
-import {
-  a11yProps,
-  TabPanel,
-} from "@routes/hallazgos/_components/TabsImageAndLogs";
 
 export default function DashboardPage() {
   const theme = useTheme();
   const [value, setValue] = useState(0);
+
+  const email = useUserSessionStore((state) => state.email);
 
   const handleChange = (_: SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -37,6 +40,10 @@ export default function DashboardPage() {
   const handleChangeIndex = (index: number) => {
     setValue(index);
   };
+
+  if (email === "cosmeticostrujillo0023@gmail.com") {
+    return window.location.replace("/hds");
+  }
 
   return (
     <Box sx={{ bgcolor: "background.paper", width: "100%" }}>

@@ -163,8 +163,8 @@ function Row(props: {
         <StyledTableCell>
           {row.manufacturingPlants.map((plant) => plant.name).join(", ")}
         </StyledTableCell>
-        <StyledTableCell>{row.area.name}</StyledTableCell>
-        <StyledTableCell>{row.position.name}</StyledTableCell>
+        <StyledTableCell>{row.area?.name || "N/A"}</StyledTableCell>
+        <StyledTableCell>{row.position?.name || "N/A"}</StyledTableCell>
         <StyledTableCell>
           {!currentTrainingGuide
             ? "0%"
@@ -1208,7 +1208,7 @@ const TrainingGuidePage = () => {
                   ))}
                   {emptyRows > 0 && (
                     <StyledTableRow style={{ height: 53 * emptyRows }}>
-                      <StyledTableCell colSpan={6} />
+                      <StyledTableCell colSpan={colSpan} />
                     </StyledTableRow>
                   )}
                 </TableBody>

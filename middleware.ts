@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+let idx = 0;
+
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl;
   const pathname = url.pathname;
@@ -27,6 +29,10 @@ export async function middleware(request: NextRequest) {
   // token valido = 0
   // token invalido = 1
 
+  idx++;
+
+  console.log({ idx, url: request.url, pathname });
+
   if (!tokenRestorePassword) {
     const data = await (
       await fetch(process.env.NEXT_PUBLIC_URL_API + "/auth/check-token", {
@@ -50,7 +56,7 @@ export async function middleware(request: NextRequest) {
           body: JSON.stringify({
             token: tokenRestorePassword,
           }),
-        }
+        },
       )
     ).json();
 
@@ -85,5 +91,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|service-worker).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|service-worker|icon|manifest|sw).*)",
+  ],
 };

@@ -29,13 +29,13 @@ const FormLogin = ({ setForgotPassword }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     event.preventDefault();
   };
 
   const handleMouseUpPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     event.preventDefault();
   };
@@ -43,10 +43,10 @@ const FormLogin = ({ setForgotPassword }: Props) => {
   const [email, setEmail] = useState(
     process.env.NODE_ENV === constants.environments.development
       ? "eduardo-266@hotmail.com"
-      : ""
+      : "",
   );
   const [password, setPassword] = useState(
-    process.env.NODE_ENV === constants.environments.development ? "123" : ""
+    process.env.NODE_ENV === constants.environments.development ? "12345" : "",
   );
 
   const router = useRouter();

@@ -91,6 +91,7 @@ export default function TableEvidences({
         "esanchez@hadamexico.com",
         "cseguridad@hadainternational.com",
         "gsanchez@hadamexico.com",
+        "bproyectos@hadamexico.com",
       ].includes(email)
     ) {
       return true;

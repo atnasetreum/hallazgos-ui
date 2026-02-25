@@ -4,13 +4,16 @@ Fecha: 2026-02-25
 Proyecto: `hallazgos-ui`
 
 ## Skills encontrados y aplicados
+
 Se leyeron y aplicaron todas las reglas de `.agents` (70 archivos):
+
 - `frontend-design`
 - `mui-v7-mastery`
 - `vercel-react-best-practices`
 - `web-design-guidelines`
 
 Aplicación práctica en esta migración:
+
 - Respeto de patrones App Router, rendimiento y límites de serialización.
 - Migración MUI centrada en APIs oficiales v7 y eliminación de APIs removidas.
 - Preservación de tipos TypeScript sin uso de `any`.
@@ -23,6 +26,7 @@ Aplicación práctica en esta migración:
 ### 1) Auditoría MUI
 
 #### Archivos con imports desde `@mui/*`
+
 - `app/ThemeRegistry.tsx`
 - `app/theme.tsx`
 - `app/page.tsx`
@@ -104,6 +108,7 @@ Aplicación práctica en esta migración:
 - `app/(routes)/dashboard/_components/TopUsersByPlantChart.tsx`
 
 #### Hallazgos clave MUI
+
 - Deep imports detectados en gran parte del código (`@mui/material/X`, `@mui/material/styles/X`).
 - No se detecta uso runtime de `makeStyles`, `withStyles`, `createMuiTheme` ni `experimentalStyled`.
 - `TransitionComponent` detectado en:
@@ -128,6 +133,7 @@ Aplicación práctica en esta migración:
   - `app/(routes)/ciael/page.tsx`
 
 ### 2) Auditoría Apollo
+
 - Importa `@apollo/experimental-nextjs-app-support` en:
   - `app/_shared/libs/apollo-wrapper.tsx`
   - `app/_shared/libs/apollo-client.ts`
@@ -137,6 +143,7 @@ Aplicación práctica en esta migración:
   - `errors` (resultado), `QueryReference`, `defaultOptions`, `connectToDevtools`: **no detectados**.
 
 ### 3) Auditoría Zustand
+
 - Stores detectados:
   - `app/_store/index.ts`
   - `app/_store/userSession.store.ts`
@@ -155,6 +162,7 @@ Aplicación práctica en esta migración:
   - `app/(routes)/hallazgos/form/page.tsx`
 
 ### 4) Auditoría Highcharts
+
 - Imports `highcharts`/`highcharts-react-official` en:
   - `app/(routes)/layout.tsx`
   - `app/(routes)/dashboard/_components/MainTypesChart.tsx`
@@ -169,12 +177,14 @@ Aplicación práctica en esta migración:
 - Uso de `xData`, `yData`, `processedXData`, `processedYData`: **no detectado**.
 
 ### 5) Auditoría Next.js
+
 - Existe `middleware.ts` en raíz y exporta `middleware`.
 - `experimental.ppr`: no detectado en `next.config.js`.
 - Flag `--turbopack`: no detectado en scripts.
 - Configuración `webpack` custom en `next.config.js`: no detectada.
 
 ### 6) Auditoría TypeScript
+
 - `React.FC`, `React.FunctionComponent`, `React.VFC`: no detectados en `app/**`.
 - `React.forwardRef` detectado en `app/(routes)/hallazgos/_components/EvidencePreview.tsx`.
 - `importsNotUsedAsValues` y `preserveValueImports`: no detectados en `tsconfig.json`.
@@ -193,6 +203,7 @@ Aplicación práctica en esta migración:
 ### 7) Matriz de riesgo de dependencias
 
 #### 🟢 SAFE (actualización con bajo riesgo de código)
+
 - `@emotion/cache`, `@emotion/react`, `@emotion/styled`
 - `@fontsource/roboto`
 - `axios`, `browser-image-compression`, `dayjs`, `regression`, `use-debounce`
@@ -200,6 +211,7 @@ Aplicación práctica en esta migración:
 - `@types/*` (alineados al target de React 19 / TS 5.8)
 
 #### 🟡 REVIEW (requieren cambios de código)
+
 - `next` (14 → 16)
 - `react`, `react-dom`, `react-is` (18 → 19)
 - `@mui/material`, `@mui/icons-material`, `@mui/lab` (v5 → v7)
@@ -212,6 +224,7 @@ Aplicación práctica en esta migración:
 - `eslint` y `eslint-config-next` (8/14 → 9/16, flat config)
 
 #### 🔴 FREEZE (mantener temporalmente si no hay compatibilidad o alto riesgo)
+
 - Ninguna librería marcada como freeze definitivo en Fase 0.
 - Posible freeze temporal si alguna dependencia indirecta no soporta React 19 (se documentará como deuda técnica en fases posteriores).
 
@@ -220,41 +233,70 @@ Aplicación práctica en esta migración:
 ## Bitácora de fases
 
 ### Fase 0
+ Estado: ✅ Completada
+ `pnpm install`: completado
+ `pnpm run build`: falló (esperado en esta fase, se corrige en fases 2-8)
 - Estado: ✅ Completada
 - Build ejecutado: No aplica (fase solo de auditoría, sin cambios funcionales)
-- Commit esperado: `chore(migration): phase-0 - full project audit report`
+ ### Fase 1 — `pnpm run build`
+ `Module not found: @apollo/experimental-nextjs-app-support/ssr` en `app/_shared/libs/apollo-wrapper.tsx`.
+ `Module not found: highcharts-react-official` en:
+  - `app/(routes)/dashboard/_components/EvidencePerMonthChart.tsx`
+  - `app/(routes)/dashboard/_components/HeatMapChart.tsx`
+  - `app/(routes)/dashboard/_components/MainTypesChart.tsx`
+  - `app/(routes)/dashboard/_components/ProductivityChart.tsx`
+  - `app/(routes)/dashboard/_components/PyramidChart.tsx`
+  - `app/(routes)/dashboard/_components/StatusChart.tsx`
+  - `app/(routes)/dashboard/_components/ZonesChart.tsx`
+ `useLazyQuery` ya no exporta desde `@apollo/client` en v4 (debe migrar a `@apollo/client/react`) en `app/_hooks/useEvidences.ts`.
+ Warnings de Next 16 en configuración:
+  - `images.domains` deprecado (migrar a `images.remotePatterns`).
+  - `experimental.missingSuspenseWithCSRBailout` inválido en `next.config.js`.
+  - `swcMinify` inválido en `next.config.js`.
+  - Convención `middleware.ts` deprecada (migrar a `proxy.ts`).
 
 ### Fase 1
+
 - Estado: ⏳ Pendiente
 
 ### Fase 2
+
 - Estado: ⏳ Pendiente
 
 ### Fase 3
+
 - Estado: ⏳ Pendiente
 
 ### Fase 4
+
 - Estado: ⏳ Pendiente
 
 ### Fase 5
+
 - Estado: ⏳ Pendiente
 
 ### Fase 6
+
 - Estado: ⏳ Pendiente
 
 ### Fase 7
+
 - Estado: ⏳ Pendiente
 
 ### Fase 8
+
 - Estado: ⏳ Pendiente
 
 ### Fase 9
+
 - Estado: ⏳ Pendiente
 
 ---
 
 ## Deuda técnica (se actualizará por fase)
+
 - Pendiente.
 
 ## Errores de build/lint por fase (se actualizará por fase)
+
 - Pendiente.

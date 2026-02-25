@@ -3,17 +3,14 @@
 import { useEffect, useState } from "react";
 
 import { Chart } from "@highcharts/react";
+import "highcharts/esm/modules/exporting";
+import "highcharts/esm/modules/drilldown";
 import Highcharts from "highcharts/highcharts.src";
 
 import { ResponseOpenVsClosed } from "@interfaces";
 import { optionsChartDefault } from "@shared/libs";
 import useCustomTheme from "_hooks/useCustomTheme";
 import { DashboardService } from "@services";
-
-if (typeof Highcharts === "object") {
-  require("highcharts/modules/exporting")(Highcharts);
-  require("highcharts/modules/drilldown")(Highcharts);
-}
 
 export const ProductivityChart = () => {
   const [data, setData] = useState({} as ResponseOpenVsClosed);

@@ -4,15 +4,12 @@ import { useEffect, useState } from "react";
 
 import Highcharts from "highcharts/highcharts.src";
 import { Chart } from "@highcharts/react";
+import "highcharts/esm/modules/exporting";
+import "highcharts/esm/modules/drilldown";
 
 import { optionsChartDefault } from "@shared/libs";
 import { DashboardService } from "@services";
 import { ResponseDashboardMainTypes } from "@interfaces";
-
-if (typeof Highcharts === "object") {
-  require("highcharts/modules/exporting")(Highcharts);
-  require("highcharts/modules/drilldown")(Highcharts);
-}
 
 export const MainTypesChart = () => {
   const [data, setData] = useState({} as ResponseDashboardMainTypes);

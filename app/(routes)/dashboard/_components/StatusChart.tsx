@@ -3,16 +3,13 @@
 import { useEffect, useState } from "react";
 
 import { Chart } from "@highcharts/react";
+import "highcharts/esm/modules/exporting";
+import "highcharts/esm/modules/drilldown";
 import Highcharts from "highcharts/highcharts.src";
 
 import { ResponseDashboardMultiNivel } from "@interfaces";
 import { optionsChartDefault } from "@shared/libs";
 import { DashboardService } from "@services";
-
-if (typeof Highcharts === "object") {
-  require("highcharts/modules/exporting")(Highcharts);
-  require("highcharts/modules/drilldown")(Highcharts);
-}
 
 export const StatusChart = () => {
   const [data, setData] = useState({} as ResponseDashboardMultiNivel);

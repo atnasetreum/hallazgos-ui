@@ -2,16 +2,13 @@
 
 import Highcharts from "highcharts/highcharts.src";
 import { Chart } from "@highcharts/react";
+import "highcharts/esm/modules/exporting";
+import "highcharts/esm/modules/drilldown";
+import "highcharts/esm/modules/funnel";
+import "highcharts/esm/modules/export-data";
+import "highcharts/esm/modules/accessibility";
 
 import { optionsChartDefault } from "@shared/libs";
-
-if (typeof Highcharts === "object") {
-  require("highcharts/modules/exporting")(Highcharts);
-  require("highcharts/modules/drilldown")(Highcharts);
-  require("highcharts/modules/funnel")(Highcharts);
-  require("highcharts/modules/export-data")(Highcharts);
-  require("highcharts/modules/accessibility")(Highcharts);
-}
 
 export const PyramidChart = () => {
   return (

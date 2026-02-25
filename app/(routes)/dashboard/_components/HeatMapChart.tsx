@@ -3,17 +3,14 @@
 import { useEffect, useState } from "react";
 
 import { Chart } from "@highcharts/react";
+import "highcharts/esm/modules/exporting";
+import "highcharts/esm/modules/drilldown";
+import "highcharts/esm/modules/heatmap";
 import Highcharts from "highcharts/highcharts.src";
 
 import { ResponseOpenVsClosed } from "@interfaces";
 import { optionsChartDefault } from "@shared/libs";
 import { DashboardService } from "@services";
-
-if (typeof Highcharts === "object") {
-  require("highcharts/modules/exporting")(Highcharts);
-  require("highcharts/modules/drilldown")(Highcharts);
-  require("highcharts/modules/heatmap")(Highcharts);
-}
 
 export const HeatMapChart = () => {
   const [data, setData] = useState({} as ResponseOpenVsClosed);

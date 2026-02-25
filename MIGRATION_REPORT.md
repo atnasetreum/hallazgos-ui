@@ -298,7 +298,10 @@ Estado: ✅ Completada
 
 ### Fase 6
 
-- Estado: ⏳ Pendiente
+- Estado: ✅ Completada
+- `highcharts-react-official` migrado a `@highcharts/react`.
+- Componentes de dashboard migrados a `<Chart />`.
+- Inicialización de módulos migrada a imports ESM `highcharts/esm/modules/*`.
 
 ### Fase 7
 

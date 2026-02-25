@@ -4,17 +4,14 @@ import { useEffect, useState } from "react";
 
 import Highcharts from "highcharts/highcharts.src";
 import { Chart } from "@highcharts/react";
+import "highcharts/esm/modules/exporting";
+import "highcharts/esm/modules/drilldown";
 import regression from "regression";
 
 import { ResponseDashboardEvidencesByMonth } from "@interfaces";
 import { optionsChartDefault } from "@shared/libs";
 import useCustomTheme from "_hooks/useCustomTheme";
 import { DashboardService } from "@services";
-
-if (typeof Highcharts === "object") {
-  require("highcharts/modules/exporting")(Highcharts);
-  require("highcharts/modules/drilldown")(Highcharts);
-}
 
 interface Props {
   year?: number;

@@ -276,7 +276,10 @@ Estado: ✅ Completada
 
 ### Fase 3
 
-- Estado: ⏳ Pendiente
+- Estado: ✅ Completada
+- Paquete de integración migrado a `@apollo/client-integration-nextjs`.
+- Hooks React migrados a `@apollo/client/react`.
+- Ajustes de tipado y firma en `useLazyQuery` aplicados para Apollo v4.
 
 ### Fase 4
 

@@ -305,7 +305,10 @@ Estado: ✅ Completada
 
 ### Fase 7
 
-- Estado: ⏳ Pendiente
+- Estado: ✅ Completada
+- Configuración migrada a `eslint.config.js` (flat config).
+- `.eslintrc.json` removido.
+- `pnpm run lint`: ✅ sin errores (4 warnings `react-hooks/exhaustive-deps`).
 
 ### Fase 8
 

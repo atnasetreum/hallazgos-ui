@@ -283,7 +283,12 @@ Estado: ✅ Completada
 
 ### Fase 4
 
-- Estado: ⏳ Pendiente
+- Estado: ✅ Completada
+- `middleware.ts` migrado a `proxy.ts` y export `proxy`.
+- `next.config.js` actualizado para Next 16:
+  - Eliminado `swcMinify`.
+  - Eliminado bloque `experimental` inválido.
+  - Migrado `images.domains` a `images.remotePatterns`.
 
 ### Fase 5
 
@@ -314,11 +319,13 @@ Estado: ✅ Completada
 ## Errores de build/lint por fase (se actualizará por fase)
 
 ### Fase 1 — `pnpm run build`
+
 - `Module not found: @apollo/experimental-nextjs-app-support/ssr` en `app/_shared/libs/apollo-wrapper.tsx`.
 - `Module not found: highcharts-react-official` en componentes de dashboard.
 - `useLazyQuery` importado desde `@apollo/client` (migrado luego a `@apollo/client/react`).
 
 ### Fase 2 — `pnpm run build`
+
 - Resultado: ✅ build exitoso.
 - Warnings activos (sin bloqueo):
   - `images.domains` deprecado en `next.config.js`.

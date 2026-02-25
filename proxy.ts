@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 
 let idx = 0;
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const url = request.nextUrl;
   const pathname = url.pathname;
   const queryParams = url.searchParams;
@@ -26,9 +26,6 @@ export async function middleware(request: NextRequest) {
   };
 
   let statusCode = 0;
-  // token valido = 0
-  // token invalido = 1
-
   idx++;
 
   console.log({ idx, url: request.url, pathname });
@@ -63,31 +60,25 @@ export async function middleware(request: NextRequest) {
     statusCode = data.statusCode || 0;
   }
 
-  // Token valido
   if (statusCode === 0) {
-    //console.log("token valido ************");
-
     if (pathname === "/" && !tokenRestorePassword) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
     return NextResponse.next();
-  } else {
-    //console.log("token invalido ************");
-
-    const searchParams = url.searchParams;
-    if (searchParams.has("token")) {
-      searchParams.delete("token");
-      url.search = searchParams.toString();
-      return NextResponse.redirect(new URL(url.pathname, request.url));
-    }
-
-    // Token invalido
-    if (pathname === "/") {
-      return NextResponse.next();
-    }
-
-    return NextResponse.redirect(new URL("/", request.url));
   }
+
+  const searchParams = url.searchParams;
+  if (searchParams.has("token")) {
+    searchParams.delete("token");
+    url.search = searchParams.toString();
+    return NextResponse.redirect(new URL(url.pathname, request.url));
+  }
+
+  if (pathname === "/") {
+    return NextResponse.next();
+  }
+
+  return NextResponse.redirect(new URL("/", request.url));
 }
 
 export const config = {

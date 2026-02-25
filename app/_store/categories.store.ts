@@ -13,7 +13,7 @@ type Actions = {
   setCategories: (categories: CategoriesState) => void;
 };
 
-export const useCategoriesStore = create(
+export const useCategoriesStore = create<CategoriesState & Actions>()(
   persist<CategoriesState & Actions>(
     (set) => ({
       ...stateInitial,
@@ -22,6 +22,6 @@ export const useCategoriesStore = create(
     {
       name: "categories",
       storage: createJSONStorage(() => sessionStorage),
-    }
-  )
+    },
+  ),
 );

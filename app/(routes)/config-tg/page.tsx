@@ -57,6 +57,7 @@ import {
   Topic,
   User,
 } from "@interfaces";
+import { useShallow } from "zustand/shallow";
 
 export interface IFiltersConfigTg {
   manufacturingPlantId?: number;
@@ -561,7 +562,9 @@ export default function TopicTg() {
     EmployeesService.findPositions().then(setPositions);
   }, []);
 
-  const { manufacturingPlants } = useUserSessionStore((state) => state);
+  const { manufacturingPlants } = useUserSessionStore(
+    useShallow((state) => state),
+  );
 
   const theme = useTheme();
 

@@ -21,7 +21,7 @@ type Actions = {
   resetSession: () => void;
 };
 
-export const useUserSessionStore = create(
+export const useUserSessionStore = create<UserSession & Actions>()(
   persist<UserSession & Actions>(
     (set) => ({
       ...stateInitial,
@@ -31,6 +31,6 @@ export const useUserSessionStore = create(
     {
       name: "user-session",
       storage: createJSONStorage(() => sessionStorage),
-    }
-  )
+    },
+  ),
 );

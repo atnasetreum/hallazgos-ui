@@ -292,7 +292,9 @@ Estado: ✅ Completada
 
 ### Fase 5
 
-- Estado: ⏳ Pendiente
+- Estado: ✅ Completada
+- Stores migrados al patrón Zustand v5 `create<T>()(...)`.
+- Selectores de objeto completo migrados a `useShallow` en vistas detectadas.
 
 ### Fase 6
 

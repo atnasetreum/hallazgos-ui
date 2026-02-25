@@ -81,6 +81,7 @@ import {
   StyledTableCell,
 } from "@shared/components/TableDefault";
 import { useSearchParams } from "next/navigation";
+import { useShallow } from "zustand/shallow";
 
 const emailsEditors = ["ggarcia@hadamexico.com", "eduardo-266@hotmail.com"];
 
@@ -1060,7 +1061,7 @@ const TrainingGuidePage = () => {
     manufacturingPlants,
     email,
     id: userSessionId,
-  } = useUserSessionStore((state) => state);
+  } = useUserSessionStore(useShallow((state) => state));
 
   const theme = useTheme();
 

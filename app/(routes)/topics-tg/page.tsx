@@ -48,6 +48,7 @@ import {
   StyledTableCell,
   StyledTableRow,
 } from "@shared/components/TableDefault";
+import { useShallow } from "zustand/shallow";
 
 export interface IFiltersTopics {
   manufacturingPlantId?: number;
@@ -179,8 +180,9 @@ const ScreenForm = ({
             size={{
               xs: 12,
               sm: 12,
-              md: 12
-            }}>
+              md: 12,
+            }}
+          >
             <Paper>
               <MultiSelectManufacturingPlants
                 values={form.manufacturingPlantNames}
@@ -197,8 +199,9 @@ const ScreenForm = ({
             size={{
               xs: 12,
               sm: 12,
-              md: 12
-            }}>
+              md: 12,
+            }}
+          >
             <Paper>
               <TextField
                 multiline
@@ -221,8 +224,9 @@ const ScreenForm = ({
             size={{
               xs: 12,
               sm: 12,
-              md: 12
-            }}>
+              md: 12,
+            }}
+          >
             <Paper>
               <TextField
                 label="Tiempo de duración"
@@ -253,8 +257,9 @@ const ScreenForm = ({
             size={{
               xs: 12,
               sm: 12,
-              md: 12
-            }}>
+              md: 12,
+            }}
+          >
             <Paper>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
@@ -322,7 +327,9 @@ export default function TopicTg() {
     getData();
   }, [getData, filters]);
 
-  const { manufacturingPlants } = useUserSessionStore((state) => state);
+  const { manufacturingPlants } = useUserSessionStore(
+    useShallow((state) => state),
+  );
 
   const theme = useTheme();
 
@@ -361,8 +368,9 @@ export default function TopicTg() {
           size={{
             xs: 12,
             sm: 12,
-            md: 12
-          }}>
+            md: 12,
+          }}
+        >
           <Typography
             variant="h4"
             gutterBottom
@@ -380,15 +388,17 @@ export default function TopicTg() {
           size={{
             xs: 12,
             sm: 12,
-            md: 12
-          }}>
+            md: 12,
+          }}
+        >
           <Grid container spacing={2} sx={{ mb: 2 }}>
             <Grid
               size={{
                 xs: 12,
                 sm: 12,
-                md: 12
-              }}>
+                md: 12,
+              }}
+            >
               <Typography
                 variant="subtitle1"
                 gutterBottom
@@ -405,8 +415,9 @@ export default function TopicTg() {
               size={{
                 xs: 12,
                 sm: 12,
-                md: 12
-              }}>
+                md: 12,
+              }}
+            >
               <Toolbar>
                 <Box sx={{ flexGrow: 1 }}>
                   <Grid container spacing={2}>
@@ -414,8 +425,9 @@ export default function TopicTg() {
                       size={{
                         xs: 12,
                         sm: 6,
-                        md: 2
-                      }}>
+                        md: 2,
+                      }}
+                    >
                       <SelectDefault
                         data={manufacturingPlants}
                         label="Planta"
@@ -433,8 +445,9 @@ export default function TopicTg() {
                       size={{
                         xs: 12,
                         sm: 6,
-                        md: 4
-                      }}>
+                        md: 4,
+                      }}
+                    >
                       <Paper>
                         <TextField
                           label="Nombre"
@@ -482,8 +495,9 @@ export default function TopicTg() {
           size={{
             xs: 12,
             sm: 12,
-            md: 12
-          }}>
+            md: 12,
+          }}
+        >
           {isLoading ? (
             <LoadingLinear />
           ) : (

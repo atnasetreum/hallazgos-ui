@@ -322,7 +322,10 @@ Estado: ✅ Completada
 
 ### Fase 9
 
-- Estado: ⏳ Pendiente
+- Estado: ✅ Completada
+- `pnpm run build`: ✅ exitoso
+- `pnpm run lint`: ✅ exitoso (0 errores, 4 warnings)
+- `pnpm list --depth 0`: ✅ capturado
 
 ---
 
@@ -330,6 +333,35 @@ Estado: ✅ Completada
 
 - `verbatimModuleSyntax`: activación pospuesta por alto impacto (requiere migrar masivamente imports a `import type` en múltiples módulos).
 - Script `lint`: ajustado a `eslint .` porque `next lint` no está disponible en Next 16 CLI actual.
+
+---
+
+## ✅ Fases completadas
+
+- Fase 0, Fase 1, Fase 2, Fase 3, Fase 4, Fase 5, Fase 6, Fase 7, Fase 8, Fase 9.
+
+## 📦 Versiones finales instaladas (`pnpm list --depth 0`)
+
+- `next@16.1.6`
+- `react@19.2.4`, `react-dom@19.2.4`, `react-is@19.1.1`
+- `@mui/material@7.3.8`, `@mui/icons-material@7.3.8`, `@mui/lab@7.0.0`
+- `@apollo/client@4.1.6`, `@apollo/client-integration-nextjs@0.14.4`
+- `zustand@5.0.11`
+- `highcharts@12.5.0`, `@highcharts/react@4.2.1`
+- `typescript@5.9.3`
+- `eslint@9.39.3`, `eslint-config-next@16.1.6`
+
+## 🔴 Acciones manuales pendientes
+
+- Evaluar y ejecutar la migración completa a `verbatimModuleSyntax: true` con refactor de imports de tipo (`import type`) en todo el proyecto.
+- Revisar 4 warnings de hooks en lint (`react-hooks/exhaustive-deps`) para robustez adicional.
+
+## 📋 Skills aplicados en la migración
+
+- `frontend-design`: se mantuvo consistencia visual y uso del design system existente.
+- `mui-v7-mastery`: se aplicaron codemods, migración de props/slots y adaptación de imports v7.
+- `vercel-react-best-practices`: se mantuvieron ajustes de rendimiento sin alterar lógica de negocio.
+- `web-design-guidelines`: se preservó estructura y usabilidad base durante la migración.
 
 ## Errores de build/lint por fase (se actualizará por fase)
 

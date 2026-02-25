@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: "Hada ComportArte",
 };
 
+export const dynamic = "force-dynamic";
+
 import { ApolloWrapper } from "@shared/libs/apollo-wrapper";
 
 import "@fontsource/roboto/300.css";

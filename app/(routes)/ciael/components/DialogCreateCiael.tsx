@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import TextField, { TextFieldProps } from "@mui/material/TextField";
+import { TextField, TextFieldProps } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
+import { IconButton } from "@mui/material";
+import { Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { SelectChangeEvent } from "@mui/material";
-import Toolbar from "@mui/material/Toolbar";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import AppBar from "@mui/material/AppBar";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
+import { Toolbar } from "@mui/material";
+import { Button } from "@mui/material";
+import { Dialog } from "@mui/material";
+import { AppBar } from "@mui/material";
+import { Paper } from "@mui/material";
+import { Grid } from "@mui/material";
 import { toast } from "sonner";
 import dayjs, { Dayjs } from "dayjs";
 
@@ -155,7 +155,7 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
   const resetForm = () => setForm(initialForm);
 
   const manufacturingPlants = useUserSessionStore(
-    (state) => state.manufacturingPlants
+    (state) => state.manufacturingPlants,
   );
 
   useEffect(() => {
@@ -170,7 +170,7 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
     RiskFactorsService.findAll().then(setRiskFactors);
     NatureOfEventsService.findAll().then(setNatureOfEvents);
     UsersService.findAll({}).then((users) =>
-      setManagersOnDuty(users.sort((a, b) => a.name.localeCompare(b.name)))
+      setManagersOnDuty(users.sort((a, b) => a.name.localeCompare(b.name))),
     );
   }, []);
 
@@ -181,14 +181,14 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
         manufacturingPlantId: Number(manufacturingPlantId),
       }).then(setEmployees);
       ZonesService.findAll({ manufacturingPlantId, withArea: true }).then(
-        setZones
+        setZones,
       );
       AccidentPositionsService.findAll({ manufacturingPlantId }).then(
-        setAccidentPositions
+        setAccidentPositions,
       );
       MachinesService.findAll({ manufacturingPlantId }).then(setMachines);
       AssociatedTasksService.findAll({ manufacturingPlantId }).then(
-        setAssociatedTasks
+        setAssociatedTasks,
       );
     }
   }, [form.manufacturingPlant]);
@@ -421,7 +421,7 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
       fullScreen
       open={open}
       onClose={handleClose}
-      TransitionComponent={Transition}
+      slots={{ transition: Transition }}
     >
       <AppBar sx={{ position: "relative" }}>
         <Toolbar>
@@ -447,7 +447,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
         </Toolbar>
       </AppBar>
       <Grid container spacing={2} sx={{ p: 5 }}>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={manufacturingPlants}
             label="Planta *"
@@ -456,7 +462,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="manufacturingPlant"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={employees}
             label="Colaborador *"
@@ -465,7 +477,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="employee"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={typesOfEvents}
             label="Tipo de evento *"
@@ -474,7 +492,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="typeOfEvent"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <Paper>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
@@ -494,7 +518,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             </LocalizationProvider>
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={cieDiagnoses}
             label="Diagnóstico CIE *"
@@ -503,7 +533,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="cieDiagnosis"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <Paper>
             <TextField
               label="Días de incapacidad"
@@ -522,7 +558,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             />
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={zones}
             label="Zona *"
@@ -531,7 +573,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="zone"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={accidentPositions}
             label="Nombre del cargo *"
@@ -540,7 +588,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="accidentPosition"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={bodyParts}
             label="Parte del cuerpo afectada *"
@@ -549,7 +603,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="bodyPart"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={atAgents}
             label="Agente AT *"
@@ -558,7 +618,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="atAgent"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={typeOfInjuries}
             label="Tipo de lesión *"
@@ -567,7 +633,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="typeOfInjury"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={atMechanisms}
             label="Mécanismo o formas del AT *"
@@ -576,7 +648,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="atMechanism"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={workingDays}
             label="Jornada *"
@@ -585,7 +663,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="workingDay"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <Paper>
             <TextField
               label="Tiempo laborado previo al AT (H) *"
@@ -604,7 +688,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             />
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={trueFalseOptions}
             label="Labor habitual *"
@@ -613,7 +703,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="usualWork"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={typesOfLinks}
             label="Tipo de vinculación *"
@@ -622,7 +718,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="typeOfLink"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={trueFalseOptions}
             label="Muerte *"
@@ -631,7 +733,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="isDeath"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={machines}
             label="Maquina / Equipo *"
@@ -640,7 +748,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="machine"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={trueFalseOptions}
             label="Dentro de la empresa *"
@@ -649,7 +763,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="isInside"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={associatedTasks}
             label="Tarea asociada *"
@@ -658,7 +778,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="associatedTask"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={areaLeaders}
             label="Lider de área *"
@@ -667,7 +793,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="areaLeader"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={riskFactors}
             label="Factor de riesgo  asociado *"
@@ -676,7 +808,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="riskFactor"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={natureOfEvents}
             label="Naturaleza del evento *"
@@ -685,7 +823,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="natureOfEvent"
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 4,
+            md: 2,
+          }}
+        >
           <SelectDefault
             data={managersOnDuty}
             label="Gestor en turno"
@@ -694,7 +838,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
             name="manager"
           />
         </Grid>
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 12,
+            md: 12,
+          }}
+        >
           <Paper sx={{ p: 2 }}>
             <TextField
               id="description-multiline-solution"

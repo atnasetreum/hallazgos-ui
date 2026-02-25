@@ -2,21 +2,21 @@
 
 import { useEffect, useState } from "react";
 
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemIcon from "@mui/material/ListItemIcon";
+import { ListItemAvatar } from "@mui/material";
+import { ListItemButton } from "@mui/material";
+import { ListItemText } from "@mui/material";
+import { ListItemIcon } from "@mui/material";
 import SwipeableViews from "react-swipeable-views";
-import Typography from "@mui/material/Typography";
+import { Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import AppBar from "@mui/material/AppBar";
-import Avatar from "@mui/material/Avatar";
-import List from "@mui/material/List";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
+import { ListItem } from "@mui/material";
+import { Divider } from "@mui/material";
+import { AppBar } from "@mui/material";
+import { Avatar } from "@mui/material";
+import { List } from "@mui/material";
+import { Tabs } from "@mui/material";
+import { Tab } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { TopUsersByPlantData } from "@interfaces";
 import { DashboardService } from "@services";

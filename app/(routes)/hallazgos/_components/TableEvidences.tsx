@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
 
-import Chip from "@mui/material/Chip";
+import { Chip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
-import Stack from "@mui/material/Stack";
+import { Stack } from "@mui/material";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import DeleteIcon from "@mui/icons-material/Delete";
 

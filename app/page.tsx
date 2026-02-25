@@ -1,13 +1,15 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useEffect, useState } from "react";
 
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 
-import CssBaseline from "@mui/material/CssBaseline";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
+import { CssBaseline } from "@mui/material";
+import { Box } from "@mui/material";
+import { Container } from "@mui/material";
 
 import FormLogin from "@components/login/FormLogin";
 import Copyright from "@shared/components/Copyright";

@@ -1,12 +1,12 @@
 import { ReactElement, Ref, forwardRef, useState } from "react";
 
-import Dialog from "@mui/material/Dialog";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
+import { Dialog } from "@mui/material";
+import { AppBar } from "@mui/material";
+import { Toolbar } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import Slide from "@mui/material/Slide";
+import { Slide } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 
 import { EvidenceGraphql } from "@hooks";
@@ -16,7 +16,7 @@ export const Transition = forwardRef(function Transition(
   props: TransitionProps & {
     children: ReactElement;
   },
-  ref: Ref<unknown>
+  ref: Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -37,7 +37,7 @@ export default function EvidencePreview({
       fullScreen
       open={!!evidenceCurrent}
       onClose={() => handleClose(refreshData)}
-      TransitionComponent={Transition}
+      slots={{ transition: Transition }}
     >
       <AppBar sx={{ position: "relative" }}>
         <Toolbar>

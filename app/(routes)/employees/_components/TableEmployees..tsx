@@ -3,8 +3,8 @@ import { useRouter } from "next/navigation";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import Stack from "@mui/material/Stack";
-import Chip from "@mui/material/Chip";
+import { Stack } from "@mui/material";
+import { Chip } from "@mui/material";
 
 import { notify, stringToDate } from "@shared/utils";
 import { Employee } from "@interfaces";

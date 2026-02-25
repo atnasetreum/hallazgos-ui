@@ -4,13 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import ButtonGroup from "@mui/material/ButtonGroup";
+import { ButtonGroup } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import SaveIcon from "@mui/icons-material/Save";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
+import { TextField } from "@mui/material";
+import { Button } from "@mui/material";
+import { Paper } from "@mui/material";
+import { Grid } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 
 import { EvidencesService, handleErrorResponse, UsersService } from "@services";
@@ -180,7 +180,12 @@ export default function HallazgosFormPage() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 6,
+          md: 3
+        }}>
         <SelectDefault
           data={manufacturingPlants}
           label="Planta"
@@ -189,8 +194,12 @@ export default function HallazgosFormPage() {
           validationEmpty
         />
       </Grid>
-
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 6,
+          md: 3
+        }}>
         <SelectDefault
           data={mainTypes}
           label="Hallazgo"
@@ -203,8 +212,12 @@ export default function HallazgosFormPage() {
           validationEmpty
         />
       </Grid>
-
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 6,
+          md: 3
+        }}>
         <SelectDefault
           data={secondaryTypes}
           label="Tipo"
@@ -214,8 +227,12 @@ export default function HallazgosFormPage() {
           validationEmpty
         />
       </Grid>
-
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 6,
+          md: 3
+        }}>
         <SelectDefault
           data={zones.filter(
             (data) =>
@@ -228,8 +245,12 @@ export default function HallazgosFormPage() {
           validationEmpty
         />
       </Grid>
-
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 6,
+          md: 3
+        }}>
         <SelectDefault
           data={processes.filter(
             (data) =>
@@ -242,8 +263,12 @@ export default function HallazgosFormPage() {
           helperText={!manufacturingPlantId ? "Seleccione una planta" : ""}
         />
       </Grid>
-
-      <Grid item xs={12} sm={6} md={3}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 6,
+          md: 3
+        }}>
         <SelectDefault
           data={supervisorsCurrent}
           label="Supervisor"
@@ -259,8 +284,12 @@ export default function HallazgosFormPage() {
           }
         />
       </Grid>
-
-      <Grid item xs={12} sm={6} md={6}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 6,
+          md: 6
+        }}>
         <Paper sx={{ p: 2 }}>
           <TextField
             id="description-multiline"
@@ -284,14 +313,18 @@ export default function HallazgosFormPage() {
           />
         </Paper>
       </Grid>
-
       <ImageORCamera
         setImage={setImage}
         image={image}
         setAttachedFile={setAttachedFile}
         attachedFile={attachedFile}
       />
-      <Grid item xs={12} sm={12} md={12}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 12,
+          md: 12
+        }}>
         <Paper sx={{ p: 2 }}>
           <ButtonGroup
             variant="contained"

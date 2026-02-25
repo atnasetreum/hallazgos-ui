@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
+import Highcharts from "highcharts/highcharts.src";
+import { Chart } from "@highcharts/react";
 
 import { optionsChartDefault } from "@shared/libs";
 import { DashboardService } from "@services";
@@ -24,52 +24,55 @@ export const MainTypesChart = () => {
   if (!Object.keys(data).length) return null;
 
   return (
-    <HighchartsReact
+    <Chart
       highcharts={Highcharts}
       containerProps={{ style: { height: "100%" } }}
-      options={{
-        ...optionsChartDefault,
-        chart: {
-          type: "column",
-        },
-        title: {
-          text: "Critertios de hallazgos, en planta",
-        },
-        accessibility: {
-          announceNewData: {
-            enabled: true,
+      options={
+        {
+          ...optionsChartDefault,
+          chart: {
+            type: "column",
           },
-        },
-        xAxis: {
-          type: "category",
-        },
-        yAxis: {
           title: {
-            text: "Porcentaje total",
+            text: "Critertios de hallazgos, en planta",
           },
-        },
-        legend: {
-          enabled: false,
-        },
-        plotOptions: {
-          series: {
-            borderWidth: 0,
-            dataLabels: {
+          accessibility: {
+            announceNewData: {
               enabled: true,
-              format: "{point.y:.1f}%",
             },
           },
-        },
+          xAxis: {
+            type: "category",
+          },
+          yAxis: {
+            title: {
+              text: "Porcentaje total",
+            },
+          },
+          legend: {
+            enabled: false,
+          },
+          plotOptions: {
+            series: {
+              borderWidth: 0,
+              dataLabels: {
+                enabled: true,
+                format: "{point.y:.1f}%",
+              },
+            },
+          },
 
-        tooltip: {
-          headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-          pointFormat:
-            '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>',
-        },
+          tooltip: {
+            headerFormat:
+              '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat:
+              '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>',
+          },
 
-        series: data.series,
-        drilldown: data.drilldown,
-      }}
+          series: data.series,
+          drilldown: data.drilldown as Highcharts.DrilldownOptions,
+        } as Highcharts.Options
+      }
     />
   );
 };

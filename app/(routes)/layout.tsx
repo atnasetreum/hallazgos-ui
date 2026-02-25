@@ -11,23 +11,26 @@ import {
 
 import { usePathname } from "next/navigation";
 
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import {
+  AppBar as MuiAppBar,
+  AppBarProps as MuiAppBarProps,
+} from "@mui/material";
 import { useTheme, ThemeProvider, createTheme } from "@mui/material/styles";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
-import CssBaseline from "@mui/material/CssBaseline";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import { CssBaseline } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Typography } from "@mui/material";
+import { Container } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { styled } from "@mui/material/styles";
-import MuiDrawer from "@mui/material/Drawer";
-import Toolbar from "@mui/material/Toolbar";
-import Divider from "@mui/material/Divider";
-import List from "@mui/material/List";
-import Box from "@mui/material/Box";
-import Highcharts from "highcharts";
+import { Drawer as MuiDrawer } from "@mui/material";
+import { Toolbar } from "@mui/material";
+import { Divider } from "@mui/material";
+import { List } from "@mui/material";
+import { Box } from "@mui/material";
+import Highcharts from "highcharts/highcharts.src";
 
 import { MainListItems, SecondaryListItems } from "@shared/components/menu";
 import Copyright from "@shared/components/Copyright";

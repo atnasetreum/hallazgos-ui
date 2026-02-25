@@ -1,5 +1,5 @@
-import Box from "@mui/material/Box";
-import LinearProgress from "@mui/material/LinearProgress";
+import { Box } from "@mui/material";
+import { LinearProgress } from "@mui/material";
 
 export default function LoadingLinear() {
   return (

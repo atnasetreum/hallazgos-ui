@@ -1,13 +1,13 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
 
 import { Theme, useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import Chip from "@mui/material/Chip";
+import { Box } from "@mui/material";
+import { OutlinedInput } from "@mui/material";
+import { InputLabel } from "@mui/material";
+import { MenuItem } from "@mui/material";
+import { FormControl } from "@mui/material";
+import { Select, SelectChangeEvent } from "@mui/material";
+import { Chip } from "@mui/material";
 
 import { ManufacturingPlantsService } from "@services";
 
@@ -41,16 +41,16 @@ export default function MultiSelectManufacturingPlants({
   onChange,
 }: Props) {
   const theme = useTheme();
-  const [names, setNames] = React.useState<string[]>([]);
-  const [labelSelectAll, setLabelSelectAll] = React.useState("Todos");
+  const [names, setNames] = useState<string[]>([]);
+  const [labelSelectAll, setLabelSelectAll] = useState("Todos");
 
-  React.useEffect(() => {
+  useEffect(() => {
     ManufacturingPlantsService.findAll({}).then((manufacturingPlants) =>
-      setNames(manufacturingPlants.map((plant) => plant.name))
+      setNames(manufacturingPlants.map((plant) => plant.name)),
     );
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!values.length) {
       setLabelSelectAll("Todos");
     } else if (values.length === names.length) {
@@ -73,7 +73,7 @@ export default function MultiSelectManufacturingPlants({
       }
     }
     onChange(
-      typeof value === "string" ? value.split(",") : (value as string[])
+      typeof value === "string" ? value.split(",") : (value as string[]),
     );
   };
 

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 
 import { useTheme } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import ListItemText from "@mui/material/ListItemText";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
+import { Typography } from "@mui/material";
+import { Grid } from "@mui/material";
+import { ListItemText } from "@mui/material";
+import { ListItem } from "@mui/material";
+import { ListItemButton } from "@mui/material";
+import { List } from "@mui/material";
+import { Divider } from "@mui/material";
 
 import { durantionToTime, stringToDateWithTime } from "@shared/utils";
 import { STATUS_CLOSED, STATUS_OPEN } from "@shared/constants";
@@ -43,7 +43,12 @@ export default function DetailsTabs({
 
   return (
     <Grid container sx={{ p: 2 }}>
-      <Grid item xs={12} sm={4} md={4}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 4,
+          md: 4
+        }}>
         <List dense={true}>
           <ListItem>
             <ListItemButton>
@@ -228,7 +233,12 @@ export default function DetailsTabs({
           </ListItem>
         </List>
       </Grid>
-      <Grid item xs={12} sm={8} md={8}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 8,
+          md: 8
+        }}>
         <TabsImageAndLogs
           evidenceCurrent={evidenceCurrent}
           setRefreshData={setRefreshData}

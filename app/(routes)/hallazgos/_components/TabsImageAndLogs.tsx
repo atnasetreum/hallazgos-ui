@@ -4,15 +4,15 @@ import Image from "next/image";
 
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import SwipeableViews from "react-swipeable-views";
-import Typography from "@mui/material/Typography";
+import { Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import AppBar from "@mui/material/AppBar";
-import Grid from "@mui/material/Grid";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
+import { TextField } from "@mui/material";
+import { Button } from "@mui/material";
+import { AppBar } from "@mui/material";
+import { Grid } from "@mui/material";
+import { Tabs } from "@mui/material";
+import { Tab } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { CommentEvidenceGraphql, EvidenceGraphql } from "@hooks";
 import { baseUrlImage, notify } from "@shared/utils";
@@ -116,11 +116,11 @@ export default function TabsImageAndLogs({
             <Grid container spacing={3}>
               {evidenceCurrent?.imgEvidence && (
                 <Grid
-                  item
-                  xs={12}
-                  sm={evidenceCurrent.imgSolution ? 6 : 12}
-                  md={evidenceCurrent.imgSolution ? 6 : 12}
-                >
+                  size={{
+                    xs: 12,
+                    sm: evidenceCurrent.imgSolution ? 6 : 12,
+                    md: evidenceCurrent.imgSolution ? 6 : 12
+                  }}>
                   <Typography variant="h6" gutterBottom>
                     Hallazgo
                   </Typography>
@@ -136,7 +136,12 @@ export default function TabsImageAndLogs({
               )}
 
               {evidenceCurrent.imgSolution && (
-                <Grid item xs={12} sm={6} md={6}>
+                <Grid
+                  size={{
+                    xs: 12,
+                    sm: 6,
+                    md: 6
+                  }}>
                   <Typography variant="h6" gutterBottom>
                     Solución
                   </Typography>
@@ -155,7 +160,12 @@ export default function TabsImageAndLogs({
         )}
         <TabPanel value={value} index={1} dir={theme.direction}>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={10} md={10}>
+            <Grid
+              size={{
+                xs: 12,
+                sm: 10,
+                md: 10
+              }}>
               <TextField
                 label="Commentario"
                 variant="outlined"
@@ -165,7 +175,12 @@ export default function TabsImageAndLogs({
                 onChange={(e) => setComment(e.target.value)}
               />
             </Grid>
-            <Grid item xs={12} sm={2} md={2}>
+            <Grid
+              size={{
+                xs: 12,
+                sm: 2,
+                md: 2
+              }}>
               <Button
                 variant="contained"
                 startIcon={<QuestionAnswerIcon />}
@@ -175,7 +190,12 @@ export default function TabsImageAndLogs({
                 Agregar
               </Button>
             </Grid>
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 12
+              }}>
               {!!comments.length && <ListComments comments={comments} />}
             </Grid>
           </Grid>

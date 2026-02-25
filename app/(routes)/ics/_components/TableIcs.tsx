@@ -3,8 +3,8 @@ import { useState } from "react";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 //import EditIcon from "@mui/icons-material/Edit";
-import Stack from "@mui/material/Stack";
-import Chip from "@mui/material/Chip";
+import { Stack } from "@mui/material";
+import { Chip } from "@mui/material";
 
 //import { notify, stringToDateWithTime } from "@shared/utils";
 import { notify } from "@shared/utils";

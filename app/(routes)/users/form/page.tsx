@@ -1,22 +1,24 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useEffect, useMemo, useState } from "react";
 
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 
-import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
-import Paper from "@mui/material/Paper";
+import { Grid } from "@mui/material";
+import { TextField } from "@mui/material";
+import { Paper } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
-import Button from "@mui/material/Button";
+import { Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "sonner";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { InputLabel } from "@mui/material";
+import { MenuItem } from "@mui/material";
+import { FormControl } from "@mui/material";
+import { Select, SelectChangeEvent } from "@mui/material";
 
 import { UsersService } from "@services";
 import MultiSelectManufacturingPlants from "@components/MultiSelectManufacturingPlants";
@@ -164,7 +166,12 @@ const UsersFormPage = () => {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3
+          }}>
           <Paper>
             <TextField
               label="Nombre"
@@ -181,7 +188,12 @@ const UsersFormPage = () => {
             />
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3
+          }}>
           <Paper>
             <TextField
               label="Correo electrónico"
@@ -198,7 +210,12 @@ const UsersFormPage = () => {
             />
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3
+          }}>
           <Paper>
             <TextField
               label="Contraseña"
@@ -215,7 +232,12 @@ const UsersFormPage = () => {
             />
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3
+          }}>
           <Paper>
             <FormControl fullWidth>
               <InputLabel id="rule-select-label">Rol</InputLabel>
@@ -240,7 +262,12 @@ const UsersFormPage = () => {
         </Grid>
 
         {form.rule && (
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 6,
+              md: 4
+            }}>
             <Paper>
               <MultiSelectManufacturingPlants
                 values={form.manufacturingPlantNames}
@@ -258,7 +285,12 @@ const UsersFormPage = () => {
         {form.rule === "Supervisor" &&
           !!form.manufacturingPlantNames.length && (
             <>
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid
+                size={{
+                  xs: 12,
+                  sm: 6,
+                  md: 4
+                }}>
                 <Paper>
                   <MultiSelectZones
                     values={form.zoneNames}
@@ -272,7 +304,12 @@ const UsersFormPage = () => {
                   />
                 </Paper>
               </Grid>
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid
+                size={{
+                  xs: 12,
+                  sm: 6,
+                  md: 4
+                }}>
                 <Paper>
                   <MultiSelectProcesses
                     values={form.processNames}
@@ -296,7 +333,12 @@ const UsersFormPage = () => {
         justifyContent={"center"}
         sx={{ marginTop: 2 }}
       >
-        <Grid item xs={12} sm={3} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 3,
+            md: 3
+          }}>
           <Button
             variant="contained"
             color="error"
@@ -307,7 +349,12 @@ const UsersFormPage = () => {
             Cancelar
           </Button>
         </Grid>
-        <Grid item xs={12} sm={3} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 3,
+            md: 3
+          }}>
           <LoadingButton
             loading={isLoading}
             loadingPosition="start"

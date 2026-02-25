@@ -2,11 +2,11 @@
 
 import { setContext } from "@apollo/client/link/context";
 import {
+  ApolloClient,
   ApolloNextAppProvider,
-  NextSSRInMemoryCache,
-  NextSSRApolloClient,
+  InMemoryCache,
   SSRMultipartLink,
-} from "@apollo/experimental-nextjs-app-support/ssr";
+} from "@apollo/client-integration-nextjs";
 import { ApolloLink, HttpLink } from "@apollo/client";
 
 function makeClient() {
@@ -35,10 +35,8 @@ function makeClient() {
         ])
       : httpLink;
 
-  return new NextSSRApolloClient({
-    cache: new NextSSRInMemoryCache({
-      addTypename: false,
-    }),
+  return new ApolloClient({
+    cache: new InMemoryCache(),
     link: authLink.concat(httpLinkMain),
   });
 }

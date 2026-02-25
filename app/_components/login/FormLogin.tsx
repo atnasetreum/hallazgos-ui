@@ -4,18 +4,18 @@ import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
+import { Button } from "@mui/material";
+import { TextField } from "@mui/material";
+import { Box } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { OutlinedInput } from "@mui/material";
+import { InputLabel } from "@mui/material";
+import { InputAdornment } from "@mui/material";
+import { FormControl } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
+import { Link } from "@mui/material";
+import { Grid } from "@mui/material";
 
 import { AuthService } from "@services";
 import { constants } from "@constants";
@@ -129,7 +129,7 @@ const FormLogin = ({ setForgotPassword }: Props) => {
         Iniciar
       </Button>
       <Grid container>
-        <Grid item xs>
+        <Grid size="grow">
           <Link
             variant="body2"
             onClick={() => setForgotPassword(true)}

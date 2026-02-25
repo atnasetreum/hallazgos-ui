@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import AddIcon from "@mui/icons-material/Add";
-import Grid from "@mui/material/Grid";
+import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
 
 import DialogCreateEpp from "./_components/DialogCreateEpp";
@@ -37,7 +37,12 @@ export default function EppPage() {
         }}
       />
       <Grid container spacing={2}>
-        <Grid item xs={12} md={2} lg={2}>
+        <Grid
+          size={{
+            xs: 12,
+            md: 2,
+            lg: 2
+          }}>
           <Button
             variant="contained"
             onClick={() => setOpen(true)}
@@ -46,7 +51,12 @@ export default function EppPage() {
             Crear registro
           </Button>
         </Grid>
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 12,
+            md: 12
+          }}>
           <TableEpps data={data} />
         </Grid>
       </Grid>

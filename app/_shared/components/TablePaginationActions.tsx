@@ -1,8 +1,8 @@
 import { MouseEvent } from "react";
 
 import { useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
+import { Box } from "@mui/material";
+import { IconButton } from "@mui/material";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";

@@ -1,7 +1,7 @@
-import Paper from "@mui/material/Paper";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
-//import FormHelperText from "@mui/material/FormHelperText";
+import { Paper } from "@mui/material";
+import { Autocomplete } from "@mui/material";
+import { TextField } from "@mui/material";
+//import { FormHelperText } from "@mui/material";
 
 interface Props {
   value: string;
@@ -68,12 +68,12 @@ export default function SelectDefault({
   );
 }
 
-/* import Paper from "@mui/material/Paper";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import FormHelperText from "@mui/material/FormHelperText";
+/* import { Paper } from "@mui/material";
+import { InputLabel } from "@mui/material";
+import { MenuItem } from "@mui/material";
+import { FormControl } from "@mui/material";
+import { Select, SelectChangeEvent } from "@mui/material";
+import { FormHelperText } from "@mui/material";
 
 interface Props {
   value: string;

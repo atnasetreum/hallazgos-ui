@@ -1,18 +1,20 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useEffect, useMemo, useState } from "react";
 
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 
-import Grid from "@mui/material/Grid";
+import { Grid } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
-import Button from "@mui/material/Button";
+import { Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "sonner";
-import Checkbox from "@mui/material/Checkbox";
-import Autocomplete from "@mui/material/Autocomplete";
+import { Checkbox } from "@mui/material";
+import { Autocomplete } from "@mui/material";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { v4 as uuidv4 } from "uuid";
@@ -216,7 +218,12 @@ const IcsFormPage = () => {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3
+          }}>
           <SelectDefault
             data={manufacturingPlants}
             label="Planta *"
@@ -225,7 +232,12 @@ const IcsFormPage = () => {
             name="manufacturingPlant"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3
+          }}>
           <SelectDefault
             data={catalogs || []}
             label="Regla de vida *"
@@ -238,7 +250,12 @@ const IcsFormPage = () => {
           catalogs.find((cat) => Number(cat.id) === Number(form.ruleOfLife))
             ?.standards || []
         ).length > 0 && (
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 6,
+              md: 3
+            }}>
             <SelectDefault
               data={
                 catalogs.find(
@@ -259,7 +276,12 @@ const IcsFormPage = () => {
           ).find((cat) => Number(cat.id) === Number(form.standardOfBehavior))
             ?.areas || []
         ).length > 0 && (
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 6,
+              md: 3
+            }}>
             <SelectDefault
               data={
                 (
@@ -277,7 +299,12 @@ const IcsFormPage = () => {
             />
           </Grid>
         )}
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3
+          }}>
           <Paper>
             <TextField
               fullWidth
@@ -309,7 +336,12 @@ const IcsFormPage = () => {
             />
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3
+          }}>
           {!!employees.length ? (
             <Paper>
               <Autocomplete
@@ -354,7 +386,12 @@ const IcsFormPage = () => {
             <p>Seleccione una planta, para ver los colaboradores.</p>
           )}
         </Grid>
-        <Grid item xs={12} sm={6} md={6}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 6
+          }}>
           <Paper sx={{ p: 2 }}>
             <TextField
               id="description-multiline"
@@ -384,7 +421,12 @@ const IcsFormPage = () => {
         justifyContent={"center"}
         sx={{ marginTop: 2 }}
       >
-        <Grid item xs={12} sm={3} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 3,
+            md: 3
+          }}>
           <Button
             variant="contained"
             color="error"
@@ -395,7 +437,12 @@ const IcsFormPage = () => {
             Cancelar
           </Button>
         </Grid>
-        <Grid item xs={12} sm={3} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 3,
+            md: 3
+          }}>
           <LoadingButton
             loading={isLoading}
             loadingPosition="start"

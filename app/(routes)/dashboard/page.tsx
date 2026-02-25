@@ -4,12 +4,12 @@ import { SyntheticEvent, useState } from "react";
 
 import SwipeableViews from "react-swipeable-views";
 import { useTheme } from "@mui/material/styles";
-import AppBar from "@mui/material/AppBar";
-import Paper from "@mui/material/Paper";
-import Tabs from "@mui/material/Tabs";
-import Grid from "@mui/material/Grid";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
+import { AppBar } from "@mui/material";
+import { Paper } from "@mui/material";
+import { Tabs } from "@mui/material";
+import { Grid } from "@mui/material";
+import { Tab } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { useUserSessionStore } from "@store";
 import {
@@ -69,7 +69,12 @@ export default function DashboardPage() {
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6} lg={3}>
+            <Grid
+              size={{
+                xs: 12,
+                md: 6,
+                lg: 3
+              }}>
               <Paper
                 sx={{
                   p: 2,
@@ -80,7 +85,12 @@ export default function DashboardPage() {
                 <StatusChart />
               </Paper>
             </Grid>
-            <Grid item xs={12} md={6} lg={6}>
+            <Grid
+              size={{
+                xs: 12,
+                md: 6,
+                lg: 6
+              }}>
               <Paper
                 sx={{
                   p: 2,
@@ -91,7 +101,12 @@ export default function DashboardPage() {
                 <MainTypesChart />
               </Paper>
             </Grid>
-            <Grid item xs={12} md={6} lg={3}>
+            <Grid
+              size={{
+                xs: 12,
+                md: 6,
+                lg: 3
+              }}>
               <Paper
                 sx={{
                   p: 2,
@@ -102,7 +117,12 @@ export default function DashboardPage() {
                 <ZonesChart />
               </Paper>
             </Grid>
-            <Grid item xs={12} md={6} lg={12}>
+            <Grid
+              size={{
+                xs: 12,
+                md: 6,
+                lg: 12
+              }}>
               <Paper
                 sx={{
                   p: 2,
@@ -117,7 +137,12 @@ export default function DashboardPage() {
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6} lg={4}>
+            <Grid
+              size={{
+                xs: 12,
+                md: 6,
+                lg: 4
+              }}>
               <Paper
                 sx={{
                   p: 2,
@@ -128,7 +153,12 @@ export default function DashboardPage() {
                 <EvidencePerMonthChart projections={true} />
               </Paper>
             </Grid>
-            <Grid item xs={12} md={6} lg={4}>
+            <Grid
+              size={{
+                xs: 12,
+                md: 6,
+                lg: 4
+              }}>
               <Paper
                 sx={{
                   p: 2,
@@ -139,7 +169,12 @@ export default function DashboardPage() {
                 <EvidencePerMonthChart />
               </Paper>
             </Grid>
-            <Grid item xs={12} md={6} lg={4}>
+            <Grid
+              size={{
+                xs: 12,
+                md: 6,
+                lg: 4
+              }}>
               <Paper
                 sx={{
                   p: 2,
@@ -157,7 +192,12 @@ export default function DashboardPage() {
         </TabPanel>
         <TabPanel value={value} index={3} dir={theme.direction}>
           <Grid container spacing={2}>
-            <Grid item xs={12} md={12} lg={12}>
+            <Grid
+              size={{
+                xs: 12,
+                md: 12,
+                lg: 12
+              }}>
               <Paper
                 sx={{
                   p: 2,

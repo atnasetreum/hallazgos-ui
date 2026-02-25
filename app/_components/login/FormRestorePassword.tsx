@@ -4,9 +4,9 @@ import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
+import { Button } from "@mui/material";
+import { TextField } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { notify, isValidEmail } from "@shared/utils";
 import { AuthService } from "@services";

@@ -1,7 +1,11 @@
 import { cookies } from "next/headers";
 
-import { registerApolloClient } from "@apollo/experimental-nextjs-app-support/rsc";
-import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
+import {
+  ApolloClient,
+  InMemoryCache,
+  registerApolloClient,
+} from "@apollo/client-integration-nextjs";
+import { createHttpLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
 export const { getClient } = registerApolloClient(() => {
@@ -10,8 +14,8 @@ export const { getClient } = registerApolloClient(() => {
     fetchOptions: { cache: "no-store" },
   });
 
-  const authLink = setContext((_, { headers }) => {
-    const cookieStore = cookies();
+  const authLink = setContext(async (_, { headers }) => {
+    const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value || "";
     return {
       headers: {
@@ -23,9 +27,7 @@ export const { getClient } = registerApolloClient(() => {
   });
 
   return new ApolloClient({
-    cache: new InMemoryCache({
-      addTypename: false,
-    }),
+    cache: new InMemoryCache(),
     link: authLink.concat(httpLink),
   });
 });

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
+import Highcharts from "highcharts/highcharts.src";
+import { Chart } from "@highcharts/react";
 import regression from "regression";
 
 import { ResponseDashboardEvidencesByMonth } from "@interfaces";
@@ -50,21 +50,21 @@ export const EvidencePerMonthChart = ({ year, projections = false }: Props) => {
         };
 
         const monthsToPredict = Object.keys(months).filter(
-          (month) => !response.categories.includes(month)
+          (month) => !response.categories.includes(month),
         );
 
         setMonthsToPredictSize(monthsToPredict.length);
 
         const regressionData = response.series.map((serie) => {
           const resultado = regression.linear(
-            serie.data.map((dataPoint, index) => [index + 1, dataPoint])
+            serie.data.map((dataPoint, index) => [index + 1, dataPoint]),
           );
           const proyecciones = monthsToPredict
             .map((mes) => months[mes])
             .map((mes) =>
               Math.round(resultado.predict(mes)[1]) < 0
                 ? 0
-                : Math.round(resultado.predict(mes)[1])
+                : Math.round(resultado.predict(mes)[1]),
             );
 
           return {
@@ -86,60 +86,62 @@ export const EvidencePerMonthChart = ({ year, projections = false }: Props) => {
   if (!Object.keys(data).length) return null;
 
   return (
-    <HighchartsReact
+    <Chart
       highcharts={Highcharts}
       containerProps={{ style: { height: "100%" } }}
-      options={{
-        ...{
-          ...optionsChartDefault,
-          ...(year && {
-            subtitle: {
-              text: ``,
-            },
-          }),
-        },
-        chart: {
-          type: "line",
-        },
-        title: {
-          text: !monthsToPredictSize
-            ? `Hallazgos ${year || new Date().getFullYear()}, por mes`
-            : `Proyección proximos ${monthsToPredictSize} meses`,
-        },
-        xAxis: {
-          categories: data.categories,
-          labels: {
-            style: {
-              color: colorText,
-            },
+      options={
+        {
+          ...{
+            ...optionsChartDefault,
+            ...(year && {
+              subtitle: {
+                text: ``,
+              },
+            }),
           },
-        },
-        yAxis: {
+          chart: {
+            type: "line",
+          },
           title: {
-            text: "Total de hallazgos",
-            style: {
+            text: !monthsToPredictSize
+              ? `Hallazgos ${year || new Date().getFullYear()}, por mes`
+              : `Proyección proximos ${monthsToPredictSize} meses`,
+          },
+          xAxis: {
+            categories: data.categories,
+            labels: {
+              style: {
+                color: colorText,
+              },
+            },
+          },
+          yAxis: {
+            title: {
+              text: "Total de hallazgos",
+              style: {
+                color: colorText,
+              },
+            },
+          },
+          legend: {
+            layout: "vertical",
+            align: "right",
+            verticalAlign: "middle",
+            itemStyle: {
               color: colorText,
             },
           },
-        },
-        legend: {
-          layout: "vertical",
-          align: "right",
-          verticalAlign: "middle",
-          itemStyle: {
-            color: colorText,
-          },
-        },
-        plotOptions: {
-          line: {
-            dataLabels: {
-              enabled: true,
+          plotOptions: {
+            line: {
+              dataLabels: {
+                enabled: true,
+              },
+              enableMouseTracking: false,
             },
-            enableMouseTracking: false,
           },
-        },
-        series: data.series,
-      }}
+          series: data.series,
+        } as Highcharts.Options
+      }
     />
   );
 };

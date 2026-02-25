@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-import HighchartsReact from "highcharts-react-official";
-import Highcharts from "highcharts";
+import { Chart } from "@highcharts/react";
+import Highcharts from "highcharts/highcharts.src";
 
 import { ResponseOpenVsClosed } from "@interfaces";
 import { optionsChartDefault } from "@shared/libs";
@@ -27,45 +27,47 @@ export const ProductivityChart = () => {
   if (!Object.keys(data).length) return null;
 
   return (
-    <HighchartsReact
+    <Chart
       highcharts={Highcharts}
       containerProps={{ style: { height: "100%" } }}
-      options={{
-        ...optionsChartDefault,
-        chart: {
-          type: "bar",
-        },
-        title: {
-          text: "Comparativo entre hallazgos abiertos y cerrados",
-          align: "center",
-        },
-        xAxis: {
-          categories: data.categories,
-          labels: {
-            style: {
-              color: colorText,
-            },
+      options={
+        {
+          ...optionsChartDefault,
+          chart: {
+            type: "bar",
           },
-        },
-        yAxis: {
-          min: 0,
           title: {
-            text: "",
+            text: "Comparativo entre hallazgos abiertos y cerrados",
+            align: "center",
           },
-        },
-        legend: {
-          reversed: true,
-        },
-        plotOptions: {
-          series: {
-            stacking: "normal",
-            dataLabels: {
-              enabled: true,
+          xAxis: {
+            categories: data.categories,
+            labels: {
+              style: {
+                color: colorText,
+              },
             },
           },
-        },
-        series: data.series,
-      }}
+          yAxis: {
+            min: 0,
+            title: {
+              text: "",
+            },
+          },
+          legend: {
+            reversed: true,
+          },
+          plotOptions: {
+            series: {
+              stacking: "normal",
+              dataLabels: {
+                enabled: true,
+              },
+            },
+          },
+          series: data.series,
+        } as Highcharts.Options
+      }
     />
   );
 };

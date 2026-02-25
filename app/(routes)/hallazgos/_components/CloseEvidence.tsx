@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 
-import Button from "@mui/material/Button";
+import { Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import IconButton from "@mui/material/IconButton";
+import { Dialog } from "@mui/material";
+import { DialogTitle } from "@mui/material";
+import { DialogContent } from "@mui/material";
+import { DialogActions } from "@mui/material";
+import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { v4 as uuidv4 } from "uuid";
 
@@ -124,7 +124,12 @@ export default function CloseEvidence({
       <DialogContent dividers>
         <Grid container spacing={2}>
           {isUnsafeBehavior && (
-            <Grid item xs={12} sm={6} md={6}>
+            <Grid
+              size={{
+                xs: 12,
+                sm: 6,
+                md: 6
+              }}>
               <b>
                 {evidenceCurrent?.description
                   ? `Descripción del comportamiento inseguro: `
@@ -135,7 +140,12 @@ export default function CloseEvidence({
           )}
 
           {isUnsafeBehavior && (
-            <Grid item xs={12} sm={6} md={6}>
+            <Grid
+              size={{
+                xs: 12,
+                sm: 6,
+                md: 6
+              }}>
               <Paper sx={{ p: 2 }}>
                 <TextField
                   id="description-multiline-solution"
@@ -161,7 +171,12 @@ export default function CloseEvidence({
             </Grid>
           )}
         </Grid>
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 12,
+            md: 12
+          }}>
           <ImageORCamera
             setImage={setImage}
             image={image}

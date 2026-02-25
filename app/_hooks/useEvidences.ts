@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-import { gql, useLazyQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client/react";
 
 import { FiltersEvidences } from "@routes/hallazgos/_components/FiltersEvidence";
 
@@ -126,9 +127,7 @@ export const useEvidences = () => {
   const getPageAndLimit = () => ({ page: page + 1, limit: rowsPerPage });
 
   const [findEvidences, { called, loading, data }] =
-    useLazyQuery<ResponseEvidences>(query, {
-      variables: { ...getPageAndLimit() },
-    });
+    useLazyQuery<ResponseEvidences>(query, { fetchPolicy: "no-cache" });
 
   const handleFindEvidences = (filters: FiltersEvidences) => {
     const variables = {
@@ -146,7 +145,6 @@ export const useEvidences = () => {
 
     return findEvidences({
       variables: { ...getPageAndLimit(), ...variables },
-      fetchPolicy: "no-cache",
     });
   };
 
@@ -154,7 +152,7 @@ export const useEvidences = () => {
     findEvidences: handleFindEvidences,
     isCalled: called,
     isLoading: loading,
-    evidences: data?.evidences.data || [],
+    evidences: (data?.evidences.data || []) as EvidenceGraphql[],
     countEvidence: data?.evidences.count || 0,
     page,
     setPage,

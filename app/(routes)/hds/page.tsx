@@ -2,24 +2,24 @@
 
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import TableFooter from "@mui/material/TableFooter";
-import TablePagination from "@mui/material/TablePagination";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
+import { Box } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Table } from "@mui/material";
+import { TableBody } from "@mui/material";
+import { TableContainer } from "@mui/material";
+import { TableHead } from "@mui/material";
+import { Typography } from "@mui/material";
+import { Paper } from "@mui/material";
+import { TableFooter } from "@mui/material";
+import { TablePagination } from "@mui/material";
+import { Grid } from "@mui/material";
+import { Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import Toolbar from "@mui/material/Toolbar";
+import { Toolbar } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import ButtonGroup from "@mui/material/ButtonGroup";
+import { ButtonGroup } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import TextField from "@mui/material/TextField";
+import { TextField } from "@mui/material";
 import { useDebouncedCallback } from "use-debounce";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
@@ -103,7 +103,12 @@ const HdsPage = () => {
 
   return (
     <Grid container>
-      <Grid item xs={12} sm={12} md={12}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 12,
+          md: 12
+        }}>
         <Typography
           variant="h4"
           gutterBottom
@@ -116,10 +121,19 @@ const HdsPage = () => {
           Hoja de datos de seguridad
         </Typography>
       </Grid>
-
-      <Grid item xs={12} sm={12} md={12}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 12,
+          md: 12
+        }}>
         <Grid container spacing={2} sx={{ mb: 2 }}>
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 12
+            }}>
             <Typography
               variant="subtitle1"
               gutterBottom
@@ -132,11 +146,21 @@ const HdsPage = () => {
               <FilterListIcon sx={{ pt: 1 }} /> Filters ({data.length})
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 12
+            }}>
             <Toolbar>
               <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6} md={4}>
+                  <Grid
+                    size={{
+                      xs: 12,
+                      sm: 6,
+                      md: 4
+                    }}>
                     <Paper>
                       <TextField
                         label="Nombre"
@@ -170,8 +194,12 @@ const HdsPage = () => {
           </Grid>
         </Grid>
       </Grid>
-
-      <Grid item xs={12} sm={12} md={12}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 12,
+          md: 12
+        }}>
         {isLoading ? (
           <LoadingLinear />
         ) : (

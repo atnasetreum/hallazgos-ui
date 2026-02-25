@@ -2,15 +2,15 @@ import { useState } from "react";
 
 import Image from "next/image";
 
-import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
+import { Box } from "@mui/material";
+import { Collapse } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Table } from "@mui/material";
+import { TableBody } from "@mui/material";
+import { TableContainer } from "@mui/material";
+import { TableHead } from "@mui/material";
+import { Typography } from "@mui/material";
+import { Paper } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";

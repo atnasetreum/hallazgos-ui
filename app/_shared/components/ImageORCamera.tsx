@@ -5,13 +5,13 @@ import { useState } from "react";
 import Image from "next/image";
 
 import { styled } from "@mui/material/styles";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
+import { Grid } from "@mui/material";
+import { Button } from "@mui/material";
+import { ButtonGroup } from "@mui/material";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import imageCompression from "browser-image-compression";
-import Paper from "@mui/material/Paper";
+import { Paper } from "@mui/material";
 
 import Camera, { FACING_MODES } from "react-html5-camera-photo";
 import "react-html5-camera-photo/build/css/index.css";
@@ -77,7 +77,12 @@ const ImageORCamera = ({
         sx={{ mt: 2 }}
       >
         {!type && (
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 12
+            }}>
             <ButtonGroup variant="contained" aria-label="Basic button group">
               <Button
                 startIcon={<PhotoCameraIcon />}
@@ -108,7 +113,12 @@ const ImageORCamera = ({
         )}
 
         {type === "camera" && (
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 12
+            }}>
             <Camera
               onTakePhoto={(dataUri) => {
                 setImage(dataUri);
@@ -128,7 +138,12 @@ const ImageORCamera = ({
         sx={{ mt: 1 }}
       >
         {image && (
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 12
+            }}>
             <Paper>
               <Image
                 src={image}
@@ -142,7 +157,12 @@ const ImageORCamera = ({
           </Grid>
         )}
         {attachedFile && (
-          <Grid item xs={12} md={12} sm={3}>
+          <Grid
+            size={{
+              xs: 12,
+              md: 12,
+              sm: 3
+            }}>
             <Paper>
               <div
                 style={{

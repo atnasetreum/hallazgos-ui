@@ -2,37 +2,37 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableContainer from "@mui/material/TableContainer";
-import TableFooter from "@mui/material/TableFooter";
-import TablePagination from "@mui/material/TablePagination";
-import TableHead from "@mui/material/TableHead";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
+import { Table } from "@mui/material";
+import { TableBody } from "@mui/material";
+import { TableContainer } from "@mui/material";
+import { TableFooter } from "@mui/material";
+import { TablePagination } from "@mui/material";
+import { TableHead } from "@mui/material";
+import { Paper } from "@mui/material";
+import { Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import Toolbar from "@mui/material/Toolbar";
-import Box from "@mui/material/Box";
+import { Toolbar } from "@mui/material";
+import { Box } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
+import { TextField } from "@mui/material";
+import { Button } from "@mui/material";
+import { ButtonGroup } from "@mui/material";
 import { useDebouncedCallback } from "use-debounce";
 import AddIcon from "@mui/icons-material/Add";
-import Tooltip from "@mui/material/Tooltip";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import IconButton from "@mui/material/IconButton";
+import { Tooltip } from "@mui/material";
+import { DialogTitle } from "@mui/material";
+import { DialogContent } from "@mui/material";
+import { DialogActions } from "@mui/material";
+import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
+import { FormControl } from "@mui/material";
+import { InputLabel } from "@mui/material";
+import { Select } from "@mui/material";
+import { MenuItem } from "@mui/material";
 import { toast } from "sonner";
 
 import MultiSelectManufacturingPlants from "@components/MultiSelectManufacturingPlants";
@@ -175,7 +175,12 @@ const ScreenForm = ({
       </IconButton>
       <DialogContent dividers>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 12
+            }}>
             <Paper>
               <MultiSelectManufacturingPlants
                 values={form.manufacturingPlantNames}
@@ -188,7 +193,12 @@ const ScreenForm = ({
               />
             </Paper>
           </Grid>
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 12
+            }}>
             <Paper>
               <TextField
                 multiline
@@ -207,7 +217,12 @@ const ScreenForm = ({
               />
             </Paper>
           </Grid>
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 12
+            }}>
             <Paper>
               <TextField
                 label="Tiempo de duración"
@@ -234,7 +249,12 @@ const ScreenForm = ({
               />
             </Paper>
           </Grid>
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 12
+            }}>
             <Paper>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
@@ -337,7 +357,12 @@ export default function TopicTg() {
         />
       )}
       <Grid container>
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 12,
+            md: 12
+          }}>
           <Typography
             variant="h4"
             gutterBottom
@@ -351,9 +376,19 @@ export default function TopicTg() {
           </Typography>
         </Grid>
 
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 12,
+            md: 12
+          }}>
           <Grid container spacing={2} sx={{ mb: 2 }}>
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 12
+              }}>
               <Typography
                 variant="subtitle1"
                 gutterBottom
@@ -366,11 +401,21 @@ export default function TopicTg() {
                 <FilterListIcon sx={{ pt: 1 }} /> Filters ({rows.length})
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 12
+              }}>
               <Toolbar>
                 <Box sx={{ flexGrow: 1 }}>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6} md={2}>
+                    <Grid
+                      size={{
+                        xs: 12,
+                        sm: 6,
+                        md: 2
+                      }}>
                       <SelectDefault
                         data={manufacturingPlants}
                         label="Planta"
@@ -384,7 +429,12 @@ export default function TopicTg() {
                         }}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid
+                      size={{
+                        xs: 12,
+                        sm: 6,
+                        md: 4
+                      }}>
                       <Paper>
                         <TextField
                           label="Nombre"
@@ -428,7 +478,12 @@ export default function TopicTg() {
           </Grid>
         </Grid>
 
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 12,
+            md: 12
+          }}>
           {isLoading ? (
             <LoadingLinear />
           ) : (

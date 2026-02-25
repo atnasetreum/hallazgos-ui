@@ -9,13 +9,13 @@
 } from "react";
 
 import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import { Table } from "@mui/material";
+import { TableBody } from "@mui/material";
+import { TableCell, tableCellClasses } from "@mui/material";
+import { TableContainer } from "@mui/material";
+import { TableHead } from "@mui/material";
+import { TableRow } from "@mui/material";
+import { Paper } from "@mui/material";
 
 import TableFooterDefault from "./TableFooterDefault";
 
@@ -119,22 +119,22 @@ export default TableDefault;
  */
 
 import { useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableContainer from "@mui/material/TableContainer";
-import TableFooter from "@mui/material/TableFooter";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import IconButton from "@mui/material/IconButton";
+import { Box } from "@mui/material";
+import { Table } from "@mui/material";
+import { TableBody } from "@mui/material";
+import { TableContainer } from "@mui/material";
+import { TableFooter } from "@mui/material";
+import { TablePagination } from "@mui/material";
+import { TableRow } from "@mui/material";
+import { Paper } from "@mui/material";
+import { IconButton } from "@mui/material";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import { TableCell, tableCellClasses } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import TableHead from "@mui/material/TableHead";
+import { TableHead } from "@mui/material";
 import { ReactNode, useState, ChangeEvent, MouseEvent } from "react";
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({

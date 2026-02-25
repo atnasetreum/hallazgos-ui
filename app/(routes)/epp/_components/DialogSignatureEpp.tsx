@@ -1,13 +1,13 @@
 import { useRef } from "react";
 
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import { Button } from "@mui/material";
+import { Dialog } from "@mui/material";
+import { AppBar } from "@mui/material";
+import { Toolbar } from "@mui/material";
+import { Box } from "@mui/material";
+import { Paper } from "@mui/material";
+import { Typography } from "@mui/material";
+import { useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import SignatureCanvas from "react-signature-canvas";
 
@@ -50,7 +50,7 @@ export default function DialogSignatureEpp({
       fullScreen
       open={open}
       onClose={handleClose}
-      TransitionComponent={Transition}
+      slots={{ transition: Transition }}
     >
       <AppBar sx={{ position: "relative" }}>
         <Toolbar></Toolbar>

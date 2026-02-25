@@ -1,10 +1,10 @@
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
+import { List } from "@mui/material";
+import { ListItem } from "@mui/material";
+import { Divider } from "@mui/material";
+import { ListItemText } from "@mui/material";
+import { ListItemAvatar } from "@mui/material";
+import { Avatar } from "@mui/material";
+import { Typography } from "@mui/material";
 
 import { stringToDateWithTime } from "@shared/utils";
 import { CommentEvidenceGraphql } from "@hooks";

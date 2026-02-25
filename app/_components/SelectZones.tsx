@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import FormHelperText from "@mui/material/FormHelperText";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { InputLabel } from "@mui/material";
+import { MenuItem } from "@mui/material";
+import { FormControl } from "@mui/material";
+import { FormHelperText } from "@mui/material";
+import { Select, SelectChangeEvent } from "@mui/material";
 
 import { ZonesService } from "@services";
 import { Zone } from "@interfaces";

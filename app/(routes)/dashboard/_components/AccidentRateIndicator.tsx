@@ -1,10 +1,10 @@
 "use client";
 
-import Typography from "@mui/material/Typography";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import { Typography } from "@mui/material";
+import { InputLabel } from "@mui/material";
+import { MenuItem } from "@mui/material";
+import { FormControl } from "@mui/material";
+import { Select } from "@mui/material";
 import { useEffect, useState } from "react";
 import { DashboardService } from "@services";
 import { ResponseAccidents } from "@interfaces";

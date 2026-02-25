@@ -233,35 +233,46 @@ Aplicación práctica en esta migración:
 ## Bitácora de fases
 
 ### Fase 0
- Estado: ✅ Completada
- `pnpm install`: completado
- `pnpm run build`: falló (esperado en esta fase, se corrige en fases 2-8)
+
+Estado: ✅ Completada
+`pnpm install`: completado
+`pnpm run build`: falló (esperado en esta fase, se corrige en fases 2-8)
+
 - Estado: ✅ Completada
 - Build ejecutado: No aplica (fase solo de auditoría, sin cambios funcionales)
- ### Fase 1 — `pnpm run build`
- `Module not found: @apollo/experimental-nextjs-app-support/ssr` en `app/_shared/libs/apollo-wrapper.tsx`.
- `Module not found: highcharts-react-official` en:
-  - `app/(routes)/dashboard/_components/EvidencePerMonthChart.tsx`
-  - `app/(routes)/dashboard/_components/HeatMapChart.tsx`
-  - `app/(routes)/dashboard/_components/MainTypesChart.tsx`
-  - `app/(routes)/dashboard/_components/ProductivityChart.tsx`
-  - `app/(routes)/dashboard/_components/PyramidChart.tsx`
-  - `app/(routes)/dashboard/_components/StatusChart.tsx`
-  - `app/(routes)/dashboard/_components/ZonesChart.tsx`
- `useLazyQuery` ya no exporta desde `@apollo/client` en v4 (debe migrar a `@apollo/client/react`) en `app/_hooks/useEvidences.ts`.
- Warnings de Next 16 en configuración:
-  - `images.domains` deprecado (migrar a `images.remotePatterns`).
-  - `experimental.missingSuspenseWithCSRBailout` inválido en `next.config.js`.
-  - `swcMinify` inválido en `next.config.js`.
-  - Convención `middleware.ts` deprecada (migrar a `proxy.ts`).
+
+### Fase 1 — `pnpm run build`
+
+`Module not found: @apollo/experimental-nextjs-app-support/ssr` en `app/_shared/libs/apollo-wrapper.tsx`.
+`Module not found: highcharts-react-official` en:
+
+- `app/(routes)/dashboard/_components/EvidencePerMonthChart.tsx`
+- `app/(routes)/dashboard/_components/HeatMapChart.tsx`
+- `app/(routes)/dashboard/_components/MainTypesChart.tsx`
+- `app/(routes)/dashboard/_components/ProductivityChart.tsx`
+- `app/(routes)/dashboard/_components/PyramidChart.tsx`
+- `app/(routes)/dashboard/_components/StatusChart.tsx`
+- `app/(routes)/dashboard/_components/ZonesChart.tsx`
+  `useLazyQuery` ya no exporta desde `@apollo/client` en v4 (debe migrar a `@apollo/client/react`) en `app/_hooks/useEvidences.ts`.
+  Warnings de Next 16 en configuración:
+- `images.domains` deprecado (migrar a `images.remotePatterns`).
+- `experimental.missingSuspenseWithCSRBailout` inválido en `next.config.js`.
+- `swcMinify` inválido en `next.config.js`.
+- Convención `middleware.ts` deprecada (migrar a `proxy.ts`).
 
 ### Fase 1
 
-- Estado: ⏳ Pendiente
+- Estado: ✅ Completada
+- `pnpm install`: completado
+- `pnpm run build`: ejecutado; errores iniciales registrados y corregidos en fases siguientes.
 
 ### Fase 2
 
-- Estado: ⏳ Pendiente
+- Estado: ✅ Completada
+- Codemods ejecutados en `app/` (el proyecto no usa `src/`).
+- Migración de `TransitionComponent` a `slots` aplicada en diálogos afectados.
+- Deep imports de `@mui/material/*` migrados a imports nombrados.
+- `pnpm run build`: ✅ exitoso (quedan warnings de Next 16 que se atienden en Fase 4).
 
 ### Fase 3
 
@@ -299,4 +310,15 @@ Aplicación práctica en esta migración:
 
 ## Errores de build/lint por fase (se actualizará por fase)
 
-- Pendiente.
+### Fase 1 — `pnpm run build`
+- `Module not found: @apollo/experimental-nextjs-app-support/ssr` en `app/_shared/libs/apollo-wrapper.tsx`.
+- `Module not found: highcharts-react-official` en componentes de dashboard.
+- `useLazyQuery` importado desde `@apollo/client` (migrado luego a `@apollo/client/react`).
+
+### Fase 2 — `pnpm run build`
+- Resultado: ✅ build exitoso.
+- Warnings activos (sin bloqueo):
+  - `images.domains` deprecado en `next.config.js`.
+  - `experimental.missingSuspenseWithCSRBailout` inválido en `next.config.js`.
+  - `swcMinify` inválido en `next.config.js`.
+  - `middleware.ts` deprecado (nuevo nombre: `proxy.ts`).

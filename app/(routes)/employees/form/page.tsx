@@ -1,19 +1,21 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
+import { Grid } from "@mui/material";
+import { Paper } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
-import Button from "@mui/material/Button";
+import { Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "sonner";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import TextField, { TextFieldProps } from "@mui/material/TextField";
+import { TextField, TextFieldProps } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs, { Dayjs } from "dayjs";
@@ -197,7 +199,12 @@ const EmployeesFormPage = () => {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3
+          }}>
           <Paper>
             <TextField
               label="Código de empleado *"
@@ -210,7 +217,12 @@ const EmployeesFormPage = () => {
             />
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3
+          }}>
           <Paper>
             <TextField
               label="Nombre completo *"
@@ -223,7 +235,12 @@ const EmployeesFormPage = () => {
             />
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3
+          }}>
           <Paper>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
@@ -243,7 +260,12 @@ const EmployeesFormPage = () => {
             </LocalizationProvider>
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3
+          }}>
           <Paper>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
@@ -263,7 +285,12 @@ const EmployeesFormPage = () => {
             </LocalizationProvider>
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3
+          }}>
           <SelectDefault
             data={catalogs?.areas || []}
             label="Area *"
@@ -272,7 +299,12 @@ const EmployeesFormPage = () => {
             name="area"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3
+          }}>
           <SelectDefault
             data={catalogs?.positions || []}
             label="Puesto *"
@@ -281,7 +313,12 @@ const EmployeesFormPage = () => {
             name="position"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3
+          }}>
           <SelectDefault
             data={catalogs?.genres || []}
             label="Género *"
@@ -290,7 +327,12 @@ const EmployeesFormPage = () => {
             name="gender"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3
+          }}>
           <Paper>
             <MultiSelectManufacturingPlants
               values={form.manufacturingPlantNames}
@@ -311,7 +353,12 @@ const EmployeesFormPage = () => {
         justifyContent={"center"}
         sx={{ marginTop: 2 }}
       >
-        <Grid item xs={12} sm={3} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 3,
+            md: 3
+          }}>
           <Button
             variant="contained"
             color="error"
@@ -322,7 +369,12 @@ const EmployeesFormPage = () => {
             Cancelar
           </Button>
         </Grid>
-        <Grid item xs={12} sm={3} md={3}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 3,
+            md: 3
+          }}>
           <LoadingButton
             loading={isLoading}
             loadingPosition="start"

@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 
 import AddIcon from "@mui/icons-material/Add";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
+import { Button } from "@mui/material";
+import { Grid } from "@mui/material";
 
 import DialogCreateCiael from "./components/DialogCreateCiael";
 import TableCiaels from "./components/TableCiaels";
@@ -37,7 +37,12 @@ const CiaelPage = () => {
     <>
       <DialogCreateCiael open={open} setOpen={setOpen} getData={getData} />
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 12,
+            md: 12
+          }}>
           <Toolbar>
             <Box sx={{ flexGrow: 1 }}>
               <Button
@@ -74,7 +79,12 @@ const CiaelPage = () => {
             </ButtonGroup>
           </Toolbar>
         </Grid>
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 12,
+            md: 12
+          }}>
           {isLoading ? <LoadingLinear /> : <TableCiaels data={ciaels} />}
         </Grid>
       </Grid>

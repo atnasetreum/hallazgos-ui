@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -11,7 +15,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -20,18 +24,42 @@
     ],
     "baseUrl": "./app",
     "paths": {
-      "@services": ["_services"],
-      "@components/*": ["_components/*"],
-      "@constants": ["_constants"],
-      "@interfaces": ["_interfaces"],
-      "@store": ["_store"],
-      "@shared/*": ["_shared/*"],
-      "@hooks": ["_hooks"],
-      "@routes/*": ["(routes)/*"]
+      "@services": [
+        "_services"
+      ],
+      "@components/*": [
+        "_components/*"
+      ],
+      "@constants": [
+        "_constants"
+      ],
+      "@interfaces": [
+        "_interfaces"
+      ],
+      "@store": [
+        "_store"
+      ],
+      "@shared/*": [
+        "_shared/*"
+      ],
+      "@hooks": [
+        "_hooks"
+      ],
+      "@routes/*": [
+        "(routes)/*"
+      ]
     },
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

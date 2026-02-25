@@ -2,22 +2,22 @@ import { useEffect, useMemo, useState } from "react";
 
 import Image from "next/image";
 
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import Paper from "@mui/material/Paper";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
+import { Stack } from "@mui/material";
+import { Button } from "@mui/material";
+import { Dialog } from "@mui/material";
+import { Paper } from "@mui/material";
+import { AppBar } from "@mui/material";
+import { Toolbar } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import Grid from "@mui/material/Grid";
+import { Grid } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import TextField from "@mui/material/TextField";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
+import { TextField } from "@mui/material";
+import { Table } from "@mui/material";
+import { TableBody } from "@mui/material";
+import { TableContainer } from "@mui/material";
+import { TableHead } from "@mui/material";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 
 import { Transition } from "@routes/hallazgos/_components/EvidencePreview";
@@ -81,7 +81,7 @@ export default function DialogCreateEpp({ open, create }: Props) {
             })),
             signature,
           }
-        : ({} as PayloadCreateEpp)
+        : ({} as PayloadCreateEpp),
     );
     setSignature("");
     setEquipmentsNew([]);
@@ -96,7 +96,7 @@ export default function DialogCreateEpp({ open, create }: Props) {
     const { equipment, observations } = form;
     if (equipment) {
       const currentEquipment = equipments.find(
-        (eq) => eq.id === Number(equipment)
+        (eq) => eq.id === Number(equipment),
       );
 
       if (currentEquipment) {
@@ -125,7 +125,7 @@ export default function DialogCreateEpp({ open, create }: Props) {
         fullScreen
         open={open}
         onClose={() => handleClose(false)}
-        TransitionComponent={Transition}
+        slots={{ transition: Transition }}
       >
         <AppBar sx={{ position: "relative" }}>
           <Toolbar>
@@ -151,7 +151,13 @@ export default function DialogCreateEpp({ open, create }: Props) {
           </Toolbar>
         </AppBar>
         <Grid container spacing={2} sx={{ p: 5 }}>
-          <Grid item xs={12} md={6} lg={2}>
+          <Grid
+            size={{
+              xs: 12,
+              md: 6,
+              lg: 2,
+            }}
+          >
             <SelectDefault
               data={employees}
               label="Colaborador"
@@ -159,17 +165,29 @@ export default function DialogCreateEpp({ open, create }: Props) {
               onChange={(e) => setForm({ ...form, employee: e.target.value })}
             />
           </Grid>
-          <Grid item xs={12} md={6} lg={2}>
+          <Grid
+            size={{
+              xs: 12,
+              md: 6,
+              lg: 2,
+            }}
+          >
             <SelectDefault
               data={equipments.filter(
-                (eq) => !equipmentsNew.some((newEq) => newEq.id === eq.id)
+                (eq) => !equipmentsNew.some((newEq) => newEq.id === eq.id),
               )}
               label="Equipo"
               value={form.equipment}
               onChange={(e) => setForm({ ...form, equipment: e.target.value })}
             />
           </Grid>
-          <Grid item xs={12} md={6} lg={4}>
+          <Grid
+            size={{
+              xs: 12,
+              md: 6,
+              lg: 4,
+            }}
+          >
             <Paper sx={{ p: 2 }}>
               <TextField
                 multiline
@@ -184,7 +202,13 @@ export default function DialogCreateEpp({ open, create }: Props) {
               />
             </Paper>
           </Grid>
-          <Grid item xs={12} md={6} lg={2}>
+          <Grid
+            size={{
+              xs: 12,
+              md: 6,
+              lg: 2,
+            }}
+          >
             <Stack spacing={2} direction="column">
               <Button
                 variant="contained"
@@ -204,7 +228,13 @@ export default function DialogCreateEpp({ open, create }: Props) {
               </Button>
             </Stack>
           </Grid>
-          <Grid item xs={12} md={6} lg={2}>
+          <Grid
+            size={{
+              xs: 12,
+              md: 6,
+              lg: 2,
+            }}
+          >
             {signature ? (
               <Image src={signature} alt="Signature" width={350} height={150} />
             ) : (
@@ -215,7 +245,13 @@ export default function DialogCreateEpp({ open, create }: Props) {
               </center>
             )}
           </Grid>
-          <Grid item xs={12} md={12} lg={12}>
+          <Grid
+            size={{
+              xs: 12,
+              md: 12,
+              lg: 12,
+            }}
+          >
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>

@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import {
   ChangeEvent,
   MouseEvent,
@@ -11,53 +13,53 @@ import {
 } from "react";
 
 import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
+import { Box } from "@mui/material";
+import { Collapse } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Table } from "@mui/material";
+import { TableBody } from "@mui/material";
+import { TableContainer } from "@mui/material";
+import { TableHead } from "@mui/material";
+import { Typography } from "@mui/material";
+import { Paper } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import TableFooter from "@mui/material/TableFooter";
-import TablePagination from "@mui/material/TablePagination";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
+import { TableFooter } from "@mui/material";
+import { TablePagination } from "@mui/material";
+import { Grid } from "@mui/material";
+import { Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import Toolbar from "@mui/material/Toolbar";
+import { Toolbar } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import ButtonGroup from "@mui/material/ButtonGroup";
+import { ButtonGroup } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import TextField, { TextFieldProps } from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemButton from "@mui/material/ListItemButton";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import AppBar from "@mui/material/AppBar";
+import { TextField, TextFieldProps } from "@mui/material";
+import { Dialog } from "@mui/material";
+import { ListItemText } from "@mui/material";
+import { ListItemButton } from "@mui/material";
+import { List } from "@mui/material";
+import { Divider } from "@mui/material";
+import { AppBar } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDebouncedCallback } from "use-debounce";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs, { type Dayjs } from "dayjs";
-import Switch from "@mui/material/Switch";
-import FormGroup from "@mui/material/FormGroup";
-import Skeleton from "@mui/material/Skeleton";
-import Stack from "@mui/material/Stack";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import CircularProgress from "@mui/material/CircularProgress";
+import { Switch } from "@mui/material";
+import { FormGroup } from "@mui/material";
+import { Skeleton } from "@mui/material";
+import { Stack } from "@mui/material";
+import { MenuItem } from "@mui/material";
+import { FormControl } from "@mui/material";
+import { Select, SelectChangeEvent } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
+import { DialogActions } from "@mui/material";
+import { DialogContent } from "@mui/material";
 import SignatureCanvas from "react-signature-canvas";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 import SearchIcon from "@mui/icons-material/Search";
@@ -570,7 +572,7 @@ function ScreenEdition({
         fullScreen
         open={true}
         onClose={handleClose}
-        TransitionComponent={Transition}
+        slots={{ transition: Transition }}
       >
         <AppBar sx={{ position: "relative" }}>
           <Toolbar>
@@ -599,7 +601,13 @@ function ScreenEdition({
 
         <div>
           <Grid container>
-            <Grid item xs={12} sm={6} md={6}>
+            <Grid
+              size={{
+                xs: 12,
+                sm: 6,
+                md: 6,
+              }}
+            >
               <List>
                 <ListItemButton>
                   <ListItemText
@@ -624,7 +632,13 @@ function ScreenEdition({
                 <Divider />
               </List>
             </Grid>
-            <Grid item xs={12} sm={6} md={6}>
+            <Grid
+              size={{
+                xs: 12,
+                sm: 6,
+                md: 6,
+              }}
+            >
               <List>
                 <ListItemButton>
                   <ListItemText
@@ -674,7 +688,13 @@ function ScreenEdition({
             {evaluationsInitial.filter((evalItem) => evalItem.evaluation === "")
               .length === 0 && (
               <>
-                <Grid item xs={12} sm={4} md={4}>
+                <Grid
+                  size={{
+                    xs: 12,
+                    sm: 4,
+                    md: 4,
+                  }}
+                >
                   <List>
                     <ListItemButton
                       onClick={() => {
@@ -719,7 +739,13 @@ function ScreenEdition({
                     <Divider />
                   </List>
                 </Grid>
-                <Grid item xs={12} sm={4} md={4}>
+                <Grid
+                  size={{
+                    xs: 12,
+                    sm: 4,
+                    md: 4,
+                  }}
+                >
                   <List>
                     <ListItemButton
                       onClick={() => {
@@ -770,7 +796,13 @@ function ScreenEdition({
                     <Divider />
                   </List>
                 </Grid>
-                <Grid item xs={12} sm={4} md={4}>
+                <Grid
+                  size={{
+                    xs: 12,
+                    sm: 4,
+                    md: 4,
+                  }}
+                >
                   <List>
                     <ListItemButton
                       onClick={() => {
@@ -1082,7 +1114,13 @@ const TrainingGuidePage = () => {
         />
       )}
       <Grid container>
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 12,
+            md: 12,
+          }}
+        >
           <Typography
             variant="h4"
             gutterBottom
@@ -1096,9 +1134,21 @@ const TrainingGuidePage = () => {
           </Typography>
         </Grid>
 
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 12,
+            md: 12,
+          }}
+        >
           <Grid container spacing={2} sx={{ mb: 2 }}>
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 12,
+              }}
+            >
               <Typography
                 variant="subtitle1"
                 gutterBottom
@@ -1111,11 +1161,23 @@ const TrainingGuidePage = () => {
                 <FilterListIcon sx={{ pt: 1 }} /> Filters ({employees.length})
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 12,
+              }}
+            >
               <Toolbar>
                 <Box sx={{ flexGrow: 1 }}>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6} md={2}>
+                    <Grid
+                      size={{
+                        xs: 12,
+                        sm: 6,
+                        md: 2,
+                      }}
+                    >
                       <SelectDefault
                         data={manufacturingPlants}
                         label="Planta"
@@ -1129,7 +1191,13 @@ const TrainingGuidePage = () => {
                         }}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid
+                      size={{
+                        xs: 12,
+                        sm: 6,
+                        md: 4,
+                      }}
+                    >
                       <Paper>
                         <TextField
                           label="Nombre"
@@ -1164,7 +1232,13 @@ const TrainingGuidePage = () => {
           </Grid>
         </Grid>
 
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 12,
+            md: 12,
+          }}
+        >
           {isLoading ? (
             <LoadingLinear />
           ) : (

@@ -4,12 +4,12 @@ import { ReactNode, useCallback, useEffect, useState } from "react";
 
 import { usePathname, useRouter } from "next/navigation";
 
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-//import ListSubheader from "@mui/material/ListSubheader";
-import List from "@mui/material/List";
-import Collapse from "@mui/material/Collapse";
+import { ListItemButton } from "@mui/material";
+import { ListItemIcon } from "@mui/material";
+import { ListItemText } from "@mui/material";
+//import { ListSubheader } from "@mui/material";
+import { List } from "@mui/material";
+import { Collapse } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 //import BarChartIcon from "@mui/icons-material/BarChart";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -19,7 +19,7 @@ import EngineeringIcon from "@mui/icons-material/Engineering";
 import DnsIcon from "@mui/icons-material/Dns";
 import HubIcon from "@mui/icons-material/Hub";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
-import Tooltip from "@mui/material/Tooltip";
+import { Tooltip } from "@mui/material";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import DescriptionIcon from "@mui/icons-material/Description";
 import WarningIcon from "@mui/icons-material/Warning";

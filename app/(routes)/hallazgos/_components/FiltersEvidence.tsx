@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 import FilterListIcon from "@mui/icons-material/FilterList";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
+import { Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 
 import { useCategoriesStore, useUserSessionStore } from "@store";
 import SelectDefault from "@components/SelectDefault";
@@ -43,12 +43,22 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
 
   return (
     <Grid container spacing={2} sx={{ mb: 2 }}>
-      <Grid item xs={12} sm={12} md={12}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 12,
+          md: 12
+        }}>
         <Typography variant="subtitle1" gutterBottom color="primary.main">
           <FilterListIcon sx={{ pt: 1 }} /> Filters ({count})
         </Typography>
       </Grid>
-      <Grid item xs={12} sm={3} md={2}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 3,
+          md: 2
+        }}>
         <SelectDefault
           data={manufacturingPlants}
           label="Planta"
@@ -62,8 +72,12 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
           }}
         />
       </Grid>
-
-      <Grid item xs={12} sm={3} md={2}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 3,
+          md: 2
+        }}>
         <SelectDefault
           data={mainTypes}
           label="Hallazgo"
@@ -78,8 +92,12 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
           }}
         />
       </Grid>
-
-      <Grid item xs={12} sm={3} md={2}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 3,
+          md: 2
+        }}>
         <SelectDefault
           data={secondaryTypes}
           label="Tipo"
@@ -94,8 +112,12 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
           helperText={!filters.mainTypeId ? "Seleccione un hallazgo" : ""}
         />
       </Grid>
-
-      <Grid item xs={12} sm={3} md={2}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 3,
+          md: 2
+        }}>
         <SelectDefault
           data={zones.filter(
             (data) =>
@@ -116,8 +138,12 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
           }
         />
       </Grid>
-
-      <Grid item xs={12} sm={3} md={2}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 3,
+          md: 2
+        }}>
         <SelectDefault
           data={processes}
           label="Administrador"
@@ -131,8 +157,12 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
           }
         />
       </Grid>
-
-      <Grid item xs={12} sm={3} md={2}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 3,
+          md: 2
+        }}>
         <SelectDefault
           data={[
             { id: "Abierto", name: "Abierto" },

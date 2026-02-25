@@ -2,37 +2,37 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableContainer from "@mui/material/TableContainer";
-import TableFooter from "@mui/material/TableFooter";
-import TablePagination from "@mui/material/TablePagination";
-import TableHead from "@mui/material/TableHead";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
+import { Table } from "@mui/material";
+import { TableBody } from "@mui/material";
+import { TableContainer } from "@mui/material";
+import { TableFooter } from "@mui/material";
+import { TablePagination } from "@mui/material";
+import { TableHead } from "@mui/material";
+import { Paper } from "@mui/material";
+import { Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
+import { Button } from "@mui/material";
+import { ButtonGroup } from "@mui/material";
 import { useDebouncedCallback } from "use-debounce";
 import AddIcon from "@mui/icons-material/Add";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
+import { Tooltip } from "@mui/material";
+import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { toast } from "sonner";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
-import Checkbox from "@mui/material/Checkbox";
+import { Autocomplete } from "@mui/material";
+import { TextField } from "@mui/material";
+import { Checkbox } from "@mui/material";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import Dialog from "@mui/material/Dialog";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
+import { Dialog } from "@mui/material";
+import { AppBar } from "@mui/material";
+import { Toolbar } from "@mui/material";
 
 import TablePaginationActions from "@shared/components/TablePaginationActions";
 import { Transition } from "@routes/hallazgos/_components/EvidencePreview";
@@ -214,7 +214,7 @@ const ScreenForm = ({
       fullScreen
       open={true}
       onClose={() => handleClose(false)}
-      TransitionComponent={Transition}
+      slots={{ transition: Transition }}
     >
       <AppBar sx={{ position: "relative" }}>
         <Toolbar>
@@ -235,7 +235,13 @@ const ScreenForm = ({
         </Toolbar>
       </AppBar>
       <Grid container spacing={2} sx={{ p: 3 }}>
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 12,
+            md: 12,
+          }}
+        >
           <SelectDefault
             data={manufacturingPlants}
             label="Planta"
@@ -250,7 +256,13 @@ const ScreenForm = ({
         </Grid>
         {!!manufacturingPlantId && (
           <>
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 12,
+              }}
+            >
               <SelectDefault
                 data={positions}
                 label="Puesto"
@@ -263,7 +275,13 @@ const ScreenForm = ({
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 12,
+              }}
+            >
               <SelectDefault
                 data={users}
                 label="Jefe de área"
@@ -282,7 +300,13 @@ const ScreenForm = ({
                 }
               />
             </Grid>
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 12,
+              }}
+            >
               <SelectDefault
                 data={users}
                 label="Jefe de RRHH"
@@ -302,9 +326,21 @@ const ScreenForm = ({
               />
             </Grid>
             <Paper sx={{ p: 2, width: "100%", m: 3 }} elevation={3}>
-              <Grid item xs={12} sm={12} md={12}>
+              <Grid
+                size={{
+                  xs: 12,
+                  sm: 12,
+                  md: 12,
+                }}
+              >
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6} md={6}>
+                  <Grid
+                    size={{
+                      xs: 12,
+                      sm: 6,
+                      md: 6,
+                    }}
+                  >
                     <SelectDefault
                       data={topics
                         .map((topic) => ({
@@ -328,7 +364,13 @@ const ScreenForm = ({
                       }
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6} md={6}>
+                  <Grid
+                    size={{
+                      xs: 12,
+                      sm: 6,
+                      md: 6,
+                    }}
+                  >
                     {!!users.length ? (
                       <Paper>
                         <Autocomplete
@@ -374,7 +416,13 @@ const ScreenForm = ({
                       </p>
                     )}
                   </Grid>
-                  <Grid item xs={12} sm={12} md={12}>
+                  <Grid
+                    size={{
+                      xs: 12,
+                      sm: 12,
+                      md: 12,
+                    }}
+                  >
                     <Button
                       fullWidth
                       variant="contained"
@@ -409,7 +457,13 @@ const ScreenForm = ({
                       Agregar tema
                     </Button>
                   </Grid>
-                  <Grid item xs={12} sm={12} md={12}>
+                  <Grid
+                    size={{
+                      xs: 12,
+                      sm: 12,
+                      md: 12,
+                    }}
+                  >
                     <TableContainer component={Paper}>
                       <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
@@ -543,7 +597,13 @@ export default function TopicTg() {
         />
       )}
       <Grid container>
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 12,
+            md: 12,
+          }}
+        >
           <Typography
             variant="h4"
             gutterBottom
@@ -557,9 +617,21 @@ export default function TopicTg() {
           </Typography>
         </Grid>
 
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 12,
+            md: 12,
+          }}
+        >
           <Grid container spacing={2} sx={{ mb: 2 }}>
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 12,
+              }}
+            >
               <Typography
                 variant="subtitle1"
                 gutterBottom
@@ -572,11 +644,23 @@ export default function TopicTg() {
                 <FilterListIcon sx={{ pt: 1 }} /> Filters ({rows.length})
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 12,
+              }}
+            >
               <Toolbar>
                 <Box sx={{ flexGrow: 1 }}>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6} md={2}>
+                    <Grid
+                      size={{
+                        xs: 12,
+                        sm: 6,
+                        md: 2,
+                      }}
+                    >
                       <SelectDefault
                         data={manufacturingPlants}
                         label="Planta"
@@ -590,7 +674,13 @@ export default function TopicTg() {
                         }}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={2}>
+                    <Grid
+                      size={{
+                        xs: 12,
+                        sm: 6,
+                        md: 2,
+                      }}
+                    >
                       <SelectDefault
                         data={positions}
                         label="Puesto"
@@ -631,7 +721,13 @@ export default function TopicTg() {
           </Grid>
         </Grid>
 
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 12,
+            md: 12,
+          }}
+        >
           {isLoading ? (
             <LoadingLinear />
           ) : (

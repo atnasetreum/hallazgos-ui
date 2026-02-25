@@ -1,8 +1,8 @@
 import { ChangeEvent, MouseEvent } from "react";
 
-import TableFooter from "@mui/material/TableFooter";
-import TableRow from "@mui/material/TableRow";
-import TablePagination from "@mui/material/TablePagination";
+import { TableFooter } from "@mui/material";
+import { TableRow } from "@mui/material";
+import { TablePagination } from "@mui/material";
 
 import TablePaginationActions from "@shared/components/TablePaginationActions";
 

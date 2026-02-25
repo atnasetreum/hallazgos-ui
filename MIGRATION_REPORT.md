@@ -312,7 +312,13 @@ Estado: ✅ Completada
 
 ### Fase 8
 
-- Estado: ⏳ Pendiente
+- Estado: ✅ Completada (incremental)
+- `tsconfig.json` actualizado:
+  - `target`: `ES2017`
+  - `module`: `esnext`
+  - `moduleResolution`: `bundler`
+- Tipos React 19 en dependencias ya aplicados en fase de instalación.
+- Build exitoso tras actualización de TypeScript 5.8.
 
 ### Fase 9
 
@@ -322,7 +328,8 @@ Estado: ✅ Completada
 
 ## Deuda técnica (se actualizará por fase)
 
-- Pendiente.
+- `verbatimModuleSyntax`: activación pospuesta por alto impacto (requiere migrar masivamente imports a `import type` en múltiples módulos).
+- Script `lint`: ajustado a `eslint .` porque `next lint` no está disponible en Next 16 CLI actual.
 
 ## Errores de build/lint por fase (se actualizará por fase)
 

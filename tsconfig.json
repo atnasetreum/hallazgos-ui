@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -24,30 +20,14 @@
     ],
     "baseUrl": "./app",
     "paths": {
-      "@services": [
-        "_services"
-      ],
-      "@components/*": [
-        "_components/*"
-      ],
-      "@constants": [
-        "_constants"
-      ],
-      "@interfaces": [
-        "_interfaces"
-      ],
-      "@store": [
-        "_store"
-      ],
-      "@shared/*": [
-        "_shared/*"
-      ],
-      "@hooks": [
-        "_hooks"
-      ],
-      "@routes/*": [
-        "(routes)/*"
-      ]
+      "@services": ["_services"],
+      "@components/*": ["_components/*"],
+      "@constants": ["_constants"],
+      "@interfaces": ["_interfaces"],
+      "@store": ["_store"],
+      "@shared/*": ["_shared/*"],
+      "@hooks": ["_hooks"],
+      "@routes/*": ["(routes)/*"]
     },
     "noUnusedLocals": true,
     "noUnusedParameters": true
@@ -59,7 +39,5 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

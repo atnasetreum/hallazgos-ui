@@ -40,7 +40,7 @@ export const baseUrlImage = (image: string, path?: string) => {
     path = "/static/images/evidences/";
   }
 
-  return `${process.env.NEXT_PUBLIC_URL_API_RAW}${path}${image}`;
+  return `https://api.comportarte.com${path}${image}`;
 };
 
 export const stringToDateWithTime = (date: string | Date) => {

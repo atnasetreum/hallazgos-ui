@@ -4,6 +4,9 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { TextField } from "@mui/material";
 import { Paper } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import SelectManufacturingPlants from "@components/SelectManufacturingPlants";
+import SelectRules from "@components/SelectRules";
+import SelectZones from "@components/SelectZones";
 // import SelectManufacturingPlants from "@components/SelectManufacturingPlants";
 // import SelectRules from "@components/SelectRules";
 // import SelectZones from "@components/SelectZones";
@@ -30,8 +33,9 @@ const FiltersUsers = ({ filters, setFilters, count }: Props) => {
         size={{
           xs: 12,
           sm: 12,
-          md: 12
-        }}>
+          md: 12,
+        }}
+      >
         <Typography
           variant="subtitle1"
           gutterBottom
@@ -48,8 +52,9 @@ const FiltersUsers = ({ filters, setFilters, count }: Props) => {
         size={{
           xs: 12,
           sm: 4,
-          md: 2
-        }}>
+          md: 2,
+        }}
+      >
         <Paper>
           <TextField
             fullWidth
@@ -66,7 +71,13 @@ const FiltersUsers = ({ filters, setFilters, count }: Props) => {
           />
         </Paper>
       </Grid>
-      {/*<Grid item xs={12} sm={4} md={2}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 4,
+          md: 2,
+        }}
+      >
         <Paper>
           <SelectManufacturingPlants
             value={filters.manufacturingPlantId}
@@ -80,7 +91,13 @@ const FiltersUsers = ({ filters, setFilters, count }: Props) => {
           />
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={4} md={2}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 4,
+          md: 2,
+        }}
+      >
         <Paper>
           <SelectRules
             value={filters.rule}
@@ -94,7 +111,13 @@ const FiltersUsers = ({ filters, setFilters, count }: Props) => {
           />
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={4} md={2}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 4,
+          md: 2,
+        }}
+      >
         <Paper>
           <SelectZones
             value={filters.zoneId}
@@ -108,7 +131,7 @@ const FiltersUsers = ({ filters, setFilters, count }: Props) => {
             manufacturingPlantId={filters.manufacturingPlantId}
           />
         </Paper>
-          </Grid>*/}
+      </Grid>
     </Grid>
   );
 };

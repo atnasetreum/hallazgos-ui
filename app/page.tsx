@@ -37,10 +37,10 @@ export default function SignIn() {
         }}
       >
         <Image
-          src={`${process.env.NEXT_PUBLIC_URL_API_RAW}/static/images/login/logo-superior.png`}
+          src="/images/logo-superior.png"
           alt=""
-          width="300"
-          height="200"
+          width={300}
+          height={200}
         />
         {token ? (
           <FormRestorePassword />
@@ -50,12 +50,7 @@ export default function SignIn() {
           <FormForgotPassword setForgotPassword={setForgotPassword} />
         )}
       </Box>
-      <Image
-        src={`${process.env.NEXT_PUBLIC_URL_API_RAW}/static/images/login/logo-inferior.png`}
-        alt=""
-        width="400"
-        height="100"
-      />
+      <Image src="/images/logo-inferior.png" alt="" width={400} height={100} />
       <Copyright sx={{ mb: 4 }} />
     </Container>
   );

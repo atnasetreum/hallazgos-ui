@@ -6,7 +6,6 @@ import { ListItemAvatar } from "@mui/material";
 import { ListItemButton } from "@mui/material";
 import { ListItemText } from "@mui/material";
 import { ListItemIcon } from "@mui/material";
-import SwipeableViews from "react-swipeable-views";
 import { Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { ListItem } from "@mui/material";
@@ -66,7 +65,8 @@ export const TopUsersByPlantChart = () => {
           indicatorColor="secondary"
           textColor="inherit"
           variant="fullWidth"
-          aria-label="full width tabs example"
+          scrollButtons="auto"
+          aria-label="scrollable tabs example"
         >
           {data.map((item, idx) => (
             <Tab
@@ -77,49 +77,46 @@ export const TopUsersByPlantChart = () => {
           ))}
         </Tabs>
       </AppBar>
-      <SwipeableViews
-        axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-        index={value}
-        onChangeIndex={handleChangeIndex}
-      >
-        {data.map((item, idx) => (
-          <TabPanel
-            key={`${item.name}_${idx}`}
-            value={value}
-            index={idx}
-            dir={theme.direction}
-          >
-            <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-              {item.data.map((user, idx) => (
-                <Box key={`${user.username}${idx}`}>
-                  <ListItem
-                    alignItems="flex-start"
-                    secondaryAction={
-                      <Typography
-                        sx={{ display: "inline" }}
-                        component="span"
-                        variant="body2"
-                        color="text.primary"
-                      >
-                        Hallazgos creados: <b>{user.total}</b>
-                      </Typography>
-                    }
-                  >
-                    <ListItemAvatar>
-                      <Avatar
-                        alt="Remy Sharp"
-                        src="/static/images/avatar/1.jpg"
-                      />
-                    </ListItemAvatar>
-                    <ListItemText primary={user.username} />
-                  </ListItem>
-                  <Divider variant="inset" component="li" />
-                </Box>
-              ))}
-            </List>
-          </TabPanel>
-        ))}
-      </SwipeableViews>
+      {data.map(
+        (item, idx) =>
+          value === idx && (
+            <TabPanel
+              key={`${item.name}_${idx}`}
+              value={value}
+              index={idx}
+              dir={theme.direction}
+            >
+              <List sx={{ width: "100%", bgcolor: "background.paper" }}>
+                {item.data.map((user, idx) => (
+                  <Box key={`${user.username}${idx}`}>
+                    <ListItem
+                      alignItems="flex-start"
+                      secondaryAction={
+                        <Typography
+                          sx={{ display: "inline" }}
+                          component="span"
+                          variant="body2"
+                          color="text.primary"
+                        >
+                          Hallazgos creados: <b>{user.total}</b>
+                        </Typography>
+                      }
+                    >
+                      <ListItemAvatar>
+                        <Avatar
+                          alt="Remy Sharp"
+                          src="/static/images/avatar/1.jpg"
+                        />
+                      </ListItemAvatar>
+                      <ListItemText primary={user.username} />
+                    </ListItem>
+                    <Divider variant="inset" component="li" />
+                  </Box>
+                ))}
+              </List>
+            </TabPanel>
+          ),
+      )}
     </Box>
   );
 };

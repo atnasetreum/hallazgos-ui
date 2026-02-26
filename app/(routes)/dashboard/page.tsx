@@ -2,7 +2,6 @@
 
 import { SyntheticEvent, useState } from "react";
 
-import SwipeableViews from "react-swipeable-views";
 import { useTheme } from "@mui/material/styles";
 import { AppBar } from "@mui/material";
 import { Paper } from "@mui/material";
@@ -37,10 +36,6 @@ export default function DashboardPage() {
     setValue(newValue);
   };
 
-  const handleChangeIndex = (index: number) => {
-    setValue(index);
-  };
-
   if (email === "cosmeticostrujillo0023@gmail.com") {
     return window.location.replace("/hds");
   }
@@ -54,7 +49,8 @@ export default function DashboardPage() {
           indicatorColor="secondary"
           textColor="inherit"
           variant="fullWidth"
-          aria-label="full width tabs example"
+          scrollButtons="auto"
+          aria-label="scrollable tabs example"
         >
           <Tab label="Estatus / Criterios / Zonas" {...a11yProps(0)} />
           <Tab label="Meses" {...a11yProps(1)} />
@@ -62,19 +58,17 @@ export default function DashboardPage() {
           <Tab label="Usuarios" {...a11yProps(3)} />
         </Tabs>
       </AppBar>
-      <SwipeableViews
-        axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-        index={value}
-        onChangeIndex={handleChangeIndex}
-      >
+
+      {value === 0 && (
         <TabPanel value={value} index={0} dir={theme.direction}>
           <Grid container spacing={2}>
             <Grid
               size={{
                 xs: 12,
                 md: 6,
-                lg: 3
-              }}>
+                lg: 3,
+              }}
+            >
               <Paper
                 sx={{
                   p: 2,
@@ -89,8 +83,9 @@ export default function DashboardPage() {
               size={{
                 xs: 12,
                 md: 6,
-                lg: 6
-              }}>
+                lg: 6,
+              }}
+            >
               <Paper
                 sx={{
                   p: 2,
@@ -105,8 +100,9 @@ export default function DashboardPage() {
               size={{
                 xs: 12,
                 md: 6,
-                lg: 3
-              }}>
+                lg: 3,
+              }}
+            >
               <Paper
                 sx={{
                   p: 2,
@@ -121,8 +117,9 @@ export default function DashboardPage() {
               size={{
                 xs: 12,
                 md: 6,
-                lg: 12
-              }}>
+                lg: 12,
+              }}
+            >
               <Paper
                 sx={{
                   p: 2,
@@ -135,14 +132,17 @@ export default function DashboardPage() {
             </Grid>
           </Grid>
         </TabPanel>
+      )}
+      {value === 1 && (
         <TabPanel value={value} index={1} dir={theme.direction}>
           <Grid container spacing={2}>
             <Grid
               size={{
                 xs: 12,
                 md: 6,
-                lg: 4
-              }}>
+                lg: 4,
+              }}
+            >
               <Paper
                 sx={{
                   p: 2,
@@ -157,8 +157,9 @@ export default function DashboardPage() {
               size={{
                 xs: 12,
                 md: 6,
-                lg: 4
-              }}>
+                lg: 4,
+              }}
+            >
               <Paper
                 sx={{
                   p: 2,
@@ -173,8 +174,9 @@ export default function DashboardPage() {
               size={{
                 xs: 12,
                 md: 6,
-                lg: 4
-              }}>
+                lg: 4,
+              }}
+            >
               <Paper
                 sx={{
                   p: 2,
@@ -187,17 +189,22 @@ export default function DashboardPage() {
             </Grid>
           </Grid>
         </TabPanel>
+      )}
+      {value === 2 && (
         <TabPanel value={value} index={2} dir={theme.direction}>
           ...
         </TabPanel>
+      )}
+      {value === 3 && (
         <TabPanel value={value} index={3} dir={theme.direction}>
           <Grid container spacing={2}>
             <Grid
               size={{
                 xs: 12,
                 md: 12,
-                lg: 12
-              }}>
+                lg: 12,
+              }}
+            >
               <Paper
                 sx={{
                   p: 2,
@@ -210,7 +217,7 @@ export default function DashboardPage() {
             </Grid>
           </Grid>
         </TabPanel>
-      </SwipeableViews>
+      )}
     </Box>
   );
 }

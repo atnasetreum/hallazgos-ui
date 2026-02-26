@@ -3,7 +3,6 @@ import { ReactNode, SyntheticEvent, useEffect, useState } from "react";
 import Image from "next/image";
 
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import SwipeableViews from "react-swipeable-views";
 import { Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { TextField } from "@mui/material";
@@ -64,15 +63,11 @@ export default function TabsImageAndLogs({
   const [value, setValue] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
   const [comments, setComments] = useState<CommentEvidenceGraphql[]>(
-    evidenceCurrent.comments
+    evidenceCurrent.comments,
   );
 
   const handleChange = (_: SyntheticEvent, newValue: number) => {
     setValue(newValue);
-  };
-
-  const handleChangeIndex = (index: number) => {
-    setValue(index);
   };
 
   useEffect(() => {
@@ -97,6 +92,7 @@ export default function TabsImageAndLogs({
           indicatorColor="secondary"
           textColor="inherit"
           variant="fullWidth"
+          scrollButtons="auto"
           aria-label="full width tabs example"
         >
           {withImages && <Tab label="Imagenes" {...a11yProps(0)} />}
@@ -106,101 +102,84 @@ export default function TabsImageAndLogs({
           />
         </Tabs>
       </AppBar>
-      <SwipeableViews
-        axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-        index={value}
-        onChangeIndex={handleChangeIndex}
-      >
-        {withImages && (
-          <TabPanel value={value} index={0} dir={theme.direction}>
-            <Grid container spacing={3}>
-              {evidenceCurrent?.imgEvidence && (
-                <Grid
-                  size={{
-                    xs: 12,
-                    sm: evidenceCurrent.imgSolution ? 6 : 12,
-                    md: evidenceCurrent.imgSolution ? 6 : 12
-                  }}>
-                  <Typography variant="h6" gutterBottom>
-                    Hallazgo
-                  </Typography>
-                  <Image
-                    src={baseUrlImage(evidenceCurrent.imgEvidence || "")}
-                    alt="Hallazgo imagen"
-                    width={0}
-                    height={0}
-                    sizes="100vw"
-                    style={{ width: "100%", height: "auto" }}
-                  />
-                </Grid>
-              )}
-
-              {evidenceCurrent.imgSolution && (
-                <Grid
-                  size={{
-                    xs: 12,
-                    sm: 6,
-                    md: 6
-                  }}>
-                  <Typography variant="h6" gutterBottom>
-                    Solución
-                  </Typography>
-                  <Image
-                    src={baseUrlImage(evidenceCurrent?.imgSolution || "")}
-                    alt="Imagen Solución"
-                    width={0}
-                    height={0}
-                    sizes="100vw"
-                    style={{ width: "100%", height: "auto" }}
-                  />
-                </Grid>
-              )}
-            </Grid>
-          </TabPanel>
-        )}
-        <TabPanel value={value} index={1} dir={theme.direction}>
+      {withImages && value === 0 && (
+        <TabPanel value={value} index={0} dir={theme.direction}>
           <Grid container spacing={3}>
-            <Grid
-              size={{
-                xs: 12,
-                sm: 10,
-                md: 10
-              }}>
-              <TextField
-                label="Commentario"
-                variant="outlined"
-                fullWidth
-                autoComplete="off"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-              />
-            </Grid>
-            <Grid
-              size={{
-                xs: 12,
-                sm: 2,
-                md: 2
-              }}>
-              <Button
-                variant="contained"
-                startIcon={<QuestionAnswerIcon />}
-                fullWidth
-                onClick={addComment}
+            {evidenceCurrent?.imgEvidence && (
+              <Grid
+                size={{
+                  xs: 12,
+                  sm: evidenceCurrent.imgSolution ? 6 : 12,
+                  md: evidenceCurrent.imgSolution ? 6 : 12,
+                }}
               >
-                Agregar
-              </Button>
-            </Grid>
-            <Grid
-              size={{
-                xs: 12,
-                sm: 12,
-                md: 12
-              }}>
-              {!!comments.length && <ListComments comments={comments} />}
-            </Grid>
+                <Typography variant="h6" gutterBottom>
+                  Hallazgo
+                </Typography>
+                <Image
+                  src={baseUrlImage(evidenceCurrent.imgEvidence || "")}
+                  alt="Hallazgo imagen"
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  style={{ width: "100%", height: "auto" }}
+                />
+              </Grid>
+            )}
+
+            {evidenceCurrent.imgSolution && (
+              <Grid
+                size={{
+                  xs: 12,
+                  sm: 6,
+                  md: 6,
+                }}
+              >
+                <Typography variant="h6" gutterBottom>
+                  Solución
+                </Typography>
+                <Image
+                  src={baseUrlImage(evidenceCurrent?.imgSolution || "")}
+                  alt="Imagen Solución"
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  style={{ width: "100%", height: "auto" }}
+                />
+              </Grid>
+            )}
           </Grid>
         </TabPanel>
-      </SwipeableViews>
+      )}
+
+      {((withImages && value === 1) || (!withImages && value === 0)) && (
+        <TabPanel
+          value={value}
+          index={withImages ? 1 : 0}
+          dir={theme.direction}
+        >
+          {/* ...contenido de comentarios... */}
+          <ListComments comments={comments} />
+          <Box sx={{ display: "flex", mt: 2 }}>
+            <TextField
+              fullWidth
+              label="Agregar comentario"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              variant="outlined"
+            />
+            <Button
+              sx={{ ml: 2 }}
+              variant="contained"
+              onClick={addComment}
+              disabled={!comment.trim()}
+              startIcon={<QuestionAnswerIcon />}
+            >
+              Comentar
+            </Button>
+          </Box>
+        </TabPanel>
+      )}
     </Box>
   );
 }

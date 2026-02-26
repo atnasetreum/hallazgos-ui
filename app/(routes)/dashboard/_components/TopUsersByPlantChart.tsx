@@ -38,10 +38,6 @@ export const TopUsersByPlantChart = () => {
     setValue(newValue);
   };
 
-  const handleChangeIndex = (index: number) => {
-    setValue(index);
-  };
-
   if (!Object.keys(data).length) return null;
 
   return (

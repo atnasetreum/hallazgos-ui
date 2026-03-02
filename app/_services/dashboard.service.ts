@@ -48,16 +48,21 @@ const findAllEvidencesByMonth = async (year?: number) => {
       params: {
         ...(year && { year }),
       },
-    }
+    },
   );
   return data;
 };
 
 const findTopUsersByPlant = async () => {
   const { data } = await api.get<ResponseTopUsersByPlant>(
-    "/top-users-by-plant"
+    "/top-users-by-plant",
   );
   return data.data;
+};
+
+const findMyEvidences = async (userId: string) => {
+  const { data } = await api.get(`/my-evidences/${userId}`);
+  return data;
 };
 
 export const DashboardService = {
@@ -68,4 +73,5 @@ export const DashboardService = {
   findAllZones,
   findAllMainTypes,
   findOpendVsClosed,
+  findMyEvidences,
 };

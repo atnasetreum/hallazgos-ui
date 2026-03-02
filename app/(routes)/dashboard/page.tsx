@@ -221,3 +221,23 @@ export default function DashboardPage() {
     </Box>
   );
 }
+
+/* "use client";
+
+import { useUserSessionStore } from "@store";
+import { useEffect } from "react";
+
+const DashboardPage = () => {
+  const currentUser = useUserSessionStore();
+
+  useEffect(() => {
+    console.log({
+      currentUser,
+    });
+  }, [currentUser]);
+
+  return <div>DashboardPage</div>;
+};
+
+export default DashboardPage;
+ */

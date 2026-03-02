@@ -1,6 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  ChangeEvent,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { Table } from "@mui/material";
 import { TableBody } from "@mui/material";
@@ -33,8 +41,13 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { Dialog } from "@mui/material";
 import { AppBar } from "@mui/material";
 import { Toolbar } from "@mui/material";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { useShallow } from "zustand/shallow";
 
 import TablePaginationActions from "@shared/components/TablePaginationActions";
+import { ConfigTgService, EmployeesService, TopicsService } from "@services";
 import { Transition } from "@routes/hallazgos/_components/EvidencePreview";
 import LoadingLinear from "@shared/components/LoadingLinear";
 import SelectDefault from "@components/SelectDefault";
@@ -45,19 +58,12 @@ import {
   StyledTableRow,
 } from "@shared/components/TableDefault";
 import {
-  ConfigTgService,
-  EmployeesService,
-  TopicsService,
-  UsersService,
-} from "@services";
-import {
   BasicData,
   ConfigTg,
+  Employee,
   ManufacturingPlant,
   Topic,
-  User,
 } from "@interfaces";
-import { useShallow } from "zustand/shallow";
 
 export interface IFiltersConfigTg {
   manufacturingPlantId?: number;
@@ -77,10 +83,12 @@ const ScreenForm = ({
   currentId: number;
   closeDialog: () => void;
 }) => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<Employee[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [topicId, setTopicId] = useState<string>("");
   const [currentEmployees, setCurrentEmployees] = useState<string[]>([]);
+
+  const theme = useTheme();
 
   const [form, setForm] = useState<{
     positionId: string;
@@ -90,7 +98,7 @@ const ScreenForm = ({
     topics: {
       id: number;
       topic: Topic;
-      responsibles: User[];
+      responsibles: Employee[];
     }[];
   }>({
     positionId: "",
@@ -99,6 +107,83 @@ const ScreenForm = ({
     humanResourceManagerId: "",
     topics: [],
   });
+
+  // Drag and drop logic for topics
+  const moveTopicRow = (fromIdx: number, toIdx: number) => {
+    setForm((prev) => {
+      const updated = [...prev.topics];
+      const [removed] = updated.splice(fromIdx, 1);
+      updated.splice(toIdx, 0, removed);
+      return { ...prev, topics: updated };
+    });
+  };
+
+  // DnD row component
+  const DraggableTopicRow = ({
+    row,
+    idx,
+  }: {
+    row: { id: number; topic: Topic; responsibles: Employee[] };
+    idx: number;
+  }) => {
+    const ref = useRef<HTMLTableRowElement>(null);
+    const [, drop] = useDrop<{ idx: number }>({
+      accept: "topic-row",
+      hover: (item) => {
+        if (item.idx === idx) return;
+        moveTopicRow(item.idx, idx);
+        item.idx = idx;
+      },
+    });
+    const [{ isDragging }, drag] = useDrag<
+      { idx: number },
+      void,
+      { isDragging: boolean }
+    >({
+      type: "topic-row",
+      item: { idx },
+      collect: (monitor) => ({ isDragging: monitor.isDragging() }),
+    });
+    drag(drop(ref));
+    return (
+      <StyledTableRow
+        ref={ref}
+        sx={{
+          opacity: isDragging ? 1 : 1,
+          cursor: "move",
+          background: isDragging ? theme.palette.primary.light : undefined,
+          boxShadow: isDragging ? "0 4px 16px 0 rgba(0,0,0,0.15)" : undefined,
+          zIndex: isDragging ? 10 : undefined,
+          transition: "background 0.2s, box-shadow 0.2s",
+          "&:last-child td, &:last-child th": { border: 0 },
+        }}
+      >
+        <StyledTableCell>
+          <DragIndicatorIcon color="action" />
+        </StyledTableCell>
+        <StyledTableCell component="th" scope="row">
+          {idx + 1}
+        </StyledTableCell>
+        <StyledTableCell>{row.topic.name}</StyledTableCell>
+        <StyledTableCell>
+          {row.responsibles.map((resp: Employee) => resp.name).join(", ")}
+        </StyledTableCell>
+        <StyledTableCell>
+          <Tooltip title="Eliminar" placement="top">
+            <Button
+              startIcon={<DeleteIcon color="error" />}
+              onClick={() =>
+                setForm({
+                  ...form,
+                  topics: form.topics.filter((t) => t.id !== row.id),
+                })
+              }
+            />
+          </Tooltip>
+        </StyledTableCell>
+      </StyledTableRow>
+    );
+  };
 
   const saveData = () => {
     if (!form.manufacturingPlantId) {
@@ -161,14 +246,14 @@ const ScreenForm = ({
 
   const getData = useCallback(() => {
     if (!currentId) return;
-
     ConfigTgService.findOne(currentId).then((data) => {
-      setForm({
-        ...form,
+      setForm((prev) => ({
+        ...prev,
         manufacturingPlantId: String(data.manufacturingPlant.id),
-      });
+      }));
       setTimeout(() => {
-        setForm({
+        setForm((prev) => ({
+          ...prev,
           manufacturingPlantId: String(data.manufacturingPlant.id),
           positionId: String(data.position.id),
           areaManagerId: String(data.areaManager.id),
@@ -178,7 +263,7 @@ const ScreenForm = ({
             topic: t.topic,
             responsibles: t.responsibles,
           })),
-        });
+        }));
       }, 1500);
     });
   }, [currentId]);
@@ -195,8 +280,8 @@ const ScreenForm = ({
 
   useEffect(() => {
     if (manufacturingPlantId) {
-      UsersService.findAll({
-        manufacturingPlantId: manufacturingPlantId.toString(),
+      EmployeesService.findAll({
+        manufacturingPlantId,
       }).then(setUsers);
 
       TopicsService.findAll({ manufacturingPlantId }).then(setTopics);
@@ -382,7 +467,7 @@ const ScreenForm = ({
                           renderOption={(props, option, { selected }) => {
                             const { key, ...optionProps } = props;
                             return (
-                              <li key={key} {...optionProps}>
+                              <li key={optionProps.id} {...optionProps}>
                                 <Checkbox
                                   icon={
                                     <CheckBoxOutlineBlankIcon fontSize="small" />
@@ -436,6 +521,7 @@ const ScreenForm = ({
                           toast.error("El tema ya ha sido agregado");
                           return;
                         }
+
                         setForm({
                           ...form,
                           topics: [
@@ -445,9 +531,11 @@ const ScreenForm = ({
                               topic: topics.find(
                                 (t) => t.id === Number(topicId),
                               )!,
-                              responsibles: users.filter((emp) =>
-                                currentEmployees.includes(String(emp.id)),
-                              ),
+                              responsibles: users.filter((emp) => {
+                                return currentEmployees.includes(
+                                  String(emp.id),
+                                );
+                              }),
                             },
                           ],
                         });
@@ -469,51 +557,24 @@ const ScreenForm = ({
                       <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
                           <StyledTableRow>
+                            <StyledTableCell />
                             <StyledTableCell>Orden</StyledTableCell>
                             <StyledTableCell>Tema</StyledTableCell>
                             <StyledTableCell>Responsables</StyledTableCell>
                             <StyledTableCell>Eliminar</StyledTableCell>
                           </StyledTableRow>
                         </TableHead>
-                        <TableBody>
-                          {form.topics.map((row, idx) => (
-                            <StyledTableRow
-                              key={row.id}
-                              sx={{
-                                "&:last-child td, &:last-child th": {
-                                  border: 0,
-                                },
-                              }}
-                            >
-                              <StyledTableCell component="th" scope="row">
-                                {idx + 1}
-                              </StyledTableCell>
-                              <StyledTableCell>
-                                {row.topic.name}
-                              </StyledTableCell>
-                              <StyledTableCell>
-                                {row.responsibles
-                                  .map((resp) => resp.name)
-                                  .join(", ")}
-                              </StyledTableCell>
-                              <StyledTableCell>
-                                <Tooltip title="Eliminar" placement="top">
-                                  <Button
-                                    startIcon={<DeleteIcon color="error" />}
-                                    onClick={() =>
-                                      setForm({
-                                        ...form,
-                                        topics: form.topics.filter(
-                                          (t) => t.id !== row.id,
-                                        ),
-                                      })
-                                    }
-                                  />
-                                </Tooltip>
-                              </StyledTableCell>
-                            </StyledTableRow>
-                          ))}
-                        </TableBody>
+                        <DndProvider backend={HTML5Backend}>
+                          <TableBody>
+                            {form.topics.map((row, idx) => (
+                              <DraggableTopicRow
+                                key={row.id}
+                                row={row}
+                                idx={idx}
+                              />
+                            ))}
+                          </TableBody>
+                        </DndProvider>
                       </Table>
                     </TableContainer>
                   </Grid>
@@ -572,14 +633,14 @@ export default function TopicTg() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   const handleChangePage = (
-    _: React.MouseEvent<HTMLButtonElement> | null,
+    _: MouseEvent<HTMLButtonElement> | null,
     newPage: number,
   ) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);

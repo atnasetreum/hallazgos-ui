@@ -1,3 +1,4 @@
+import { Employee } from "./employees.interfaces";
 import { ManufacturingPlant } from "./manufacturing-plants.interfaces";
 import { User } from "./users.interfaces";
 
@@ -53,7 +54,7 @@ export interface Topic {
   updatedAt: Date;
   manufacturingPlants: ManufacturingPlant[];
   topic: Topic;
-  responsibles: User[];
+  responsibles: Employee[];
 }
 
 export interface TrainingGuideEmployee {

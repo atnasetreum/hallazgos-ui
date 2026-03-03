@@ -32,6 +32,9 @@ const findAll = async (filters: {
         manufacturingPlantNames: filters.manufacturingPlantNames,
       }),
     },
+    paramsSerializer: {
+      indexes: null, // => manufacturingPlantNames=Planta%20Norte&manufacturingPlantNames=Planta%20Sur
+    },
   });
   return data;
 };

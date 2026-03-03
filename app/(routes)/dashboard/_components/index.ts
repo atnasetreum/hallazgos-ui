@@ -1,4 +1,7 @@
 export * from "./AccidentRateIndicator";
+export * from "./DashboardAdmin";
+export * from "./DashboardGeneral";
+export * from "./DashboardSupervisor";
 export * from "./EvidencePerMonthChart";
 export * from "./HeatMapChart";
 export * from "./MainTypesChart";

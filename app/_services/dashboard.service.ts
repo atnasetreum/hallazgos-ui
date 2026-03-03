@@ -1,5 +1,6 @@
 import axiosWrapper from "./axiosWrapper";
 import {
+  CriticalZone,
   ResponseAccidents,
   ResponseDashboardEvidencesByMonth,
   ResponseDashboardMainTypes,
@@ -65,7 +66,21 @@ const findMyEvidences = async (userId: string) => {
   return data;
 };
 
+const findCriticalZones = async ({
+  manufacturingPlantId,
+}: {
+  manufacturingPlantId: string;
+}) => {
+  const { data } = await api.get<CriticalZone[]>("/critical-zones", {
+    params: {
+      manufacturingPlantId,
+    },
+  });
+  return data;
+};
+
 export const DashboardService = {
+  findCriticalZones,
   findAccidentRate,
   findTopUsersByPlant,
   findAllEvidencesByMonth,

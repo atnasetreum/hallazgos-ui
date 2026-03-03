@@ -181,7 +181,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   const [mode, setMode] = useState<"light" | "dark">("light");
   const [open, setOpen] = useState(false);
 
-  const { id: userId, name, setSession } = useUserSessionStore();
+  const { id: userId, name, setSession, role } = useUserSessionStore();
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -271,7 +271,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
                 noWrap
                 sx={{ flexGrow: 1 }}
               >
-                {name}
+                {name} / {role}
               </Typography>
               {/* <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">

@@ -24,6 +24,7 @@ const findAll = async (filters: {
   manufacturingPlantId?: string;
   rule?: string;
   zoneId?: string;
+  orderBy?: string;
 }) => {
   const { data } = await api.get<User[]>("", {
     params: {
@@ -38,6 +39,9 @@ const findAll = async (filters: {
       }),
       ...(filters?.zoneId && {
         zoneId: filters.zoneId,
+      }),
+      ...(filters?.orderBy && {
+        orderBy: filters.orderBy,
       }),
     },
   });

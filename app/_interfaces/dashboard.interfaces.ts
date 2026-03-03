@@ -92,3 +92,15 @@ interface TopUsersByPlant {
   manufacturingplantname: string;
   total: string;
 }
+
+export interface CriticalZone {
+  planta: string;
+  zona: string;
+  total_abiertas: string;
+  hallazgo_mas_antiguo: Date;
+  max_dias_sin_resolver: number;
+  promedio_dias_abierto: string;
+  nuevos_este_mes: string;
+  criticos_mas_90_dias: string;
+  responsables: string;
+}

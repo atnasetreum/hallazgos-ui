@@ -1,6 +1,7 @@
 import axiosWrapper from "./axiosWrapper";
 import {
   CriticalZone,
+  GlobalSummary,
   ResponseAccidents,
   ResponseDashboardEvidencesByMonth,
   ResponseDashboardMainTypes,
@@ -79,7 +80,21 @@ const findCriticalZones = async ({
   return data;
 };
 
+const findGlobalSummary = async ({
+  manufacturingPlantId,
+}: {
+  manufacturingPlantId: string;
+}) => {
+  const { data } = await api.get<GlobalSummary>("/global-summary", {
+    params: {
+      manufacturingPlantId,
+    },
+  });
+  return data;
+};
+
 export const DashboardService = {
+  findGlobalSummary,
   findCriticalZones,
   findAccidentRate,
   findTopUsersByPlant,

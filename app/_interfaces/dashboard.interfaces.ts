@@ -104,3 +104,24 @@ export interface CriticalZone {
   criticos_mas_90_dias: string;
   responsables: string;
 }
+
+export interface GlobalSummary {
+  planta: string;
+  total: string;
+  abiertas: string;
+  cerradas: string;
+  canceladas: string;
+  pct_resolucion_historica: string;
+  total_mes_actual: string;
+  total_mes_anterior: string;
+  abiertas_mes_actual: string;
+  abiertas_mes_anterior: string;
+  cerradas_mes_actual: string;
+  cerradas_mes_anterior: string;
+  canceladas_mes_actual: string;
+  canceladas_mes_anterior: string;
+  pct_total: string;
+  pct_abiertas: string;
+  pct_cerradas: string;
+  pct_canceladas: string;
+}

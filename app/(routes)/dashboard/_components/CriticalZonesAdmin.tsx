@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
 import {
   Box,
   Paper,
@@ -8,6 +9,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TableSortLabel,
   TextField,
   Tooltip,
   Typography,
@@ -24,11 +26,24 @@ interface Props {
   manufacturingPlantId: string;
 }
 
+type Order = "asc" | "desc";
+type SortableColumn =
+  | "zona"
+  | "total_abiertas"
+  | "hallazgo_mas_antiguo"
+  | "max_dias_sin_resolver"
+  | "promedio_dias_abierto"
+  | "nuevos_este_mes"
+  | "criticos_mas_90_dias"
+  | "responsables";
+
 export const CriticalZonesAdmin = ({ manufacturingPlantId }: Props) => {
   const [criticalZones, setCriticalZones] = useState<CriticalZone[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
+  const [order, setOrder] = useState<Order>("asc");
+  const [orderBy, setOrderBy] = useState<SortableColumn>("zona");
 
   useEffect(() => {
     DashboardService.findCriticalZones({
@@ -54,6 +69,47 @@ export const CriticalZonesAdmin = ({ manufacturingPlantId }: Props) => {
     setPage(0);
   };
 
+  const handleRequestSort = (property: SortableColumn) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+    setPage(0);
+  };
+
+  const parseNumber = useCallback(
+    (value: string | number | null | undefined) => {
+      if (typeof value === "number") return value;
+
+      const parsed = Number(
+        String(value ?? "")
+          .replace(/,/g, "")
+          .trim(),
+      );
+      return Number.isNaN(parsed) ? 0 : parsed;
+    },
+    [],
+  );
+
+  const getSortValue = useCallback(
+    (zone: CriticalZone, column: SortableColumn) => {
+      switch (column) {
+        case "hallazgo_mas_antiguo":
+          return new Date(zone.hallazgo_mas_antiguo).getTime();
+        case "total_abiertas":
+        case "max_dias_sin_resolver":
+        case "promedio_dias_abierto":
+        case "nuevos_este_mes":
+        case "criticos_mas_90_dias":
+          return parseNumber(zone[column]);
+        case "zona":
+        case "responsables":
+        default:
+          return String(zone[column] ?? "").toLowerCase();
+      }
+    },
+    [parseNumber],
+  );
+
   const filteredCriticalZones = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
 
@@ -68,7 +124,21 @@ export const CriticalZonesAdmin = ({ manufacturingPlantId }: Props) => {
     );
   }, [criticalZones, searchTerm]);
 
-  const paginatedCriticalZones = filteredCriticalZones.slice(
+  const sortedCriticalZones = useMemo(() => {
+    return [...filteredCriticalZones]
+      .map((zone, index) => ({ zone, index }))
+      .sort((a, b) => {
+        const valueA = getSortValue(a.zone, orderBy);
+        const valueB = getSortValue(b.zone, orderBy);
+
+        if (valueA < valueB) return order === "asc" ? -1 : 1;
+        if (valueA > valueB) return order === "asc" ? 1 : -1;
+        return a.index - b.index;
+      })
+      .map(({ zone }) => zone);
+  }, [filteredCriticalZones, getSortValue, order, orderBy]);
+
+  const paginatedCriticalZones = sortedCriticalZones.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage,
   );
@@ -105,18 +175,101 @@ export const CriticalZonesAdmin = ({ manufacturingPlantId }: Props) => {
         <Table size="small" aria-label="Tabla de zonas críticas">
           <TableHead>
             <StyledTableRow>
-              <StyledTableCell>Zona</StyledTableCell>
-              <StyledTableCell align="right">Abiertas</StyledTableCell>
-              <StyledTableCell>Hallazgo más antiguo</StyledTableCell>
-              <StyledTableCell align="right">
-                Máx. días sin resolver
+              <StyledTableCell
+                sortDirection={orderBy === "zona" ? order : false}
+              >
+                <TableSortLabel
+                  active={orderBy === "zona"}
+                  direction={orderBy === "zona" ? order : "asc"}
+                  onClick={() => handleRequestSort("zona")}
+                >
+                  Zona
+                </TableSortLabel>
+              </StyledTableCell>
+              <StyledTableCell
+                align="right"
+                sortDirection={orderBy === "total_abiertas" ? order : false}
+              >
+                <TableSortLabel
+                  active={orderBy === "total_abiertas"}
+                  direction={orderBy === "total_abiertas" ? order : "asc"}
+                  onClick={() => handleRequestSort("total_abiertas")}
+                >
+                  Abiertas
+                </TableSortLabel>
+              </StyledTableCell>
+              <StyledTableCell
+                sortDirection={
+                  orderBy === "hallazgo_mas_antiguo" ? order : false
+                }
+              >
+                <TableSortLabel
+                  active={orderBy === "hallazgo_mas_antiguo"}
+                  direction={orderBy === "hallazgo_mas_antiguo" ? order : "asc"}
+                  onClick={() => handleRequestSort("hallazgo_mas_antiguo")}
+                >
+                  Hallazgo más antiguo
+                </TableSortLabel>
               </StyledTableCell>
               <StyledTableCell align="right">
-                Prom. días abierto
+                <TableSortLabel
+                  active={orderBy === "max_dias_sin_resolver"}
+                  direction={
+                    orderBy === "max_dias_sin_resolver" ? order : "asc"
+                  }
+                  onClick={() => handleRequestSort("max_dias_sin_resolver")}
+                >
+                  Máx. días sin resolver
+                </TableSortLabel>
               </StyledTableCell>
-              <StyledTableCell align="right">Nuevos este mes</StyledTableCell>
-              <StyledTableCell align="right">Críticos +90 días</StyledTableCell>
-              <StyledTableCell>Responsables</StyledTableCell>
+              <StyledTableCell align="right">
+                <TableSortLabel
+                  active={orderBy === "promedio_dias_abierto"}
+                  direction={
+                    orderBy === "promedio_dias_abierto" ? order : "asc"
+                  }
+                  onClick={() => handleRequestSort("promedio_dias_abierto")}
+                >
+                  Prom. días abierto
+                </TableSortLabel>
+              </StyledTableCell>
+              <StyledTableCell
+                align="right"
+                sortDirection={orderBy === "nuevos_este_mes" ? order : false}
+              >
+                <TableSortLabel
+                  active={orderBy === "nuevos_este_mes"}
+                  direction={orderBy === "nuevos_este_mes" ? order : "asc"}
+                  onClick={() => handleRequestSort("nuevos_este_mes")}
+                >
+                  Nuevos este mes
+                </TableSortLabel>
+              </StyledTableCell>
+              <StyledTableCell
+                align="right"
+                sortDirection={
+                  orderBy === "criticos_mas_90_dias" ? order : false
+                }
+              >
+                <TableSortLabel
+                  active={orderBy === "criticos_mas_90_dias"}
+                  direction={orderBy === "criticos_mas_90_dias" ? order : "asc"}
+                  onClick={() => handleRequestSort("criticos_mas_90_dias")}
+                >
+                  Críticos +90 días
+                </TableSortLabel>
+              </StyledTableCell>
+              <StyledTableCell
+                sortDirection={orderBy === "responsables" ? order : false}
+              >
+                <TableSortLabel
+                  active={orderBy === "responsables"}
+                  direction={orderBy === "responsables" ? order : "asc"}
+                  onClick={() => handleRequestSort("responsables")}
+                >
+                  Responsables
+                </TableSortLabel>
+              </StyledTableCell>
             </StyledTableRow>
           </TableHead>
           <TableBody>

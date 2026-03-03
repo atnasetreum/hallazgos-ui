@@ -1,4 +1,4 @@
-"use client";
+/* "use client";
 
 import { SyntheticEvent, useState } from "react";
 
@@ -220,136 +220,136 @@ export default function DashboardPage() {
       )}
     </Box>
   );
-}
+}*/
 
-// "use client";
+"use client";
 
-// import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-// import { Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 
-// import SelectDefault from "@components/SelectDefault";
-// import { useUserSessionStore } from "@store";
-// import { UsersService } from "@services";
-// import { User } from "@interfaces";
-// import {
-//   ROLE_ADMINISTRADOR,
-//   ROLE_GENERAL,
-//   ROLE_SUPERVISOR,
-// } from "@shared/constants";
-// import {
-//   DashboardAdmin,
-//   DashboardSupervisor,
-//   DashboardGeneral,
-// } from "./_components";
+import SelectDefault from "@components/SelectDefault";
+import { useUserSessionStore } from "@store";
+import { UsersService } from "@services";
+import { User } from "@interfaces";
+import {
+  ROLE_ADMINISTRADOR,
+  ROLE_GENERAL,
+  ROLE_SUPERVISOR,
+} from "@shared/constants";
+import {
+  DashboardAdmin,
+  DashboardSupervisor,
+  DashboardGeneral,
+} from "./_components";
 
-// const DashboardPage = () => {
-//   const [manufacturingPlantId, setManufacturingPlantId] = useState<string>("");
-//   const [currentRole, setCurrentRole] = useState<string>("");
-//   const [users, setUsers] = useState<User[]>([]);
-//   const [userId, setUserId] = useState<string>("");
-//   const [userSelected, setUserSelected] = useState<User | null>(null);
+const DashboardPage = () => {
+  const [manufacturingPlantId, setManufacturingPlantId] = useState<string>("");
+  const [currentRole, setCurrentRole] = useState<string>("");
+  const [users, setUsers] = useState<User[]>([]);
+  const [userId, setUserId] = useState<string>("");
+  const [userSelected, setUserSelected] = useState<User | null>(null);
 
-//   const currentUser = useUserSessionStore();
+  const currentUser = useUserSessionStore();
 
-//   const manufacturingPlants = useUserSessionStore(
-//     (state) => state.manufacturingPlants,
-//   );
+  const manufacturingPlants = useUserSessionStore(
+    (state) => state.manufacturingPlants,
+  );
 
-//   useEffect(() => {
-//     if (manufacturingPlants.length) {
-//       setManufacturingPlantId(manufacturingPlants[0].id.toString());
-//     }
-//   }, [manufacturingPlants]);
+  useEffect(() => {
+    if (manufacturingPlants.length) {
+      setManufacturingPlantId(manufacturingPlants[0].id.toString());
+    }
+  }, [manufacturingPlants]);
 
-//   useEffect(() => {
-//     if (!currentRole && currentUser?.role) {
-//       setCurrentRole(currentUser.role);
-//     }
-//   }, [currentUser, currentRole]);
+  useEffect(() => {
+    if (!currentRole && currentUser?.role) {
+      setCurrentRole(currentUser.role);
+    }
+  }, [currentUser, currentRole]);
 
-//   useEffect(() => {
-//     if (manufacturingPlantId && currentRole === ROLE_ADMINISTRADOR) {
-//       UsersService.findAll({
-//         manufacturingPlantId,
-//         orderBy: "name|ASC",
-//       }).then((data) =>
-//         setUsers(
-//           data
-//             .filter((user) => user.role !== ROLE_ADMINISTRADOR)
-//             .map((user) => ({ ...user, name: `${user.name} - ${user.role}` })),
-//         ),
-//       );
-//     }
-//   }, [manufacturingPlantId, currentRole]);
+  useEffect(() => {
+    if (manufacturingPlantId && currentRole === ROLE_ADMINISTRADOR) {
+      UsersService.findAll({
+        manufacturingPlantId,
+        orderBy: "name|ASC",
+      }).then((data) =>
+        setUsers(
+          data
+            .filter((user) => user.role !== ROLE_ADMINISTRADOR)
+            .map((user) => ({ ...user, name: `${user.name} - ${user.role}` })),
+        ),
+      );
+    }
+  }, [manufacturingPlantId, currentRole]);
 
-//   useEffect(() => {
-//     if (userId && users.length) {
-//       const user = users.find((user) => Number(user.id) === Number(userId));
-//       setUserSelected(user!);
-//     } else if (!userId) {
-//       setUserSelected(null);
-//     }
-//   }, [userId, users]);
+  useEffect(() => {
+    if (userId && users.length) {
+      const user = users.find((user) => Number(user.id) === Number(userId));
+      setUserSelected(user!);
+    } else if (!userId) {
+      setUserSelected(null);
+    }
+  }, [userId, users]);
 
-//   return (
-//     <Grid container spacing={2}>
-//       {!!manufacturingPlants.length && (
-//         <Grid
-//           size={{
-//             xs: 12,
-//             sm: 6,
-//             md: 3,
-//           }}
-//         >
-//           <SelectDefault
-//             data={manufacturingPlants}
-//             label="Planta"
-//             value={manufacturingPlantId}
-//             onChange={(e) => setManufacturingPlantId(e.target.value)}
-//             validationEmpty
-//           />
-//         </Grid>
-//       )}
-//       {currentRole === ROLE_ADMINISTRADOR && (
-//         <Grid
-//           size={{
-//             xs: 12,
-//             sm: 6,
-//             md: 3,
-//           }}
-//         >
-//           <SelectDefault
-//             data={users}
-//             label="Colaborador"
-//             value={userId}
-//             onChange={(e) => setUserId(e.target.value)}
-//           />
-//         </Grid>
-//       )}
-//       <Grid
-//         size={{
-//           xs: 12,
-//           sm: 12,
-//           md: 12,
-//         }}
-//       >
-//         {currentRole === ROLE_ADMINISTRADOR &&
-//           !userSelected &&
-//           manufacturingPlantId && (
-//             <DashboardAdmin manufacturingPlantId={manufacturingPlantId} />
-//           )}
-//         {currentRole === ROLE_SUPERVISOR ||
-//           (userSelected?.role === ROLE_SUPERVISOR && (
-//             <DashboardSupervisor user={userSelected} />
-//           ))}
-//         {currentRole === ROLE_GENERAL ||
-//           (userSelected?.role === ROLE_GENERAL && (
-//             <DashboardGeneral user={userSelected} />
-//           ))}
-//       </Grid>
-//     </Grid>
-//   );
-// };
+  return (
+    <Grid container spacing={2}>
+      {!!manufacturingPlants.length && (
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3,
+          }}
+        >
+          <SelectDefault
+            data={manufacturingPlants}
+            label="Planta"
+            value={manufacturingPlantId}
+            onChange={(e) => setManufacturingPlantId(e.target.value)}
+            validationEmpty
+          />
+        </Grid>
+      )}
+      {currentRole === ROLE_ADMINISTRADOR && (
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 3,
+          }}
+        >
+          <SelectDefault
+            data={users}
+            label="Colaborador"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+          />
+        </Grid>
+      )}
+      <Grid
+        size={{
+          xs: 12,
+          sm: 12,
+          md: 12,
+        }}
+      >
+        {currentRole === ROLE_ADMINISTRADOR &&
+          !userSelected &&
+          manufacturingPlantId && (
+            <DashboardAdmin manufacturingPlantId={manufacturingPlantId} />
+          )}
+        {currentRole === ROLE_SUPERVISOR ||
+          (userSelected?.role === ROLE_SUPERVISOR && (
+            <DashboardSupervisor user={userSelected} />
+          ))}
+        {currentRole === ROLE_GENERAL ||
+          (userSelected?.role === ROLE_GENERAL && (
+            <DashboardGeneral user={userSelected} />
+          ))}
+      </Grid>
+    </Grid>
+  );
+};
 
-// export default DashboardPage;
+export default DashboardPage;

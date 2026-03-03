@@ -1,4 +1,4 @@
-"use client";
+/* "use client";
 
 import { SyntheticEvent, useState } from "react";
 
@@ -220,9 +220,9 @@ export default function DashboardPage() {
       )}
     </Box>
   );
-}
+}*/
 
-/* "use client";
+"use client";
 
 import { useEffect, useState } from "react";
 
@@ -269,19 +269,20 @@ const DashboardPage = () => {
   }, [currentUser, currentRole]);
 
   useEffect(() => {
-    if (manufacturingPlantId && currentRole === ROLE_ADMINISTRADOR) {
-      UsersService.findAll({
-        manufacturingPlantId,
-        orderBy: "name|ASC",
-      }).then((data) =>
-        setUsers(
-          data
-            .filter((user) => user.role !== ROLE_ADMINISTRADOR)
-            .map((user) => ({ ...user, name: `${user.name} - ${user.role}` })),
-        ),
-      );
-    }
-  }, [manufacturingPlantId, currentRole]);
+    UsersService.findAll({
+      manufacturingPlantId,
+      orderBy: "name|ASC",
+    }).then((data) =>
+      setUsers(
+        data
+          .filter((user) => user.role !== ROLE_ADMINISTRADOR)
+          .map((user) => ({
+            ...user,
+            name: `${user.id} - ${user.name} (${user.role})`,
+          })),
+      ),
+    );
+  }, [manufacturingPlantId]);
 
   useEffect(() => {
     if (userId && users.length) {
@@ -292,14 +293,29 @@ const DashboardPage = () => {
     }
   }, [userId, users]);
 
+  useEffect(() => {
+    if (
+      !currentUser?.id ||
+      !currentRole ||
+      currentRole === ROLE_ADMINISTRADOR ||
+      userSelected
+    )
+      return;
+    setUserId(currentUser.id.toString());
+  }, [currentUser, currentRole, userSelected]);
+
+  useEffect(() => {
+    console.log({ userSelected });
+  }, [userSelected]);
+
   return (
     <Grid container spacing={2}>
-      {!!manufacturingPlants.length && (
+      {manufacturingPlants.length > 1 && (
         <Grid
           size={{
             xs: 12,
             sm: 6,
-            md: 3,
+            md: 6,
           }}
         >
           <SelectDefault
@@ -316,7 +332,7 @@ const DashboardPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3,
+            md: 6,
           }}
         >
           <SelectDefault
@@ -339,18 +355,23 @@ const DashboardPage = () => {
           manufacturingPlantId && (
             <DashboardAdmin manufacturingPlantId={manufacturingPlantId} />
           )}
-        {currentRole === ROLE_SUPERVISOR ||
-          (userSelected?.role === ROLE_SUPERVISOR && (
-            <DashboardSupervisor user={userSelected} />
-          ))}
-        {currentRole === ROLE_GENERAL ||
-          (userSelected?.role === ROLE_GENERAL && (
-            <DashboardGeneral user={userSelected} />
-          ))}
+
+        {userSelected?.role === ROLE_SUPERVISOR && (
+          <DashboardSupervisor
+            manufacturingPlantId={manufacturingPlantId}
+            user={userSelected}
+          />
+        )}
+
+        {userSelected?.role === ROLE_GENERAL && (
+          <DashboardGeneral
+            manufacturingPlantId={manufacturingPlantId}
+            user={userSelected}
+          />
+        )}
       </Grid>
     </Grid>
   );
 };
 
 export default DashboardPage;
- */

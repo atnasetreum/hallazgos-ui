@@ -271,7 +271,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
                 noWrap
                 sx={{ flexGrow: 1 }}
               >
-                {name} / {role}
+                {name} ({role})
               </Typography>
               {/* <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">

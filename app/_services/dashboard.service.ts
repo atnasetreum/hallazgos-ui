@@ -1,7 +1,15 @@
 import axiosWrapper from "./axiosWrapper";
 import {
+  AverageResolution,
   CriticalZone,
   GlobalSummary,
+  MonthlyGlobalTrend,
+  MonthlySubtypeTrend,
+  MonthlyTypeTrend,
+  MyEvidences,
+  OpenEvidence,
+  RankingOfResponsible,
+  RecentEvidence,
   ResponseAccidents,
   ResponseDashboardEvidencesByMonth,
   ResponseDashboardMainTypes,
@@ -62,8 +70,8 @@ const findTopUsersByPlant = async () => {
   return data.data;
 };
 
-const findMyEvidences = async (userId: string) => {
-  const { data } = await api.get(`/my-evidences/${userId}`);
+const findMyEvidences = async (userId: number) => {
+  const { data } = await api.get<MyEvidences>(`/my-evidences/${userId}`);
   return data;
 };
 
@@ -93,7 +101,123 @@ const findGlobalSummary = async ({
   return data;
 };
 
+const findRankingOfResponsibles = async ({
+  manufacturingPlantId,
+}: {
+  manufacturingPlantId: string;
+}) => {
+  const { data } = await api.get<RankingOfResponsible[]>(
+    "/ranking-of-responsibles",
+    {
+      params: {
+        manufacturingPlantId,
+      },
+    },
+  );
+  return data;
+};
+
+const findAverageResolutionTime = async ({
+  manufacturingPlantId,
+}: {
+  manufacturingPlantId: string;
+}) => {
+  const { data } = await api.get<AverageResolution>(
+    "/average-resolution-time",
+    {
+      params: {
+        manufacturingPlantId,
+      },
+    },
+  );
+  return data;
+};
+
+const findMonthlyGlobalTrend = async ({
+  manufacturingPlantId,
+}: {
+  manufacturingPlantId: string;
+}) => {
+  const { data } = await api.get<MonthlyGlobalTrend[]>(
+    "/monthly-global-trend",
+    {
+      params: {
+        manufacturingPlantId,
+      },
+    },
+  );
+  return data;
+};
+
+const findMonthlyTypeTrend = async ({
+  manufacturingPlantId,
+}: {
+  manufacturingPlantId: string;
+}) => {
+  const { data } = await api.get<MonthlyTypeTrend[]>("/monthly-type-trend", {
+    params: {
+      manufacturingPlantId,
+    },
+  });
+  return data;
+};
+
+const findMonthlySubtypeTrend = async ({
+  manufacturingPlantId,
+}: {
+  manufacturingPlantId: string;
+}) => {
+  const { data } = await api.get<MonthlySubtypeTrend[]>(
+    "/monthly-subtype-trend",
+    {
+      params: {
+        manufacturingPlantId,
+      },
+    },
+  );
+  return data;
+};
+
+const findOpenEvidence = async ({
+  manufacturingPlantId,
+  userId,
+}: {
+  manufacturingPlantId: string;
+  userId: number;
+}) => {
+  const { data } = await api.get<OpenEvidence[]>("/open-evidences", {
+    params: {
+      manufacturingPlantId,
+      userId,
+    },
+  });
+  return data;
+};
+
+const findRecentEvidences = async ({
+  manufacturingPlantId,
+  userId,
+}: {
+  manufacturingPlantId: string;
+  userId: number;
+}) => {
+  const { data } = await api.get<RecentEvidence[]>("/recent-evidences", {
+    params: {
+      manufacturingPlantId,
+      userId,
+    },
+  });
+  return data;
+};
+
 export const DashboardService = {
+  findRecentEvidences,
+  findOpenEvidence,
+  findMonthlyTypeTrend,
+  findMonthlySubtypeTrend,
+  findMonthlyGlobalTrend,
+  findAverageResolutionTime,
+  findRankingOfResponsibles,
   findGlobalSummary,
   findCriticalZones,
   findAccidentRate,

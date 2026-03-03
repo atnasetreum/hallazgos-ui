@@ -30,7 +30,13 @@ import {
   StyledTableRow,
 } from "@shared/components/TableDefault";
 import DialogSignatureEpp from "./DialogSignatureEpp";
+import { useUserSessionStore } from "@store";
 
+const formInitial = {
+  employee: "",
+  equipment: "",
+  observations: "",
+};
 interface Props {
   open: boolean;
   create: (form: PayloadCreateEpp) => void;
@@ -47,20 +53,41 @@ export default function DialogCreateEpp({ open, create }: Props) {
     employee: string;
     equipment: string;
     observations: string;
-  }>({
-    employee: "",
-    equipment: "",
-    observations: "",
-  });
-  const [openSignature, setOpenSignature] = useState(false);
+  }>(formInitial);
+  const [openSignature, setOpenSignature] = useState<boolean>(false);
+  const [manufacturingPlantId, setManufacturingPlantId] = useState<string>("");
+
+  const manufacturingPlants = useUserSessionStore(
+    (state) => state.manufacturingPlants,
+  );
 
   useEffect(() => {
-    EquipmentsService.findAll().then(setEquipments);
-  }, []);
+    if (manufacturingPlants.length === 1) {
+      setManufacturingPlantId(manufacturingPlants[0].id.toString());
+    }
+  }, [manufacturingPlants]);
 
   useEffect(() => {
-    EmployeesService.findAll({}).then(setEmployees);
-  }, []);
+    if (!manufacturingPlantId) return;
+
+    setForm(formInitial);
+    setEquipments([]);
+    setEmployees([]);
+    setEquipmentsNew([]);
+    setSignature("");
+
+    EquipmentsService.findAll({ manufacturingPlantId }).then(setEquipments);
+    EmployeesService.findAll({
+      manufacturingPlantId: Number(manufacturingPlantId),
+    }).then((data) => {
+      setEmployees(
+        data.map((employee) => ({
+          ...employee,
+          name: `${employee.code} - ${employee.name}`,
+        })),
+      );
+    });
+  }, [manufacturingPlantId]);
 
   const isDisabledSave = useMemo(() => {
     const employeeId = Number(form.employee || 0);
@@ -154,130 +181,163 @@ export default function DialogCreateEpp({ open, create }: Props) {
           <Grid
             size={{
               xs: 12,
-              md: 6,
-              lg: 2,
+              sm: 6,
+              md: 4,
             }}
           >
             <SelectDefault
-              data={employees}
-              label="Colaborador"
-              value={form.employee}
-              onChange={(e) => setForm({ ...form, employee: e.target.value })}
+              data={manufacturingPlants}
+              label="Planta"
+              value={manufacturingPlantId}
+              onChange={(e) => setManufacturingPlantId(e.target.value)}
+              validationEmpty
             />
           </Grid>
-          <Grid
-            size={{
-              xs: 12,
-              md: 6,
-              lg: 2,
-            }}
-          >
-            <SelectDefault
-              data={equipments.filter(
-                (eq) => !equipmentsNew.some((newEq) => newEq.id === eq.id),
-              )}
-              label="Equipo"
-              value={form.equipment}
-              onChange={(e) => setForm({ ...form, equipment: e.target.value })}
-            />
-          </Grid>
-          <Grid
-            size={{
-              xs: 12,
-              md: 6,
-              lg: 4,
-            }}
-          >
-            <Paper sx={{ p: 2 }}>
-              <TextField
-                multiline
-                rows={4}
-                variant="standard"
-                fullWidth
-                value={form.observations}
-                onChange={(e) =>
-                  setForm({ ...form, observations: e.target.value })
-                }
-                label="Observaciones"
-              />
-            </Paper>
-          </Grid>
-          <Grid
-            size={{
-              xs: 12,
-              md: 6,
-              lg: 2,
-            }}
-          >
-            <Stack spacing={2} direction="column">
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                fullWidth
-                onClick={() => handleAddEquipment()}
+          {manufacturingPlantId && (
+            <>
+              <Grid
+                size={{
+                  xs: 12,
+                  md: 6,
+                  lg: 4,
+                }}
               >
-                Agregar
-              </Button>
-              <Button
-                color="secondary"
-                variant="contained"
-                startIcon={<VerifiedUserIcon />}
-                onClick={() => setOpenSignature(true)}
+                <SelectDefault
+                  data={employees}
+                  label="Colaborador"
+                  value={form.employee}
+                  onChange={(e) =>
+                    setForm({ ...form, employee: e.target.value })
+                  }
+                  validationEmpty
+                />
+              </Grid>
+              <Grid
+                size={{
+                  xs: 12,
+                  md: 6,
+                  lg: 4,
+                }}
               >
-                Firmar
-              </Button>
-            </Stack>
-          </Grid>
-          <Grid
-            size={{
-              xs: 12,
-              md: 6,
-              lg: 2,
-            }}
-          >
-            {signature ? (
-              <Image src={signature} alt="Signature" width={350} height={150} />
-            ) : (
-              <center>
-                <Typography variant="body2" color="text.secondary">
-                  No hay firma
-                </Typography>
-              </center>
-            )}
-          </Grid>
-          <Grid
-            size={{
-              xs: 12,
-              md: 12,
-              lg: 12,
-            }}
-          >
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <StyledTableRow>
-                    <StyledTableCell>Equipo</StyledTableCell>
-                    <StyledTableCell>Observaciones</StyledTableCell>
-                  </StyledTableRow>
-                </TableHead>
-                <TableBody>
-                  {equipmentsNew.map((equipment) => (
-                    <StyledTableRow
-                      key={equipment.id}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <StyledTableCell component="th" scope="row">
-                        {equipment.name}
-                      </StyledTableCell>
-                      <StyledTableCell>
-                        {equipment.observations}
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Grid>
+                <SelectDefault
+                  data={equipments.filter(
+                    (eq) => !equipmentsNew.some((newEq) => newEq.id === eq.id),
+                  )}
+                  label="Equipo"
+                  value={form.equipment}
+                  onChange={(e) =>
+                    setForm({ ...form, equipment: e.target.value })
+                  }
+                  validationEmpty
+                />
+              </Grid>
+              <Grid
+                size={{
+                  xs: 12,
+                  md: 6,
+                  lg: 4,
+                }}
+              >
+                <Paper sx={{ p: 2 }}>
+                  <TextField
+                    multiline
+                    rows={4}
+                    variant="standard"
+                    fullWidth
+                    value={form.observations}
+                    onChange={(e) =>
+                      setForm({ ...form, observations: e.target.value })
+                    }
+                    label="Observaciones"
+                  />
+                </Paper>
+              </Grid>
+              <Grid
+                size={{
+                  xs: 12,
+                  md: 6,
+                  lg: 4,
+                }}
+              >
+                <Stack spacing={2} direction="column">
+                  <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    fullWidth
+                    onClick={() => handleAddEquipment()}
+                  >
+                    Agregar
+                  </Button>
+                  <Button
+                    color="secondary"
+                    variant="contained"
+                    startIcon={<VerifiedUserIcon />}
+                    onClick={() => setOpenSignature(true)}
+                  >
+                    Firmar
+                  </Button>
+                </Stack>
+              </Grid>
+
+              <Grid
+                size={{
+                  xs: 12,
+                  md: 6,
+                  lg: 3,
+                }}
+              >
+                {signature ? (
+                  <Image
+                    src={signature}
+                    alt="Signature"
+                    width={350}
+                    height={150}
+                  />
+                ) : (
+                  <center>
+                    <Typography variant="body2" color="text.secondary">
+                      No hay firma
+                    </Typography>
+                  </center>
+                )}
+              </Grid>
+              <Grid
+                size={{
+                  xs: 12,
+                  md: 12,
+                  lg: 12,
+                }}
+              >
+                <TableContainer component={Paper}>
+                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                      <StyledTableRow>
+                        <StyledTableCell>Equipo</StyledTableCell>
+                        <StyledTableCell>Observaciones</StyledTableCell>
+                      </StyledTableRow>
+                    </TableHead>
+                    <TableBody>
+                      {equipmentsNew.map((equipment) => (
+                        <StyledTableRow
+                          key={equipment.id}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <StyledTableCell component="th" scope="row">
+                            {equipment.name}
+                          </StyledTableCell>
+                          <StyledTableCell>
+                            {equipment.observations}
+                          </StyledTableCell>
+                        </StyledTableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+            </>
+          )}
         </Grid>
       </Dialog>
     </>

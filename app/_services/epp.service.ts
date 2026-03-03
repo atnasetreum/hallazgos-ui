@@ -10,8 +10,16 @@ const create = async (payload: PayloadCreateEpp) => {
   return data;
 };
 
-const findAll = async () => {
-  const { data } = await api.get<Epp[]>("");
+const findAll = async ({
+  manufacturingPlantId,
+}: {
+  manufacturingPlantId: string;
+}) => {
+  const { data } = await api.get<Epp[]>("", {
+    params: {
+      manufacturingPlantId,
+    },
+  });
   return data;
 };
 

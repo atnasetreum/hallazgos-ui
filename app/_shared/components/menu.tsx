@@ -41,6 +41,8 @@ import {
   ZonesService,
 } from "@services";
 
+const userEpp = ["malonso@hadainternational.com"];
+
 function CreateLink({
   url,
   title,
@@ -114,85 +116,93 @@ export const MainListItems = () => {
         icon={<AssignmentIcon />}
       />
       <CreateLink url="/ics" title="ICS" icon={<FactCheckIcon />} />
-      {isAdmin && (
+      {(isAdmin || userEpp.includes(email)) && (
         <>
-          <Tooltip title="Configuraciones" placement="right">
-            <ListItemButton onClick={() => setOpenConfig((prev) => !prev)}>
-              <ListItemIcon>
-                <SettingsIcon />
-              </ListItemIcon>
-              <ListItemText primary="Configuraciones" />
-              {openConfig ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-          </Tooltip>
-          <Collapse in={openConfig} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <CreateLink
-                nested
-                url="/users"
-                title="Usuarios"
-                icon={<SupervisedUserCircleIcon />}
-              />
-              <CreateLink
-                nested
-                url="/employees"
-                title="Colaboradores"
-                icon={<FolderSharedIcon />}
-              />
-              <CreateLink
-                nested
-                url="/manufacturing-plants"
-                title="Plantas"
-                icon={<BusinessIcon />}
-              />
-              <CreateLink
-                nested
-                url="/main-types"
-                title="Criterios"
-                icon={<EngineeringIcon />}
-              />
-              <CreateLink
-                nested
-                url="/secondary-types"
-                title="Tipos de criterios"
-                icon={<DnsIcon />}
-              />
-              <CreateLink
-                nested
-                url="/zones"
-                title="Zonas"
-                icon={<HubIcon />}
-              />
-              <CreateLink
-                nested
-                url="/processes"
-                title="Procesos"
-                icon={<AccountTreeIcon />}
-              />
-              <CreateLink
-                nested
-                url="/topics-tg"
-                title="Temas - G. Entr."
-                icon={<ContentPasteIcon />}
-              />
-              <CreateLink
-                nested
-                url="/config-tg"
-                title="Config - G. Entr."
-                icon={<ContentPasteIcon />}
-              />
-            </List>
-          </Collapse>
+          {isAdmin && (
+            <>
+              <Tooltip title="Configuraciones" placement="right">
+                <ListItemButton onClick={() => setOpenConfig((prev) => !prev)}>
+                  <ListItemIcon>
+                    <SettingsIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Configuraciones" />
+                  {openConfig ? <ExpandLess /> : <ExpandMore />}
+                </ListItemButton>
+              </Tooltip>
+              <Collapse in={openConfig} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <CreateLink
+                    nested
+                    url="/users"
+                    title="Usuarios"
+                    icon={<SupervisedUserCircleIcon />}
+                  />
+                  <CreateLink
+                    nested
+                    url="/employees"
+                    title="Colaboradores"
+                    icon={<FolderSharedIcon />}
+                  />
+                  <CreateLink
+                    nested
+                    url="/manufacturing-plants"
+                    title="Plantas"
+                    icon={<BusinessIcon />}
+                  />
+                  <CreateLink
+                    nested
+                    url="/main-types"
+                    title="Criterios"
+                    icon={<EngineeringIcon />}
+                  />
+                  <CreateLink
+                    nested
+                    url="/secondary-types"
+                    title="Tipos de criterios"
+                    icon={<DnsIcon />}
+                  />
+                  <CreateLink
+                    nested
+                    url="/zones"
+                    title="Zonas"
+                    icon={<HubIcon />}
+                  />
+                  <CreateLink
+                    nested
+                    url="/processes"
+                    title="Procesos"
+                    icon={<AccountTreeIcon />}
+                  />
+                  <CreateLink
+                    nested
+                    url="/topics-tg"
+                    title="Temas - G. Entr."
+                    icon={<ContentPasteIcon />}
+                  />
+                  <CreateLink
+                    nested
+                    url="/config-tg"
+                    title="Config - G. Entr."
+                    icon={<ContentPasteIcon />}
+                  />
+                </List>
+              </Collapse>
+            </>
+          )}
           <CreateLink url="/epp" title="EPP" icon={<DescriptionIcon />} />
           <CreateLink url="/ciael" title="CIAEL" icon={<WarningIcon />} />
         </>
       )}
-      <CreateLink
-        url="/training-guide"
-        title="G. Entr."
-        icon={<ContentPasteIcon />}
-      />
-      <CreateLink url="/hds" title="HDS" icon={<FolderIcon />} />
+      {!userEpp.includes(email) && (
+        <>
+          <CreateLink
+            url="/training-guide"
+            title="G. Entr."
+            icon={<ContentPasteIcon />}
+          />
+          <CreateLink url="/hds" title="HDS" icon={<FolderIcon />} />
+        </>
+      )}
     </>
   );
 };

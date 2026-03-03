@@ -5,8 +5,16 @@ const api = axiosWrapper({
   baseURL: "/equipments",
 });
 
-const findAll = async () => {
-  const { data } = await api.get<Equipment[]>("");
+const findAll = async ({
+  manufacturingPlantId,
+}: {
+  manufacturingPlantId: string;
+}) => {
+  const { data } = await api.get<Equipment[]>("", {
+    params: {
+      manufacturingPlantId,
+    },
+  });
   return data;
 };
 

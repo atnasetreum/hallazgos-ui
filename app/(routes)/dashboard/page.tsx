@@ -1,4 +1,4 @@
-/* "use client";
+"use client";
 
 import { SyntheticEvent, useState } from "react";
 
@@ -220,9 +220,9 @@ export default function DashboardPage() {
       )}
     </Box>
   );
-}*/
+}
 
-"use client";
+/* "use client";
 
 import { useEffect, useState } from "react";
 
@@ -353,3 +353,4 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
+ */

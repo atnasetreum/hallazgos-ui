@@ -20,6 +20,7 @@ import {
   PendingBySeniorityByUser as PendingBySeniorityByUserItem,
   User,
 } from "@interfaces";
+import { resolveTriStateSort } from "@shared/utils";
 import {
   StyledTableCell,
   StyledTableRow,
@@ -47,7 +48,7 @@ const PendingBySeniorityByUser = ({ manufacturingPlantId, user }: Props) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<SortableColumn>("id");
+  const [orderBy, setOrderBy] = useState<SortableColumn | null>(null);
 
   useEffect(() => {
     DashboardService.findPendingBySeniorityByUser({
@@ -75,9 +76,14 @@ const PendingBySeniorityByUser = ({ manufacturingPlantId, user }: Props) => {
   };
 
   const handleRequestSort = (property: SortableColumn) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
+    const { nextOrder, nextOrderBy } = resolveTriStateSort(
+      order,
+      orderBy,
+      property,
+    );
+
+    setOrder(nextOrder);
+    setOrderBy(nextOrderBy);
     setPage(0);
   };
 
@@ -130,6 +136,8 @@ const PendingBySeniorityByUser = ({ manufacturingPlantId, user }: Props) => {
   }, [data, searchTerm]);
 
   const sorted = useMemo(() => {
+    if (!orderBy) return filtered;
+
     return [...filtered]
       .map((item, index) => ({ item, index }))
       .sort((a, b) => {

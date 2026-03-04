@@ -17,6 +17,7 @@ import {
 
 import { DashboardService } from "@services";
 import { CriticalZone } from "@interfaces";
+import { resolveTriStateSort } from "@shared/utils";
 import {
   StyledTableCell,
   StyledTableRow,
@@ -43,7 +44,7 @@ export const CriticalZonesAdmin = ({ manufacturingPlantId }: Props) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<SortableColumn>("zona");
+  const [orderBy, setOrderBy] = useState<SortableColumn | null>(null);
 
   useEffect(() => {
     DashboardService.findCriticalZones({
@@ -70,9 +71,14 @@ export const CriticalZonesAdmin = ({ manufacturingPlantId }: Props) => {
   };
 
   const handleRequestSort = (property: SortableColumn) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
+    const { nextOrder, nextOrderBy } = resolveTriStateSort(
+      order,
+      orderBy,
+      property,
+    );
+
+    setOrder(nextOrder);
+    setOrderBy(nextOrderBy);
     setPage(0);
   };
 
@@ -125,6 +131,8 @@ export const CriticalZonesAdmin = ({ manufacturingPlantId }: Props) => {
   }, [criticalZones, searchTerm]);
 
   const sortedCriticalZones = useMemo(() => {
+    if (!orderBy) return filteredCriticalZones;
+
     return [...filteredCriticalZones]
       .map((zone, index) => ({ zone, index }))
       .sort((a, b) => {

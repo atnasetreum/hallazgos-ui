@@ -19,6 +19,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 import { stringYYYYMMDDToDDMMYYYY } from "@shared/utils";
+import { resolveTriStateSort } from "@shared/utils";
 import {
   StyledTableCell,
   StyledTableRow,
@@ -134,16 +135,21 @@ export default function TableEpps({ data }: Props) {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<SortableColumn>("name");
+  const [orderBy, setOrderBy] = useState<SortableColumn | null>(null);
 
   useEffect(() => {
     setPage(0);
   }, [searchTerm]);
 
   const handleRequestSort = (property: SortableColumn) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
+    const { nextOrder, nextOrderBy } = resolveTriStateSort(
+      order,
+      orderBy,
+      property,
+    );
+
+    setOrder(nextOrder);
+    setOrderBy(nextOrderBy);
     setPage(0);
   };
 
@@ -193,6 +199,8 @@ export default function TableEpps({ data }: Props) {
           return String(epp.name ?? "").toLowerCase();
       }
     };
+
+    if (!orderBy) return filteredData;
 
     return [...filteredData]
       .map((epp, index) => ({ epp, index }))

@@ -17,6 +17,7 @@ import {
 
 import { RankingOfResponsible } from "@interfaces";
 import { DashboardService } from "@services";
+import { resolveTriStateSort } from "@shared/utils";
 import {
   StyledTableCell,
   StyledTableRow,
@@ -50,7 +51,7 @@ export const RankingOfResponsiblesAdmin = ({ manufacturingPlantId }: Props) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<SortableColumn>("user_id");
+  const [orderBy, setOrderBy] = useState<SortableColumn | null>(null);
 
   useEffect(() => {
     DashboardService.findRankingOfResponsibles({
@@ -77,9 +78,14 @@ export const RankingOfResponsiblesAdmin = ({ manufacturingPlantId }: Props) => {
   };
 
   const handleRequestSort = (property: SortableColumn) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
+    const { nextOrder, nextOrderBy } = resolveTriStateSort(
+      order,
+      orderBy,
+      property,
+    );
+
+    setOrder(nextOrder);
+    setOrderBy(nextOrderBy);
     setPage(0);
   };
 
@@ -138,6 +144,8 @@ export const RankingOfResponsiblesAdmin = ({ manufacturingPlantId }: Props) => {
   }, [data, searchTerm]);
 
   const sorted = useMemo(() => {
+    if (!orderBy) return filtered;
+
     return [...filtered]
       .map((item, index) => ({ item, index }))
       .sort((a, b) => {

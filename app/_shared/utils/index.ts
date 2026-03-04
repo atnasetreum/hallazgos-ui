@@ -65,3 +65,6 @@ export const stringYYYYMMDDToDDMMYYYY = (dateString: string) => {
   const date = dateString.split("T")[0].split("-");
   return `${date[2]}/${date[1]}/${date[0]}`;
 };
+
+export { resolveTriStateSort } from "./triStateSort";
+export type { SortOrder } from "./triStateSort";

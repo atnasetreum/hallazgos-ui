@@ -30,6 +30,7 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import FolderSharedIcon from "@mui/icons-material/FolderShared";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import FolderIcon from "@mui/icons-material/Folder";
+import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 
 import { useCategoriesStore, useUserSessionStore } from "@store";
 import { ROLE_ADMINISTRADOR } from "@shared/constants";
@@ -184,6 +185,12 @@ export const MainListItems = () => {
                     url="/config-tg"
                     title="Config - G. Entr."
                     icon={<ContentPasteIcon />}
+                  />
+                  <CreateLink
+                    nested
+                    url="/epp-config"
+                    title="EPP Config."
+                    icon={<SettingsApplicationsIcon />}
                   />
                 </List>
               </Collapse>

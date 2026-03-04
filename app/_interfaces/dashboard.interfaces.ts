@@ -228,3 +228,55 @@ export interface RecentEvidence {
   zona: string;
   planta: string;
 }
+
+export interface AverageResolutionByUser {
+  planta: string;
+  promedio_dias_historico: string;
+  minimo_dias: number;
+  maximo_dias: number;
+  total_cerradas_historico: string;
+  promedio_dias_mes_actual: string;
+  total_cerradas_mes_actual: string;
+  promedio_dias_mes_anterior: string;
+  total_cerradas_mes_anterior: string;
+  pct_cambio_promedio: string;
+}
+
+export interface AverageResolutionByUserAssigned {
+  total: string;
+  abiertas: string;
+  cerradas: string;
+  canceladas: string;
+  total_mes_actual: string;
+  total_mes_anterior: string;
+  abiertas_mes_actual: string;
+  abiertas_mes_anterior: string;
+  cerradas_mes_actual: string;
+  cerradas_mes_anterior: string;
+  canceladas_mes_actual: string;
+  canceladas_mes_anterior: string;
+  pct_total: string;
+  pct_abiertas: string;
+  pct_cerradas: string;
+  pct_canceladas: string;
+}
+
+export interface TypeEvidenceByUser {
+  tipo_principal: string;
+  total_historico: string;
+  total_mes_actual: string;
+  total_mes_anterior: string;
+  pct_cambio: string;
+}
+
+export interface PendingBySeniorityByUser {
+  id: number;
+  description: string;
+  createdAt: Date;
+  tipo_principal: string;
+  tipo_secundario: string;
+  zona: string;
+  planta: string;
+  creado_por: string;
+  dias_sin_resolver: number;
+}

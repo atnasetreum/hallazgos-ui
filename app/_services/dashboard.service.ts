@@ -1,6 +1,8 @@
 import axiosWrapper from "./axiosWrapper";
 import {
   AverageResolution,
+  AverageResolutionByUser,
+  AverageResolutionByUserAssigned,
   CriticalZone,
   GlobalSummary,
   MonthlyGlobalTrend,
@@ -8,6 +10,7 @@ import {
   MonthlyTypeTrend,
   MyEvidences,
   OpenEvidence,
+  PendingBySeniorityByUser,
   RankingOfResponsible,
   RecentEvidence,
   ResponseAccidents,
@@ -16,6 +19,7 @@ import {
   ResponseDashboardMultiNivel,
   ResponseOpenVsClosed,
   ResponseTopUsersByPlant,
+  TypeEvidenceByUser,
 } from "@interfaces";
 
 const api = axiosWrapper({
@@ -216,7 +220,89 @@ const findRecentEvidences = async ({
   return data;
 };
 
+const findAverageResolutionTimeByUser = async ({
+  manufacturingPlantId,
+  userId,
+}: {
+  manufacturingPlantId: string;
+  userId: number;
+}) => {
+  const { data } = await api.get<AverageResolutionByUser>(
+    "/average-resolution-time-by-user",
+    {
+      params: {
+        manufacturingPlantId,
+        userId,
+      },
+    },
+  );
+  return data;
+};
+
+const findAverageResolutionTimeByUserAssigned = async ({
+  manufacturingPlantId,
+  userId,
+}: {
+  manufacturingPlantId: string;
+  userId: number;
+}) => {
+  const { data } = await api.get<AverageResolutionByUserAssigned>(
+    "/average-resolution-time-by-user",
+    {
+      params: {
+        manufacturingPlantId,
+        userId,
+        assigned: "true",
+      },
+    },
+  );
+  return data;
+};
+
+const findTypeEvidenceByUser = async ({
+  manufacturingPlantId,
+  userId,
+}: {
+  manufacturingPlantId: string;
+  userId: number;
+}) => {
+  const { data } = await api.get<TypeEvidenceByUser[]>(
+    "type-evidence-by-user",
+    {
+      params: {
+        manufacturingPlantId,
+        userId,
+        assigned: "true",
+      },
+    },
+  );
+  return data;
+};
+
+const findPendingBySeniorityByUser = async ({
+  manufacturingPlantId,
+  userId,
+}: {
+  manufacturingPlantId: string;
+  userId: number;
+}) => {
+  const { data } = await api.get<PendingBySeniorityByUser[]>(
+    "pending-by-seniority-by-user",
+    {
+      params: {
+        manufacturingPlantId,
+        userId,
+      },
+    },
+  );
+  return data;
+};
+
 export const DashboardService = {
+  findPendingBySeniorityByUser,
+  findTypeEvidenceByUser,
+  findAverageResolutionTimeByUserAssigned,
+  findAverageResolutionTimeByUser,
   findRecentEvidences,
   findOpenEvidence,
   findMonthlyTypeTrend,

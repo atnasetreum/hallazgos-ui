@@ -6,10 +6,8 @@ import "highcharts/esm/modules/exporting";
 import "highcharts/esm/modules/drilldown";
 import { useTheme } from "@mui/material/styles";
 
-import { DashboardService } from "@services";
 import { MonthlyGlobalTrend, User } from "@interfaces";
-import { ROLE_ADMINISTRADOR } from "@shared/constants";
-import { useUserSessionStore } from "@store";
+import { DashboardService } from "@services";
 
 //import { optionsChartDefault } from "@shared/libs";
 
@@ -39,7 +37,6 @@ const formatMonth = (value: Date | string) => {
 interface Props {
   manufacturingPlantId: string;
   user?: User;
-  isAdmin?: boolean;
 }
 
 const GlobalTrendAdmin = ({ manufacturingPlantId, user }: Props) => {
@@ -63,7 +60,7 @@ const GlobalTrendAdmin = ({ manufacturingPlantId, user }: Props) => {
   }, [monthlyGlobalTrends]);
 
   const chartTitle = sortedTrends[0]?.planta
-    ? `Tendencia global mensual - ${sortedTrends[0].planta}`
+    ? `Tendencia global mensual - ${!user ? sortedTrends[0].planta : user.name}`
     : "Tendencia global mensual";
 
   const chartSubtitle = `Actualizado: ${new Intl.DateTimeFormat("es-MX", {

@@ -278,7 +278,7 @@ const DashboardPage = () => {
           .filter((user) => user.role !== ROLE_ADMINISTRADOR)
           .map((user) => ({
             ...user,
-            name: `${user.id} - ${user.name} (${user.role})`,
+            name: `# ${user.id} - ${user.name} (${user.role})`,
           })),
       ),
     );

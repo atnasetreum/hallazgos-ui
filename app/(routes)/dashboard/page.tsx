@@ -266,7 +266,7 @@ const DashboardPage = () => {
     if (!currentRole && currentUser?.role) {
       setCurrentRole(currentUser.role);
     }
-  }, [currentUser, currentRole]);
+  }, [currentRole, currentUser]);
 
   useEffect(() => {
     UsersService.findAll({
@@ -303,10 +303,6 @@ const DashboardPage = () => {
       return;
     setUserId(currentUser.id.toString());
   }, [currentUser, currentRole, userSelected]);
-
-  useEffect(() => {
-    console.log({ userSelected });
-  }, [userSelected]);
 
   return (
     <Grid container spacing={2}>

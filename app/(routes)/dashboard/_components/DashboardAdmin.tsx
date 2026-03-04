@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { Box, Grid, Stack, Tab, Tabs } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 
 import RankingOfResponsiblesAdmin from "./RankingOfResponsiblesAdmin";
 import AverageResolutionAdmin from "./AverageResolutionAdmin";
@@ -43,7 +44,20 @@ export const DashboardAdmin = ({ manufacturingPlantId }: Props) => {
           variant="fullWidth"
           scrollButtons="auto"
           aria-label="full width tabs example"
-          sx={{ backgroundColor: "primary.main" }}
+          sx={{
+            backgroundColor: "primary.main",
+            "& .MuiTab-root": {
+              color: (theme) => alpha(theme.palette.common.white, 0.68),
+              opacity: 1,
+              transition: "all 0.2s ease",
+            },
+            "& .MuiTab-root.Mui-selected": {
+              color: "common.white",
+              fontWeight: 700,
+              backgroundColor: (theme) =>
+                alpha(theme.palette.common.white, 0.14),
+            },
+          }}
         >
           <Tab
             label="Ranking de responsables"

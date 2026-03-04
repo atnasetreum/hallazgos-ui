@@ -7,13 +7,11 @@ import "highcharts/esm/modules/drilldown";
 import { useTheme } from "@mui/material/styles";
 
 import { DashboardService } from "@services";
-import { MonthlyGlobalTrend } from "@interfaces";
+import { MonthlyGlobalTrend, User } from "@interfaces";
+import { ROLE_ADMINISTRADOR } from "@shared/constants";
+import { useUserSessionStore } from "@store";
 
 //import { optionsChartDefault } from "@shared/libs";
-
-interface Props {
-  manufacturingPlantId: string;
-}
 
 const parseNumber = (value: string | number | null | undefined) => {
   if (typeof value === "number") return value;
@@ -38,17 +36,25 @@ const formatMonth = (value: Date | string) => {
   return month.charAt(0).toUpperCase() + month.slice(1);
 };
 
-const GlobalTrendAdmin = ({ manufacturingPlantId }: Props) => {
+interface Props {
+  manufacturingPlantId: string;
+  user?: User;
+  isAdmin?: boolean;
+}
+
+const GlobalTrendAdmin = ({ manufacturingPlantId, user }: Props) => {
   const theme = useTheme();
   const [monthlyGlobalTrends, setMonthlyGlobalTrends] = useState<
     MonthlyGlobalTrend[]
   >([]);
 
   useEffect(() => {
-    DashboardService.findMonthlyGlobalTrend({ manufacturingPlantId }).then(
-      setMonthlyGlobalTrends,
-    );
-  }, [manufacturingPlantId]);
+    DashboardService.findMonthlyGlobalTrend({
+      manufacturingPlantId,
+      userId: user?.id || 0,
+      isAdmin: !user ? true : false,
+    }).then(setMonthlyGlobalTrends);
+  }, [manufacturingPlantId, user]);
 
   const sortedTrends = useMemo(() => {
     return [...monthlyGlobalTrends].sort(

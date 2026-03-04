@@ -135,14 +135,20 @@ const findAverageResolutionTime = async ({
 
 const findMonthlyGlobalTrend = async ({
   manufacturingPlantId,
+  userId,
+  isAdmin = false,
 }: {
   manufacturingPlantId: string;
+  userId: number;
+  isAdmin?: boolean;
 }) => {
   const { data } = await api.get<MonthlyGlobalTrend[]>(
     "/monthly-global-trend",
     {
       params: {
         manufacturingPlantId,
+        userId,
+        isAdmin: isAdmin ? "true" : "false",
       },
     },
   );

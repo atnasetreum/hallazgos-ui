@@ -54,7 +54,7 @@ export interface Topic {
   updatedAt: Date;
   manufacturingPlants: ManufacturingPlant[];
   topic: Topic;
-  responsibles: Employee[];
+  responsibles: User[];
 }
 
 export interface TrainingGuideEmployee {

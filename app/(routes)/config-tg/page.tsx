@@ -47,7 +47,12 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { useShallow } from "zustand/shallow";
 
 import TablePaginationActions from "@shared/components/TablePaginationActions";
-import { ConfigTgService, EmployeesService, TopicsService } from "@services";
+import {
+  ConfigTgService,
+  EmployeesService,
+  TopicsService,
+  UsersService,
+} from "@services";
 import { Transition } from "@routes/hallazgos/_components/EvidencePreview";
 import LoadingLinear from "@shared/components/LoadingLinear";
 import SelectDefault from "@components/SelectDefault";
@@ -60,9 +65,9 @@ import {
 import {
   BasicData,
   ConfigTg,
-  Employee,
   ManufacturingPlant,
   Topic,
+  User,
 } from "@interfaces";
 
 export interface IFiltersConfigTg {
@@ -83,7 +88,7 @@ const ScreenForm = ({
   currentId: number;
   closeDialog: () => void;
 }) => {
-  const [users, setUsers] = useState<Employee[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [topicId, setTopicId] = useState<string>("");
   const [currentEmployees, setCurrentEmployees] = useState<string[]>([]);
@@ -98,7 +103,7 @@ const ScreenForm = ({
     topics: {
       id: number;
       topic: Topic;
-      responsibles: Employee[];
+      responsibles: User[];
     }[];
   }>({
     positionId: "",
@@ -123,7 +128,7 @@ const ScreenForm = ({
     row,
     idx,
   }: {
-    row: { id: number; topic: Topic; responsibles: Employee[] };
+    row: { id: number; topic: Topic; responsibles: User[] };
     idx: number;
   }) => {
     const ref = useRef<HTMLTableRowElement>(null);
@@ -166,7 +171,7 @@ const ScreenForm = ({
         </StyledTableCell>
         <StyledTableCell>{row.topic.name}</StyledTableCell>
         <StyledTableCell>
-          {row.responsibles.map((resp: Employee) => resp.name).join(", ")}
+          {row.responsibles.map((resp: User) => resp.name).join(", ")}
         </StyledTableCell>
         <StyledTableCell>
           <Tooltip title="Eliminar" placement="top">
@@ -280,8 +285,8 @@ const ScreenForm = ({
 
   useEffect(() => {
     if (manufacturingPlantId) {
-      EmployeesService.findAll({
-        manufacturingPlantId,
+      UsersService.findAll({
+        manufacturingPlantId: `${manufacturingPlantId}`,
       }).then(setUsers);
 
       TopicsService.findAll({ manufacturingPlantId }).then(setTopics);

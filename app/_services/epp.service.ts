@@ -42,7 +42,28 @@ const downloadFile = async (employeeId: number) => {
   return "ok";
 };
 
+const validateDeliveryFrequency = async ({
+  equipmentId,
+  employeeId,
+}: {
+  equipmentId: number;
+  employeeId: number;
+}) => {
+  const { data } = await api.get<{
+    canDeliver: boolean;
+    message: string;
+  }>("/validate-delivery-frequency", {
+    params: {
+      equipmentId,
+      employeeId,
+    },
+  });
+
+  return data;
+};
+
 export const EppService = {
+  validateDeliveryFrequency,
   create,
   findAll,
   downloadFile,

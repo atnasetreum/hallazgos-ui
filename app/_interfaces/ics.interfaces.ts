@@ -1,3 +1,5 @@
+import { ManufacturingPlant } from "./manufacturing-plants.interfaces";
+
 export interface ICSData {
   id: number;
   description: string;
@@ -42,17 +44,6 @@ interface Employee {
   name: string;
   birthdate: Date;
   dateOfAdmission: Date;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface ManufacturingPlant {
-  id: number;
-  name: string;
-  link: string;
-  lat: string;
-  lng: string;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

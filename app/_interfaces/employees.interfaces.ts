@@ -1,3 +1,4 @@
+import { ManufacturingPlant } from "./manufacturing-plants.interfaces";
 import { TrainingGuideEmployee } from "./training-guides.interfaces";
 
 export interface Employee {
@@ -29,15 +30,4 @@ export interface CatalogEmployee {
   positions: Area[];
   manufacturingPlants: ManufacturingPlant[];
   genres: Area[];
-}
-
-interface ManufacturingPlant {
-  id: number;
-  name: string;
-  link: string;
-  lat: string;
-  lng: string;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }

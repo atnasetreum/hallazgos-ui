@@ -21,18 +21,20 @@ const FiltersManufacturingPlants = ({ filters, setFilters, count }: Props) => {
         size={{
           xs: 12,
           sm: 12,
-          md: 12
-        }}>
+          md: 12,
+        }}
+      >
         <Typography variant="subtitle1" gutterBottom>
-          <FilterListIcon sx={{ pt: 1 }} /> Filters ({count})
+          <FilterListIcon sx={{ pt: 1 }} /> Filtros ({count})
         </Typography>
       </Grid>
       <Grid
         size={{
           xs: 12,
           sm: 6,
-          md: 3
-        }}>
+          md: 3,
+        }}
+      >
         <Paper>
           <TextField
             fullWidth

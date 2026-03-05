@@ -25,8 +25,9 @@ const FiltersIcs = ({ filters, setFilters, count }: Props) => {
         size={{
           xs: 12,
           sm: 12,
-          md: 12
-        }}>
+          md: 12,
+        }}
+      >
         <Typography
           variant="subtitle1"
           gutterBottom
@@ -36,15 +37,16 @@ const FiltersIcs = ({ filters, setFilters, count }: Props) => {
               : theme.palette.common.white
           }
         >
-          <FilterListIcon sx={{ pt: 1 }} /> Filters ({count})
+          <FilterListIcon sx={{ pt: 1 }} /> Filtros ({count})
         </Typography>
       </Grid>
       <Grid
         size={{
           xs: 12,
           sm: 4,
-          md: 2
-        }}>
+          md: 2,
+        }}
+      >
         <Paper>
           <TextField
             fullWidth

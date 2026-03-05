@@ -27,7 +27,7 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
   const [secondaryTypes, setSecondaryTypes] = useState<SecondaryType[]>([]);
 
   const manufacturingPlants = useUserSessionStore(
-    (state) => state.manufacturingPlants
+    (state) => state.manufacturingPlants,
   );
 
   const { mainTypes, zones, processes } = useCategoriesStore();
@@ -36,7 +36,7 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
     if (filters.mainTypeId) {
       setSecondaryTypes(
         mainTypes.find((data) => data.id === Number(filters.mainTypeId))
-          ?.secondaryTypes || []
+          ?.secondaryTypes || [],
       );
     }
   }, [filters.mainTypeId, mainTypes]);
@@ -47,18 +47,20 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
         size={{
           xs: 12,
           sm: 12,
-          md: 12
-        }}>
+          md: 12,
+        }}
+      >
         <Typography variant="subtitle1" gutterBottom color="primary.main">
-          <FilterListIcon sx={{ pt: 1 }} /> Filters ({count})
+          <FilterListIcon sx={{ pt: 1 }} /> Filtros ({count})
         </Typography>
       </Grid>
       <Grid
         size={{
           xs: 12,
           sm: 3,
-          md: 2
-        }}>
+          md: 2,
+        }}
+      >
         <SelectDefault
           data={manufacturingPlants}
           label="Planta"
@@ -76,8 +78,9 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
         size={{
           xs: 12,
           sm: 3,
-          md: 2
-        }}>
+          md: 2,
+        }}
+      >
         <SelectDefault
           data={mainTypes}
           label="Hallazgo"
@@ -96,8 +99,9 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
         size={{
           xs: 12,
           sm: 3,
-          md: 2
-        }}>
+          md: 2,
+        }}
+      >
         <SelectDefault
           data={secondaryTypes}
           label="Tipo"
@@ -116,13 +120,14 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
         size={{
           xs: 12,
           sm: 3,
-          md: 2
-        }}>
+          md: 2,
+        }}
+      >
         <SelectDefault
           data={zones.filter(
             (data) =>
               data.manufacturingPlant.id ===
-              Number(filters.manufacturingPlantId)
+              Number(filters.manufacturingPlantId),
           )}
           label="Zona"
           isFilter={true}
@@ -142,8 +147,9 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
         size={{
           xs: 12,
           sm: 3,
-          md: 2
-        }}>
+          md: 2,
+        }}
+      >
         <SelectDefault
           data={processes}
           label="Administrador"
@@ -161,8 +167,9 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
         size={{
           xs: 12,
           sm: 3,
-          md: 2
-        }}>
+          md: 2,
+        }}
+      >
         <SelectDefault
           data={[
             { id: "Abierto", name: "Abierto" },

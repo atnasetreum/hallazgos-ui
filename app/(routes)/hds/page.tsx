@@ -107,8 +107,9 @@ const HdsPage = () => {
         size={{
           xs: 12,
           sm: 12,
-          md: 12
-        }}>
+          md: 12,
+        }}
+      >
         <Typography
           variant="h4"
           gutterBottom
@@ -125,15 +126,17 @@ const HdsPage = () => {
         size={{
           xs: 12,
           sm: 12,
-          md: 12
-        }}>
+          md: 12,
+        }}
+      >
         <Grid container spacing={2} sx={{ mb: 2 }}>
           <Grid
             size={{
               xs: 12,
               sm: 12,
-              md: 12
-            }}>
+              md: 12,
+            }}
+          >
             <Typography
               variant="subtitle1"
               gutterBottom
@@ -143,15 +146,16 @@ const HdsPage = () => {
                   : theme.palette.common.white
               }
             >
-              <FilterListIcon sx={{ pt: 1 }} /> Filters ({data.length})
+              <FilterListIcon sx={{ pt: 1 }} /> Filtros ({data.length})
             </Typography>
           </Grid>
           <Grid
             size={{
               xs: 12,
               sm: 12,
-              md: 12
-            }}>
+              md: 12,
+            }}
+          >
             <Toolbar>
               <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={2}>
@@ -159,8 +163,9 @@ const HdsPage = () => {
                     size={{
                       xs: 12,
                       sm: 6,
-                      md: 4
-                    }}>
+                      md: 4,
+                    }}
+                  >
                     <Paper>
                       <TextField
                         label="Nombre"
@@ -198,8 +203,9 @@ const HdsPage = () => {
         size={{
           xs: 12,
           sm: 12,
-          md: 12
-        }}>
+          md: 12,
+        }}
+      >
         {isLoading ? (
           <LoadingLinear />
         ) : (

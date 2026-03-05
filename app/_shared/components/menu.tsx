@@ -30,7 +30,7 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import FolderSharedIcon from "@mui/icons-material/FolderShared";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import FolderIcon from "@mui/icons-material/Folder";
-import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
+import ConstructionIcon from "@mui/icons-material/Construction";
 
 import { useCategoriesStore, useUserSessionStore } from "@store";
 import { ROLE_ADMINISTRADOR } from "@shared/constants";
@@ -188,9 +188,9 @@ export const MainListItems = () => {
                   />
                   <CreateLink
                     nested
-                    url="/epp-config"
-                    title="EPP Config."
-                    icon={<SettingsApplicationsIcon />}
+                    url="/equipments"
+                    title="Equipo de protección"
+                    icon={<ConstructionIcon />}
                   />
                 </List>
               </Collapse>

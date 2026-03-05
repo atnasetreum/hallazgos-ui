@@ -705,7 +705,7 @@ export default function TopicTg() {
                     : theme.palette.common.white
                 }
               >
-                <FilterListIcon sx={{ pt: 1 }} /> Filters ({rows.length})
+                <FilterListIcon sx={{ pt: 1 }} /> Filtros ({rows.length})
               </Typography>
             </Grid>
             <Grid

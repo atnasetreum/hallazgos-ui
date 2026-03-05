@@ -29,26 +29,21 @@ import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { FormControl } from "@mui/material";
-import { InputLabel } from "@mui/material";
-import { Select } from "@mui/material";
-import { MenuItem } from "@mui/material";
 import { toast } from "sonner";
 
-import MultiSelectManufacturingPlants from "@components/MultiSelectManufacturingPlants";
 import TablePaginationActions from "@shared/components/TablePaginationActions";
 import { BootstrapDialog } from "@routes/hallazgos/_components/CloseEvidence";
+import SelectManufacturingPlants from "@components/SelectManufacturingPlants";
 import LoadingLinear from "@shared/components/LoadingLinear";
+import { Equipment, ManufacturingPlant } from "@interfaces";
 import SelectDefault from "@components/SelectDefault";
 import { stringToDateWithTime } from "@shared/utils";
 import { useUserSessionStore } from "@store";
-import { TopicsService } from "@services";
-import { ManufacturingPlant, Topic } from "@interfaces";
+import { EquipmentsService } from "@services";
 import {
   StyledTableCell,
   StyledTableRow,
 } from "@shared/components/TableDefault";
-import { useShallow } from "zustand/shallow";
 
 export interface IFiltersTopics {
   manufacturingPlantId?: number;
@@ -68,57 +63,43 @@ const ScreenForm = ({
 }) => {
   const [form, setForm] = useState<{
     name: string;
-    duration: string;
-    typeOfEvaluation: string;
-    manufacturingPlantNames: string[];
+    deliveryFrequency: string;
+    manufacturingPlantId: string;
   }>({
     name: "",
-    duration: "",
-    typeOfEvaluation: "",
-    manufacturingPlantNames: [],
+    deliveryFrequency: "",
+    manufacturingPlantId: "",
   });
 
   const saveData = () => {
     const nameCleaned = form.name.trim();
-    const durationCleaned = Number(form.duration.trim() || 0);
+    const deliveryFrequencyCleaned = Number(form.deliveryFrequency.trim() || 0);
 
     if (!nameCleaned) {
       toast.error("El nombre es requerido");
       return;
     }
 
-    if (durationCleaned <= 0) {
-      toast.error("El tiempo de duración debe ser mayor a 0");
-      return;
-    }
-
-    if (!form.typeOfEvaluation) {
-      toast.error("El tipo de evaluación es requerido");
-      return;
-    }
-
-    if (!form.manufacturingPlantNames.length) {
-      toast.error("Debe seleccionar al menos una planta de manufactura");
+    if (!form.manufacturingPlantId) {
+      toast.error("Debe seleccionar una planta de manufactura.");
       return;
     }
 
     const payload = {
       name: nameCleaned,
-      duration: durationCleaned,
-      typeOfEvaluation: form.typeOfEvaluation,
-      manufacturingPlantsIds: manufacturingPlants
-        .filter((mp) => form.manufacturingPlantNames.includes(mp.name))
-        .map((mp) => mp.id),
+      deliveryFrequency:
+        deliveryFrequencyCleaned > 0 ? deliveryFrequencyCleaned : null,
+      manufacturingPlantId: Number(form.manufacturingPlantId),
     };
 
     if (!currentId) {
-      TopicsService.create(payload).then(() => {
-        toast.success("Tema creado correctamente");
+      EquipmentsService.create(payload).then(() => {
+        toast.success("Equipo creado correctamente");
         closeDialog();
       });
     } else {
-      TopicsService.update(currentId, payload).then(() => {
-        toast.success("Tema actualizado correctamente");
+      EquipmentsService.update(currentId, payload).then(() => {
+        toast.success("Equipo actualizado correctamente");
         closeDialog();
       });
     }
@@ -136,12 +117,13 @@ const ScreenForm = ({
   const getData = useCallback(() => {
     if (!currentId) return;
 
-    TopicsService.findOne(currentId).then((data) => {
+    EquipmentsService.findOne(currentId).then((data) => {
       setForm({
         name: data.name,
-        duration: String(data.duration),
-        typeOfEvaluation: data.typeOfEvaluation,
-        manufacturingPlantNames: data.manufacturingPlants.map((mp) => mp.name),
+        deliveryFrequency: data?.deliveryFrequency
+          ? String(data.deliveryFrequency)
+          : "",
+        manufacturingPlantId: String(data.manufacturingPlant.id),
       });
     });
   }, [currentId]);
@@ -151,6 +133,15 @@ const ScreenForm = ({
       getData();
     }
   }, [getData, currentId]);
+
+  useEffect(() => {
+    if (!currentId && manufacturingPlants.length === 1) {
+      setForm((prev) => ({
+        ...prev,
+        manufacturingPlantId: String(manufacturingPlants[0].id),
+      }));
+    }
+  }, [manufacturingPlants, currentId]);
 
   return (
     <BootstrapDialog
@@ -184,14 +175,14 @@ const ScreenForm = ({
             }}
           >
             <Paper>
-              <MultiSelectManufacturingPlants
-                values={form.manufacturingPlantNames}
-                onChange={(values) => {
+              <SelectManufacturingPlants
+                value={form.manufacturingPlantId}
+                onChange={(e) =>
                   setForm({
                     ...form,
-                    manufacturingPlantNames: values,
-                  });
-                }}
+                    manufacturingPlantId: e.target.value,
+                  })
+                }
               />
             </Paper>
           </Grid>
@@ -204,8 +195,6 @@ const ScreenForm = ({
           >
             <Paper>
               <TextField
-                multiline
-                rows={4}
                 label="Nombre"
                 variant="outlined"
                 fullWidth
@@ -229,7 +218,7 @@ const ScreenForm = ({
           >
             <Paper>
               <TextField
-                label="Tiempo de duración"
+                label="	Frecuencia de entrega (dias)"
                 variant="outlined"
                 fullWidth
                 autoComplete="off"
@@ -245,42 +234,12 @@ const ScreenForm = ({
                   if (val === "" || (!Number.isNaN(num) && num > 0)) {
                     setForm({
                       ...form,
-                      duration: e.target.value,
+                      deliveryFrequency: e.target.value,
                     });
                   }
                 }}
-                value={form.duration}
+                value={form.deliveryFrequency}
               />
-            </Paper>
-          </Grid>
-          <Grid
-            size={{
-              xs: 12,
-              sm: 12,
-              md: 12,
-            }}
-          >
-            <Paper>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
-                  Tipo de evaluación
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={form.typeOfEvaluation}
-                  label="Tipo de evaluación"
-                  onChange={(event) => {
-                    setForm({
-                      ...form,
-                      typeOfEvaluation: event.target.value,
-                    });
-                  }}
-                >
-                  <MenuItem value="NUMERIC">Numérico</MenuItem>
-                  <MenuItem value="BOOLEAN">Aprobado / Reprobado</MenuItem>
-                </Select>
-              </FormControl>
             </Paper>
           </Grid>
         </Grid>
@@ -297,10 +256,10 @@ const ScreenForm = ({
   );
 };
 
-export default function EppConfigPage() {
+export default function EquipmentsPage() {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
-  const [rows, setRows] = useState<Topic[]>([]);
+  const [rows, setRows] = useState<Equipment[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentId, setCurrentId] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -315,8 +274,8 @@ export default function EppConfigPage() {
 
   const getData = useDebouncedCallback(() => {
     setIsLoading(true);
-    TopicsService.findAll({
-      manufacturingPlantId: Number(filters.manufacturingPlantId || 0),
+    EquipmentsService.findAll({
+      manufacturingPlantId: filters.manufacturingPlantId,
       name: filters.name,
     })
       .then(setRows)
@@ -327,8 +286,8 @@ export default function EppConfigPage() {
     getData();
   }, [getData, filters]);
 
-  const { manufacturingPlants } = useUserSessionStore(
-    useShallow((state) => state),
+  const manufacturingPlants = useUserSessionStore(
+    (state) => state.manufacturingPlants,
   );
 
   const theme = useTheme();
@@ -349,6 +308,15 @@ export default function EppConfigPage() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  useEffect(() => {
+    if (manufacturingPlants.length === 1) {
+      setFilters((prev) => ({
+        ...prev,
+        manufacturingPlantId: String(manufacturingPlants[0].id),
+      }));
+    }
+  }, [manufacturingPlants]);
 
   return (
     <>
@@ -380,7 +348,7 @@ export default function EppConfigPage() {
                 : theme.palette.common.white
             }
           >
-            Temas - Guías de entrenamiento
+            Equipo de protección personal
           </Typography>
         </Grid>
 
@@ -408,7 +376,7 @@ export default function EppConfigPage() {
                     : theme.palette.common.white
                 }
               >
-                <FilterListIcon sx={{ pt: 1 }} /> Filters ({rows.length})
+                <FilterListIcon sx={{ pt: 1 }} /> Filtros ({rows.length})
               </Typography>
             </Grid>
             <Grid
@@ -512,8 +480,10 @@ export default function EppConfigPage() {
                     <StyledTableCell style={{ width: 350 }}>
                       Nombre
                     </StyledTableCell>
-                    <StyledTableCell>Duración (hrs)</StyledTableCell>
-                    <StyledTableCell>Tipo de evaluación</StyledTableCell>
+                    <StyledTableCell>
+                      Frecuencia de entrega (dias)
+                    </StyledTableCell>
+                    <StyledTableCell>Planta</StyledTableCell>
                     <StyledTableCell>Fecha de creación</StyledTableCell>
                     <StyledTableCell>Creado por</StyledTableCell>
                     <StyledTableCell>Fecha de actualización</StyledTableCell>
@@ -534,8 +504,10 @@ export default function EppConfigPage() {
                         {row.id}
                       </StyledTableCell>
                       <StyledTableCell>{row.name}</StyledTableCell>
-                      <StyledTableCell>{row.duration}</StyledTableCell>
-                      <StyledTableCell>{row.typeOfEvaluation}</StyledTableCell>
+                      <StyledTableCell>{row.deliveryFrequency}</StyledTableCell>
+                      <StyledTableCell>
+                        {row.manufacturingPlant.name}
+                      </StyledTableCell>
                       <StyledTableCell>
                         {stringToDateWithTime(row.createdAt)}
                       </StyledTableCell>
@@ -560,16 +532,18 @@ export default function EppConfigPage() {
                             onClick={() =>
                               toast("¡ Confirmar eliminación !", {
                                 position: "top-center",
-                                description: `¿Está seguro de eliminar el tema "${row.name}"?`,
+                                description: `¿Está seguro de eliminar el equipo "${row.name}"?`,
                                 action: {
                                   label: "Confirmar",
                                   onClick: () =>
-                                    TopicsService.remove(row.id).then(() => {
-                                      toast.success(
-                                        "Tema eliminado correctamente",
-                                      );
-                                      getData();
-                                    }),
+                                    EquipmentsService.remove(row.id).then(
+                                      () => {
+                                        toast.success(
+                                          "Equipo eliminado correctamente",
+                                        );
+                                        getData();
+                                      },
+                                    ),
                                 },
                               })
                             }

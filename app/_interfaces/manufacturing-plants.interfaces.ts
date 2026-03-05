@@ -5,6 +5,10 @@ export interface ManufacturingPlant {
   lat: number;
   lng: number;
   isActive: boolean;
+  country: {
+    id: number;
+    name: string;
+  };
   createdAt: Date;
   updatedAt: Date;
 }

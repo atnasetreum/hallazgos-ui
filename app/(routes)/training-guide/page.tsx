@@ -1159,7 +1159,7 @@ const TrainingGuidePage = () => {
                     : theme.palette.common.white
                 }
               >
-                <FilterListIcon sx={{ pt: 1 }} /> Filters ({employees.length})
+                <FilterListIcon sx={{ pt: 1 }} /> Filtros ({employees.length})
               </Typography>
             </Grid>
             <Grid

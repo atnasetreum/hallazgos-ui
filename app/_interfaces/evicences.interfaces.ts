@@ -1,3 +1,5 @@
+import { ManufacturingPlant } from "./manufacturing-plants.interfaces";
+
 export interface Evidence {
   id: number;
   imgEvidence: string;
@@ -31,17 +33,6 @@ export interface Comment {
 interface GenericType {
   id: number;
   name: string;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface ManufacturingPlant {
-  id: number;
-  name: string;
-  link: string;
-  lat: string;
-  lng: string;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

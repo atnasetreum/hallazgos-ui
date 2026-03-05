@@ -45,7 +45,7 @@ const FiltersUsers = ({ filters, setFilters, count }: Props) => {
               : theme.palette.common.white
           }
         >
-          <FilterListIcon sx={{ pt: 1 }} /> Filters ({count})
+          <FilterListIcon sx={{ pt: 1 }} /> Filtros ({count})
         </Typography>
       </Grid>
       <Grid

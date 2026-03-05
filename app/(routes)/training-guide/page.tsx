@@ -80,7 +80,7 @@ import {
   StyledTableRow,
   StyledTableCell,
 } from "@shared/components/TableDefault";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useShallow } from "zustand/shallow";
 
 const emailsEditors = ["ggarcia@hadamexico.com", "eduardo-266@hotmail.com"];
@@ -1055,6 +1055,7 @@ const TrainingGuidePage = () => {
   const [currentEmployee, setCurrentEmployee] = useState<Employee>();
 
   const searchParams = useSearchParams();
+  const router = useRouter();
   const employeeName = searchParams.get("employee");
 
   const [filters, setFilters] = useState<{
@@ -1108,12 +1109,21 @@ const TrainingGuidePage = () => {
   useEffect(() => {
     if (employeeName && employees.length) {
       setFilters((prev) => ({ ...prev, name: employeeName }));
-      setCurrentEmployee(
-        employees.find(
-          (employee) =>
-            employee.name.toLowerCase() === employeeName.toLowerCase(),
-        ),
+
+      const employeeFound = employees.find(
+        (employee) =>
+          employee.name.toLowerCase() === employeeName.toLowerCase(),
       );
+
+      if (!employeeFound) {
+        notify(
+          "No se encontró el colaborador, verifica que el nombre sea correcto",
+          false,
+        );
+        return;
+      }
+
+      setCurrentEmployee(employeeFound);
     }
   }, [employeeName, employees]);
 
@@ -1125,6 +1135,12 @@ const TrainingGuidePage = () => {
           setOpen={() => {
             setCurrentEmployee(undefined);
             getData();
+            if (employeeName) {
+              const params = new URLSearchParams(searchParams);
+              params.delete("employee");
+              router.push(`?${params.toString()}`);
+              setFilters((prev) => ({ ...prev, name: "" }));
+            }
           }}
         />
       )}

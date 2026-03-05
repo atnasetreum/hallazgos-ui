@@ -1,4 +1,3 @@
-import { Employee } from "./employees.interfaces";
 import { ManufacturingPlant } from "./manufacturing-plants.interfaces";
 import { User } from "./users.interfaces";
 

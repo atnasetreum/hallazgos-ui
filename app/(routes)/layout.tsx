@@ -30,7 +30,7 @@ import { Toolbar } from "@mui/material";
 import { Divider } from "@mui/material";
 import { List } from "@mui/material";
 import { Box } from "@mui/material";
-import Highcharts from "highcharts/highcharts.src";
+import Highcharts from "highcharts/esm/highcharts.src.js";
 
 import { MainListItems, SecondaryListItems } from "@shared/components/menu";
 import Copyright from "@shared/components/Copyright";

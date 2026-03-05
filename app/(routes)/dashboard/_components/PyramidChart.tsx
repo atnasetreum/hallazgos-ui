@@ -1,12 +1,12 @@
 "use client";
 
-import Highcharts from "highcharts/highcharts.src";
+import Highcharts from "highcharts/esm/highcharts.src.js";
 import { Chart } from "@highcharts/react";
-import "highcharts/esm/modules/exporting";
-import "highcharts/esm/modules/drilldown";
-import "highcharts/esm/modules/funnel";
-import "highcharts/esm/modules/export-data";
-import "highcharts/esm/modules/accessibility";
+import "highcharts/esm/modules/exporting.src.js";
+import "highcharts/esm/modules/drilldown.src.js";
+import "highcharts/esm/modules/funnel.src.js";
+import "highcharts/esm/modules/export-data.src.js";
+import "highcharts/esm/modules/accessibility.src.js";
 
 import { optionsChartDefault } from "@shared/libs";
 

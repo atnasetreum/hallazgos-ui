@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 
 import { Chart } from "@highcharts/react";
-import "highcharts/esm/modules/exporting";
-import "highcharts/esm/modules/drilldown";
-import "highcharts/esm/modules/heatmap";
-import Highcharts from "highcharts/highcharts.src";
+import "highcharts/esm/modules/exporting.src.js";
+import "highcharts/esm/modules/drilldown.src.js";
+import "highcharts/esm/modules/heatmap.src.js";
+import Highcharts from "highcharts/esm/highcharts.src.js";
 
 import { ResponseOpenVsClosed } from "@interfaces";
 import { optionsChartDefault } from "@shared/libs";

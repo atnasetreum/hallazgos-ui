@@ -467,7 +467,7 @@ const DashboardPage = () => {
                     flexDirection: "column",
                   }}
                 >
-                  <EvidencePerMonthChart year={2024} />
+                  <EvidencePerMonthChart year={new Date().getFullYear() - 1} />
                 </Paper>
               </Grid>
             </Grid>

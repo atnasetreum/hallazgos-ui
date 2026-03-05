@@ -47,12 +47,6 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { useShallow } from "zustand/shallow";
 
 import TablePaginationActions from "@shared/components/TablePaginationActions";
-import {
-  ConfigTgService,
-  EmployeesService,
-  TopicsService,
-  UsersService,
-} from "@services";
 import { Transition } from "@routes/hallazgos/_components/EvidencePreview";
 import LoadingLinear from "@shared/components/LoadingLinear";
 import SelectDefault from "@components/SelectDefault";
@@ -62,6 +56,12 @@ import {
   StyledTableCell,
   StyledTableRow,
 } from "@shared/components/TableDefault";
+import {
+  ConfigTgService,
+  EmployeesService,
+  TopicsService,
+  UsersService,
+} from "@services";
 import {
   BasicData,
   ConfigTg,
@@ -173,18 +173,17 @@ const ScreenForm = ({
         <StyledTableCell>
           {row.responsibles.map((resp: User) => resp.name).join(", ")}
         </StyledTableCell>
-        <StyledTableCell>
-          <Tooltip title="Eliminar" placement="top">
-            <Button
-              startIcon={<DeleteIcon color="error" />}
-              onClick={() =>
-                setForm({
-                  ...form,
-                  topics: form.topics.filter((t) => t.id !== row.id),
-                })
-              }
-            />
-          </Tooltip>
+        <StyledTableCell align="center">
+          <Button
+            onClick={() =>
+              setForm({
+                ...form,
+                topics: form.topics.filter((t) => t.id !== row.id),
+              })
+            }
+          >
+            <DeleteIcon color="error" />
+          </Button>
         </StyledTableCell>
       </StyledTableRow>
     );
@@ -566,7 +565,9 @@ const ScreenForm = ({
                             <StyledTableCell>Orden</StyledTableCell>
                             <StyledTableCell>Tema</StyledTableCell>
                             <StyledTableCell>Responsables</StyledTableCell>
-                            <StyledTableCell>Eliminar</StyledTableCell>
+                            <StyledTableCell align="center">
+                              Acciones
+                            </StyledTableCell>
                           </StyledTableRow>
                         </TableHead>
                         <DndProvider backend={HTML5Backend}>

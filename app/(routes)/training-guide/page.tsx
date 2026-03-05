@@ -292,6 +292,7 @@ function SignatureDialog({
 }) {
   const [signature, setSignature] = useState<string>("");
   const sigCanvas = useRef<SignatureCanvas | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleClose = useCallback(() => {
     setOpen();
@@ -312,10 +313,13 @@ function SignatureDialog({
     if (!sigCanvas.current) return;
     if (!sigCanvas.current?.isEmpty()) {
       const payload = { ...signatureUser, signature, id: currentId };
-      TrainingGuidesService.saveSignature(payload).then(() => {
-        notify("Firma guardada correctamente", true);
-        handleCloseParent();
-      });
+      setIsLoading(true);
+      TrainingGuidesService.saveSignature(payload)
+        .then(() => {
+          notify("Firma guardada correctamente", true);
+          handleCloseParent();
+        })
+        .finally(() => setIsLoading(false));
     }
   }, [signature, handleClose, signatureUser, currentId, handleCloseParent]);
 
@@ -363,7 +367,11 @@ function SignatureDialog({
           >
             Limpiar
           </Button>
-          <Button variant="contained" onClick={saveSignature}>
+          <Button
+            variant="contained"
+            onClick={saveSignature}
+            disabled={isLoading}
+          >
             Guardar Firma
           </Button>
         </Box>
@@ -593,7 +601,7 @@ function ScreenEdition({
                 <CircularProgress color="secondary" />
               </Box>
             ) : !emailsEditors.includes(email) ? null : (
-              <Button autoFocus color="inherit" onClick={saveTrainingGuide}>
+              <Button color="inherit" onClick={saveTrainingGuide}>
                 Guardar
               </Button>
             )}
@@ -1098,10 +1106,16 @@ const TrainingGuidePage = () => {
   }, [getData, filters]);
 
   useEffect(() => {
-    if (employeeName) {
+    if (employeeName && employees.length) {
       setFilters((prev) => ({ ...prev, name: employeeName }));
+      setCurrentEmployee(
+        employees.find(
+          (employee) =>
+            employee.name.toLowerCase() === employeeName.toLowerCase(),
+        ),
+      );
     }
-  }, [employeeName]);
+  }, [employeeName, employees]);
 
   return (
     <>

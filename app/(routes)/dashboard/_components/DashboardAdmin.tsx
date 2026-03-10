@@ -12,6 +12,7 @@ import GlobalSummaryAdmin from "./GlobalSummaryAdmin";
 //import SubtypeTrendAdmin from "./SubtypeTrendAdmin";
 import GlobalTrendAdmin from "./GlobalTrendAdmin";
 import TypeTrendAdmin from "./TypeTrendAdmin";
+import MainTypesGlobalTrendAdmin from "./MainTypesGlobalTrendAdmin";
 
 interface Props {
   manufacturingPlantId: string;
@@ -22,6 +23,8 @@ export const DashboardAdmin = ({ manufacturingPlantId }: Props) => {
 
   return (
     <Stack spacing={2.5}>
+      <MainTypesGlobalTrendAdmin manufacturingPlantId={manufacturingPlantId} />
+
       <GlobalSummaryAdmin manufacturingPlantId={manufacturingPlantId} />
       <AverageResolutionAdmin manufacturingPlantId={manufacturingPlantId} />
 

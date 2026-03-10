@@ -280,3 +280,36 @@ export interface PendingBySeniorityByUser {
   creado_por: string;
   dias_sin_resolver: number;
 }
+
+export interface MainTypesGlobalTrend {
+  tipo_principal: string;
+  total_historico: string;
+  abiertas: string;
+  cerradas: string;
+  canceladas: string;
+  pct_resolucion_historica: string;
+  total_mes_actual: string;
+  total_mes_anterior: string;
+  cerradas_mes_actual: string;
+  cerradas_mes_anterior: string;
+  abiertas_mes_actual: string;
+  abiertas_mes_anterior: string;
+  pct_cambio_total: string;
+  pct_cambio_cerradas: string;
+  pct_cambio_abiertas: string;
+}
+
+export interface MainTypesGlobalTrendDetails {
+  responsable_id: number;
+  responsable: string;
+  total_asignadas: string;
+  abiertas: string;
+  cerradas: string;
+  canceladas: string;
+  pct_resolucion: string;
+  promedio_dias_resolucion: string;
+  criticos_mas_90_dias: string;
+  asignadas_mes_anterior: string;
+  asignadas_mes_actual: string;
+  max_dias_sin_resolver: number;
+}

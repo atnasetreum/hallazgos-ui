@@ -312,17 +312,13 @@ const DashboardPage = () => {
     setUserId(currentUser.id.toString());
   }, [currentUser, currentRole, userSelected]);
 
-  useEffect(() => {
-    console.log({ currentCountry });
-  }, [currentCountry]);
-
   if (email === "cosmeticostrujillo0023@gmail.com") {
     return window.location.replace("/hds");
   }
 
   if (!currentCountry) return null;
 
-  if (currentCountry === "México") {
+  if (currentCountry === "México" && currentUser?.id !== 1) {
     return (
       <Box sx={{ bgcolor: "background.paper", width: "100%" }}>
         <AppBar position="static">

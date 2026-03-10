@@ -5,6 +5,8 @@ import {
   AverageResolutionByUserAssigned,
   CriticalZone,
   GlobalSummary,
+  MainTypesGlobalTrend,
+  MainTypesGlobalTrendDetails,
   MonthlyGlobalTrend,
   MonthlySubtypeTrend,
   MonthlyTypeTrend,
@@ -298,7 +300,44 @@ const findPendingBySeniorityByUser = async ({
   return data;
 };
 
+const findMainTypesGlobalTrend = async ({
+  manufacturingPlantId,
+}: {
+  manufacturingPlantId: string;
+}) => {
+  const { data } = await api.get<MainTypesGlobalTrend[]>(
+    "/main-types-global-trend",
+    {
+      params: {
+        manufacturingPlantId,
+      },
+    },
+  );
+  return data;
+};
+
+const findMainTypesGlobalTrendDetails = async ({
+  manufacturingPlantId,
+  mainTypeId,
+}: {
+  manufacturingPlantId: string;
+  mainTypeId: string;
+}) => {
+  const { data } = await api.get<MainTypesGlobalTrendDetails[]>(
+    `/main-types-global-trend-details`,
+    {
+      params: {
+        manufacturingPlantId,
+        mainTypeId,
+      },
+    },
+  );
+  return data;
+};
+
 export const DashboardService = {
+  findMainTypesGlobalTrendDetails,
+  findMainTypesGlobalTrend,
   findPendingBySeniorityByUser,
   findTypeEvidenceByUser,
   findAverageResolutionTimeByUserAssigned,

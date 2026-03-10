@@ -50,7 +50,7 @@ export interface IFiltersTopics {
   name?: string;
 }
 
-const colSpan = 9;
+const colSpan = 10;
 
 const ScreenForm = ({
   currentId,
@@ -65,15 +65,18 @@ const ScreenForm = ({
     name: string;
     deliveryFrequency: string;
     manufacturingPlantId: string;
+    price: string;
   }>({
     name: "",
     deliveryFrequency: "",
     manufacturingPlantId: "",
+    price: "",
   });
 
   const saveData = () => {
     const nameCleaned = form.name.trim();
     const deliveryFrequencyCleaned = Number(form.deliveryFrequency.trim() || 0);
+    const priceCleaned = Number(form.price.trim() || 0);
 
     if (!nameCleaned) {
       toast.error("El nombre es requerido");
@@ -90,6 +93,7 @@ const ScreenForm = ({
       deliveryFrequency:
         deliveryFrequencyCleaned > 0 ? deliveryFrequencyCleaned : null,
       manufacturingPlantId: Number(form.manufacturingPlantId),
+      price: priceCleaned > 0 ? priceCleaned : null,
     };
 
     if (!currentId) {
@@ -124,6 +128,9 @@ const ScreenForm = ({
           ? String(data.deliveryFrequency)
           : "",
         manufacturingPlantId: String(data.manufacturingPlant.id),
+        price: data?.costHistory.length
+          ? String(data.costHistory[0].price)
+          : "",
       });
     });
   }, [currentId]);
@@ -218,12 +225,12 @@ const ScreenForm = ({
           >
             <Paper>
               <TextField
-                label="	Frecuencia de entrega (dias)"
+                label="Frecuencia de entrega (dias)"
                 variant="outlined"
                 fullWidth
                 autoComplete="off"
                 type="number"
-                inputProps={{ min: 1, step: 1 }}
+                inputProps={{ min: 1, step: 0 }}
                 onKeyDown={(evt) => {
                   const forbidden = ["e", "E", "-", "+", "."];
                   if (forbidden.includes(evt.key)) evt.preventDefault();
@@ -239,6 +246,41 @@ const ScreenForm = ({
                   }
                 }}
                 value={form.deliveryFrequency}
+              />
+            </Paper>
+          </Grid>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 12,
+            }}
+          >
+            <Paper>
+              <TextField
+                label="Precio"
+                variant="outlined"
+                fullWidth
+                autoComplete="off"
+                type="number"
+                inputProps={{ min: 1, step: 0.01 }}
+                onKeyDown={(evt) => {
+                  const forbidden = ["e", "E", "-", "+"];
+                  if (forbidden.includes(evt.key)) evt.preventDefault();
+                }}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const num = Number(val);
+
+                  if (val === "" || (!Number.isNaN(num) && num > 0)) {
+                    const rounded = Math.round(num * 100) / 100;
+                    setForm({
+                      ...form,
+                      price: rounded.toString(),
+                    });
+                  }
+                }}
+                value={form.price}
               />
             </Paper>
           </Grid>
@@ -483,6 +525,7 @@ export default function EquipmentsPage() {
                     <StyledTableCell>
                       Frecuencia de entrega (dias)
                     </StyledTableCell>
+                    <StyledTableCell>Precio</StyledTableCell>
                     <StyledTableCell>Planta</StyledTableCell>
                     <StyledTableCell>Fecha de creación</StyledTableCell>
                     <StyledTableCell>Creado por</StyledTableCell>
@@ -505,6 +548,11 @@ export default function EquipmentsPage() {
                       </StyledTableCell>
                       <StyledTableCell>{row.name}</StyledTableCell>
                       <StyledTableCell>{row.deliveryFrequency}</StyledTableCell>
+                      <StyledTableCell>
+                        {row.costHistory.length
+                          ? `$ ${row.costHistory[0].price}`
+                          : ""}
+                      </StyledTableCell>
                       <StyledTableCell>
                         {row.manufacturingPlant.name}
                       </StyledTableCell>

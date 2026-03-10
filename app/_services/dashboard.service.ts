@@ -7,6 +7,7 @@ import {
   GlobalSummary,
   MainTypesGlobalTrend,
   MainTypesGlobalTrendDetails,
+  MainTypesGlobalTrendDetailsZone,
   MonthlyGlobalTrend,
   MonthlySubtypeTrend,
   MonthlyTypeTrend,
@@ -335,7 +336,27 @@ const findMainTypesGlobalTrendDetails = async ({
   return data;
 };
 
+const findPercentageComplianceByZone = async ({
+  manufacturingPlantId,
+  mainTypeId,
+}: {
+  manufacturingPlantId: string;
+  mainTypeId: string;
+}) => {
+  const { data } = await api.get<MainTypesGlobalTrendDetailsZone[]>(
+    `/percentage-compliance-by-zone`,
+    {
+      params: {
+        manufacturingPlantId,
+        mainTypeId,
+      },
+    },
+  );
+  return data;
+};
+
 export const DashboardService = {
+  findPercentageComplianceByZone,
   findMainTypesGlobalTrendDetails,
   findMainTypesGlobalTrend,
   findPendingBySeniorityByUser,

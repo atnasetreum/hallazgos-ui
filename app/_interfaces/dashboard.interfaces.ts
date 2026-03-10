@@ -282,6 +282,7 @@ export interface PendingBySeniorityByUser {
 }
 
 export interface MainTypesGlobalTrend {
+  id: string;
   tipo_principal: string;
   total_historico: string;
   abiertas: string;
@@ -312,4 +313,17 @@ export interface MainTypesGlobalTrendDetails {
   asignadas_mes_anterior: string;
   asignadas_mes_actual: string;
   max_dias_sin_resolver: number;
+}
+
+export interface MainTypesGlobalTrendDetailsZone {
+  zona: string;
+  total_hallazgos: string;
+  cerradas: string;
+  abiertas: string;
+  canceladas: string;
+  pct_cumplimiento_historico: string;
+  pct_cumplimiento_mes_actual: string;
+  pct_cumplimiento_mes_anterior: string;
+  criticos_mas_90_dias: string;
+  promedio_dias_resolucion: string;
 }

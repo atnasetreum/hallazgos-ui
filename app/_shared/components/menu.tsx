@@ -7,11 +7,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { ListItemButton } from "@mui/material";
 import { ListItemIcon } from "@mui/material";
 import { ListItemText } from "@mui/material";
-//import { ListSubheader } from "@mui/material";
+import { ListSubheader } from "@mui/material";
 import { List } from "@mui/material";
 import { Collapse } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-//import BarChartIcon from "@mui/icons-material/BarChart";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import BusinessIcon from "@mui/icons-material/Business";
@@ -220,15 +220,14 @@ export const SecondaryListItems = () => {
 
   return (
     <>
-      {/* <ListSubheader component="div" inset>
-        Reportes
+      <ListSubheader component="div" inset>
+        BI
       </ListSubheader>
-      <ListItemButton>
-        <ListItemIcon>
-          <BarChartIcon />
-        </ListItemIcon>
-        <ListItemText primary="BI" />
-      </ListItemButton> */}
+      <CreateLink
+        url="/business-intelligence/epp"
+        title="Epp"
+        icon={<BarChartIcon />}
+      />
       <ListItemButton
         onClick={() => {
           AuthService.logout().then(({ message }) => {

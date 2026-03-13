@@ -3,6 +3,7 @@ import {
   AverageResolution,
   AverageResolutionByUser,
   AverageResolutionByUserAssigned,
+  BusinessIntelligenceEpp,
   CriticalZone,
   GlobalSummary,
   MainTypesGlobalTrend,
@@ -355,7 +356,24 @@ const findPercentageComplianceByZone = async ({
   return data;
 };
 
+const findBusinessIntelligenceEpp = async ({
+  manufacturingPlantId,
+}: {
+  manufacturingPlantId: string;
+}) => {
+  const { data } = await api.get<BusinessIntelligenceEpp>(
+    `/business-intelligence/epp`,
+    {
+      params: {
+        manufacturingPlantId,
+      },
+    },
+  );
+  return data;
+};
+
 export const DashboardService = {
+  findBusinessIntelligenceEpp,
   findPercentageComplianceByZone,
   findMainTypesGlobalTrendDetails,
   findMainTypesGlobalTrend,

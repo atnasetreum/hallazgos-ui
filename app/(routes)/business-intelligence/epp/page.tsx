@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, type ComponentType } from "react";
 
 import { Box, Grid, Stack, Tab, Tabs } from "@mui/material";
 import { alpha } from "@mui/material/styles";
@@ -15,29 +15,56 @@ import Chart7 from "./charts/Charts7";
 import Chart8 from "./charts/Charts8";
 import Chart9 from "./charts/Charts9";
 import Chart10 from "./charts/Charts10";
+import { DashboardService } from "@services";
+import { BusinessIntelligenceEpp } from "@interfaces";
+
+type ChartComponentProps = {
+  data: BusinessIntelligenceEpp | null;
+};
+
+type ChartComponentType = ComponentType<ChartComponentProps>;
+type ChartGroupItem = {
+  Component: ChartComponentType;
+  fullWidth?: boolean;
+};
 
 const chartGroups = [
   {
     title: "Gasto y Costo",
-    charts: [Chart2, Chart1],
+    charts: [{ Component: Chart2 }, { Component: Chart1 }] as ChartGroupItem[],
   },
   {
     title: "Entregas y Operacion",
-    charts: [Chart4, Chart3],
+    charts: [{ Component: Chart4 }, { Component: Chart3 }] as ChartGroupItem[],
   },
   {
     title: "Cobertura de Empleados",
-    charts: [Chart7, Chart6, Chart5],
+    charts: [
+      { Component: Chart7 },
+      { Component: Chart6 },
+      { Component: Chart5, fullWidth: true },
+    ] as ChartGroupItem[],
   },
   {
     title: "Analisis de Costos",
-    charts: [Chart10, Chart9, Chart8],
+    charts: [
+      { Component: Chart10 },
+      { Component: Chart9 },
+      { Component: Chart8, fullWidth: true },
+    ] as ChartGroupItem[],
   },
 ];
 
 const EPPCharts = () => {
   const [activeTab, setActiveTab] = useState(0);
   const activeGroup = chartGroups[activeTab];
+  const [data, setData] = useState<BusinessIntelligenceEpp | null>(null);
+
+  useEffect(() => {
+    DashboardService.findBusinessIntelligenceEpp({
+      manufacturingPlantId: "2",
+    }).then(setData);
+  }, []);
 
   return (
     <Stack spacing={{ xs: 3, md: 4 }}>
@@ -81,13 +108,16 @@ const EPPCharts = () => {
         aria-labelledby={`epp-group-tab-${activeTab}`}
       >
         <Grid container spacing={{ xs: 2, md: 2.5 }}>
-          {activeGroup.charts.map((ChartComponent, index) => (
+          {activeGroup.charts.map(({ Component, fullWidth }, index) => (
             <Grid
               key={`${activeGroup.title}-${index}`}
-              size={{ xs: 12, md: 6 }}
+              size={{
+                xs: 12,
+                md: fullWidth ? 12 : 6,
+              }}
             >
               <Box sx={{ width: "100%" }}>
-                <ChartComponent />
+                <Component data={data} />
               </Box>
             </Grid>
           ))}

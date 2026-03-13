@@ -327,3 +327,89 @@ export interface MainTypesGlobalTrendDetailsZone {
   criticos_mas_90_dias: string;
   promedio_dias_resolucion: string;
 }
+
+export interface BusinessIntelligenceEpp {
+  chart1: Chart1[];
+  chart2: Chart2[];
+  chart3: Chart3[];
+  chart4: Chart4[];
+  chart5: Chart5[];
+  chart6: Chart6[];
+  chart7: Chart7[];
+  chart8: Chart[];
+  chart9: Chart9[];
+  chart10: Chart[];
+  promedioGlobalChart10: string;
+}
+
+interface Chart1 {
+  equipment_name: string;
+  gasto_mes_actual: string;
+  unidades_mes_actual: string;
+  gasto_mes_anterior: string;
+  unidades_mes_anterior: string;
+  diferencia: string;
+  variacion_pct: string;
+}
+
+interface Chart {
+  mes_label: string;
+  mes_date: Date;
+  empleados_con_entrega: string;
+  gasto_total: string;
+  gasto_promedio_por_empleado?: string;
+  unidades_total?: string;
+}
+
+interface Chart2 {
+  equipment_name: string;
+  precio_actual: string;
+  fecha_captura: Date;
+}
+
+interface Chart3 {
+  mes_label: string;
+  mes: Date;
+  total_entregas: string;
+  fuera_de_rango: string;
+  en_rango: string;
+  pct_fuera_de_rango: string;
+}
+
+interface Chart4 {
+  equipment_name: string;
+  unidades_mes_actual: string;
+  unidades_mes_anterior: string;
+  empleados_mes_actual: string;
+  empleados_mes_anterior: string;
+}
+
+interface Chart5 {
+  total_empleados_activos: string;
+  con_entrega_mes_actual: string;
+  sin_entrega_mes_actual: string;
+  pct_con_entrega_actual: string;
+  pct_sin_entrega_actual: string;
+  con_entrega_mes_anterior: string;
+  sin_entrega_mes_anterior: string;
+  pct_con_entrega_anterior: string;
+  pct_sin_entrega_anterior: string;
+}
+
+interface Chart6 {
+  primera_vez_mes_actual: string;
+  primera_vez_mes_anterior: string;
+  diferencia: string;
+}
+
+interface Chart7 {
+  equipment_name: string;
+  empleados_nuevos_que_lo_recibieron: string;
+}
+
+interface Chart9 {
+  equipment_name: string;
+  gasto_total: string;
+  unidades_total: string;
+  pct_del_total: string;
+}

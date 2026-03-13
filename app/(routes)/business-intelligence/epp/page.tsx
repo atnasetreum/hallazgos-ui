@@ -17,6 +17,8 @@ import Chart9 from "./charts/Charts9";
 import Chart10 from "./charts/Charts10";
 import { DashboardService } from "@services";
 import { BusinessIntelligenceEpp } from "@interfaces";
+import SelectDefault from "@components/SelectDefault";
+import { useUserSessionStore } from "@store";
 
 type ChartComponentProps = {
   data: BusinessIntelligenceEpp | null;
@@ -59,71 +61,111 @@ const EPPCharts = () => {
   const [activeTab, setActiveTab] = useState(0);
   const activeGroup = chartGroups[activeTab];
   const [data, setData] = useState<BusinessIntelligenceEpp | null>(null);
+  const [manufacturingPlantId, setManufacturingPlantId] = useState("");
+
+  const manufacturingPlants = useUserSessionStore(
+    (state) => state.manufacturingPlants,
+  );
 
   useEffect(() => {
     DashboardService.findBusinessIntelligenceEpp({
-      manufacturingPlantId: "2",
+      manufacturingPlantId,
     }).then(setData);
-  }, []);
+  }, [manufacturingPlantId]);
+
+  useEffect(() => {
+    if (manufacturingPlants.length) {
+      const defaultPlantId = manufacturingPlants[0].id;
+      setManufacturingPlantId(defaultPlantId.toString());
+    }
+  }, [manufacturingPlants]);
 
   return (
-    <Stack spacing={{ xs: 3, md: 4 }}>
-      <Tabs
-        value={activeTab}
-        onChange={(_, newValue: number) => setActiveTab(newValue)}
-        aria-label="Grupos de indicadores EPP"
-        sx={{
-          width: "100%",
-          backgroundColor: "primary.main",
-          "& .MuiTab-root": {
-            color: (theme) => alpha(theme.palette.common.white, 0.68),
-            opacity: 1,
-            transition: "all 0.2s ease",
-          },
-          "& .MuiTab-root.Mui-selected": {
-            color: "common.white",
-            fontWeight: 700,
-            backgroundColor: (theme) => alpha(theme.palette.common.white, 0.14),
-          },
+    <Grid container spacing={2} sx={{ mb: 2 }}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 3,
+          md: 2,
         }}
-        indicatorColor="secondary"
-        textColor="inherit"
-        variant="fullWidth"
-        scrollButtons="auto"
       >
-        {chartGroups.map((group, index) => (
-          <Tab
-            key={group.title}
-            label={group.title}
-            id={`epp-group-tab-${index}`}
-            aria-controls={`epp-group-panel-${index}`}
-          />
-        ))}
-      </Tabs>
+        <SelectDefault
+          data={manufacturingPlants}
+          label="Planta"
+          isFilter={true}
+          value={manufacturingPlantId}
+          onChange={(e) => {
+            setManufacturingPlantId(e.target.value);
+          }}
+        />
+      </Grid>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 12,
+          md: 12,
+        }}
+      >
+        <Stack spacing={{ xs: 3, md: 4 }}>
+          <Tabs
+            value={activeTab}
+            onChange={(_, newValue: number) => setActiveTab(newValue)}
+            aria-label="Grupos de indicadores EPP"
+            sx={{
+              width: "100%",
+              backgroundColor: "primary.main",
+              "& .MuiTab-root": {
+                color: (theme) => alpha(theme.palette.common.white, 0.68),
+                opacity: 1,
+                transition: "all 0.2s ease",
+              },
+              "& .MuiTab-root.Mui-selected": {
+                color: "common.white",
+                fontWeight: 700,
+                backgroundColor: (theme) =>
+                  alpha(theme.palette.common.white, 0.14),
+              },
+            }}
+            indicatorColor="secondary"
+            textColor="inherit"
+            variant="fullWidth"
+            scrollButtons="auto"
+          >
+            {chartGroups.map((group, index) => (
+              <Tab
+                key={group.title}
+                label={group.title}
+                id={`epp-group-tab-${index}`}
+                aria-controls={`epp-group-panel-${index}`}
+              />
+            ))}
+          </Tabs>
 
-      <Stack
-        spacing={2}
-        role="tabpanel"
-        id={`epp-group-panel-${activeTab}`}
-        aria-labelledby={`epp-group-tab-${activeTab}`}
-      >
-        <Grid container spacing={{ xs: 2, md: 2.5 }}>
-          {activeGroup.charts.map(({ Component, fullWidth }, index) => (
-            <Grid
-              key={`${activeGroup.title}-${index}`}
-              size={{
-                xs: 12,
-                md: fullWidth ? 12 : 6,
-              }}
-            >
-              <Box sx={{ width: "100%" }}>
-                <Component data={data} />
-              </Box>
+          <Stack
+            spacing={2}
+            role="tabpanel"
+            id={`epp-group-panel-${activeTab}`}
+            aria-labelledby={`epp-group-tab-${activeTab}`}
+          >
+            <Grid container spacing={{ xs: 2, md: 2.5 }}>
+              {activeGroup.charts.map(({ Component, fullWidth }, index) => (
+                <Grid
+                  key={`${activeGroup.title}-${index}`}
+                  size={{
+                    xs: 12,
+                    md: fullWidth ? 12 : 6,
+                  }}
+                >
+                  <Box sx={{ width: "100%" }}>
+                    <Component data={data} />
+                  </Box>
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
-      </Stack>
-    </Stack>
+          </Stack>
+        </Stack>
+      </Grid>
+    </Grid>
   );
 };
 

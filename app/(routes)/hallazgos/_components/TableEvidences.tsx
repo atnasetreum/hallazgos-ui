@@ -206,15 +206,23 @@ export default function TableEvidences({
                   />
                 )}
 
-                {row.status === STATUS_OPEN && role === ROLE_ADMINISTRADOR && (
-                  <Chip
-                    icon={<DeleteIcon />}
-                    label="Cancelar"
-                    color="error"
-                    onClick={() => removeEvicence(row.id)}
-                    disabled={isLoading}
-                  />
-                )}
+                {row.status === STATUS_OPEN &&
+                  [
+                    "glora@hadainternational.com",
+                    "sst@hadamexico.com",
+                    "dtrujillo@hadamexico.com",
+                    "gsanchez@hadamexico.com",
+                    "cseguridad@hadainternational.com",
+                  ].includes(email) && (
+                    //&& role === ROLE_ADMINISTRADOR
+                    <Chip
+                      icon={<DeleteIcon />}
+                      label="Cancelar"
+                      color="error"
+                      onClick={() => removeEvicence(row.id)}
+                      disabled={isLoading}
+                    />
+                  )}
               </Stack>
             </StyledTableCell>
           </StyledTableRow>

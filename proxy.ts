@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 let idx = 0;
+const PUBLIC_PATHS = new Set(["/", "/privacy"]);
 
 export async function proxy(request: NextRequest) {
   const url = request.nextUrl;
@@ -12,7 +13,7 @@ export async function proxy(request: NextRequest) {
     request.cookies.get("token")?.value || tokenRestorePassword || "";
 
   if (!token) {
-    if (pathname === "/") {
+    if (PUBLIC_PATHS.has(pathname)) {
       return NextResponse.next();
     }
     return NextResponse.redirect(new URL("/", request.url));
@@ -74,7 +75,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL(url.pathname, request.url));
   }
 
-  if (pathname === "/") {
+  if (PUBLIC_PATHS.has(pathname)) {
     return NextResponse.next();
   }
 

@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import { Dayjs } from "dayjs";
 
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { Typography } from "@mui/material";
 import { Grid } from "@mui/material";
+import { Paper } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { useCategoriesStore, useUserSessionStore } from "@store";
 import SelectDefault from "@components/SelectDefault";
@@ -15,6 +21,8 @@ export interface FiltersEvidences {
   zone: string;
   process: string;
   state: string;
+  startDate: string;
+  endDate: string;
 }
 
 interface Props {
@@ -25,6 +33,17 @@ interface Props {
 
 const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
   const [secondaryTypes, setSecondaryTypes] = useState<SecondaryType[]>([]);
+
+  const parseDate = (value: string): Dayjs | null => {
+    if (!value) return null;
+
+    const [day, month, year] = value.split("/");
+
+    if (!day || !month || !year) return null;
+
+    const parsedDate = dayjs(`${year}-${month}-${day}`);
+    return parsedDate.isValid() ? parsedDate : null;
+  };
 
   const manufacturingPlants = useUserSessionStore(
     (state) => state.manufacturingPlants,
@@ -186,6 +205,81 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
             })
           }
         />
+      </Grid>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 3,
+          md: 2,
+        }}
+      >
+        <Paper>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Fecha inicio"
+              format="DD/MM/YYYY"
+              value={parseDate(filters.startDate)}
+              maxDate={parseDate(filters.endDate) || dayjs()}
+              onChange={(newValue: Dayjs | null) =>
+                setFilters({
+                  ...filters,
+                  startDate: newValue ? newValue.format("DD/MM/YYYY") : "",
+                })
+              }
+              slotProps={{
+                field: {
+                  clearable: true,
+                  onClear: () =>
+                    setFilters({
+                      ...filters,
+                      startDate: "",
+                    }),
+                },
+                textField: {
+                  fullWidth: true,
+                },
+              }}
+            />
+          </LocalizationProvider>
+        </Paper>
+      </Grid>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 3,
+          md: 2,
+        }}
+      >
+        <Paper>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Fecha fin"
+              format="DD/MM/YYYY"
+              value={parseDate(filters.endDate)}
+              minDate={parseDate(filters.startDate) || undefined}
+              maxDate={dayjs()}
+              onChange={(newValue: Dayjs | null) =>
+                setFilters({
+                  ...filters,
+                  endDate: newValue ? newValue.format("DD/MM/YYYY") : "",
+                })
+              }
+              slotProps={{
+                field: {
+                  clearable: true,
+                  onClear: () =>
+                    setFilters({
+                      ...filters,
+                      endDate: "",
+                    }),
+                },
+                textField: {
+                  fullWidth: true,
+                },
+              }}
+            />
+          </LocalizationProvider>
+        </Paper>
       </Grid>
     </Grid>
   );

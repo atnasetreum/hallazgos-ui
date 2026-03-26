@@ -31,6 +31,8 @@ export default function HallazgosPage() {
     zone: "",
     process: "",
     state: "",
+    startDate: "",
+    endDate: "",
   });
 
   const [isLoadingPdf, setIsLoadingPdf] = useState<boolean>(false);
@@ -79,8 +81,9 @@ export default function HallazgosPage() {
         size={{
           xs: 12,
           sm: 12,
-          md: 12
-        }}>
+          md: 12,
+        }}
+      >
         <Toolbar>
           <Box sx={{ flexGrow: 1 }}>
             <Button
@@ -107,7 +110,7 @@ export default function HallazgosPage() {
               onClick={() => {
                 setIsLoadingExcel(true);
                 EvidencesService.downloadExcel(filters).finally(() =>
-                  setIsLoadingExcel(false)
+                  setIsLoadingExcel(false),
                 );
               }}
               loading={isLoadingExcel}
@@ -129,8 +132,9 @@ export default function HallazgosPage() {
         size={{
           xs: 12,
           sm: 12,
-          md: 12
-        }}>
+          md: 12,
+        }}
+      >
         <FiltersEvidence
           filters={filters}
           setFilters={setFilters}
@@ -141,8 +145,9 @@ export default function HallazgosPage() {
         size={{
           xs: 12,
           sm: 12,
-          md: 12
-        }}>
+          md: 12,
+        }}
+      >
         {isLoading ? (
           <LoadingLinear />
         ) : (

@@ -19,6 +19,8 @@ const paramsFilter = (params: FiltersEvidences) => {
     ...(params.secondaryType && { secondaryType: params.secondaryType }),
     ...(params.zone && { zone: params.zone }),
     ...(params.state && { status: params.state }),
+    ...(params.startDate && { startDate: params.startDate }),
+    ...(params.endDate && { endDate: params.endDate }),
   };
 };
 
@@ -39,7 +41,7 @@ const create = async (formData: FormData) => {
         ["x-app-key"]: process.env.NEXT_PUBLIC_APP_KEY,
       },
       withCredentials: true,
-    }
+    },
   );
   return data;
 };
@@ -54,7 +56,7 @@ const solution = async (id: number, formData: FormData) => {
         ["x-app-key"]: process.env.NEXT_PUBLIC_APP_KEY,
       },
       withCredentials: true,
-    }
+    },
   );
   return data;
 };

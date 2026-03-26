@@ -15,6 +15,8 @@ const query = gql`
     $zoneId: Float
     $processId: Float
     $status: String
+    $startDate: String
+    $endDate: String
   ) {
     evidences(
       page: $page
@@ -25,6 +27,8 @@ const query = gql`
       zoneId: $zoneId
       processId: $processId
       status: $status
+      startDate: $startDate
+      endDate: $endDate
     ) {
       count
       data {
@@ -141,6 +145,8 @@ export const useEvidences = () => {
       ...(filters.zone && { zoneId: Number(filters.zone) }),
       ...(filters.process && { processId: Number(filters.process) }),
       ...(filters.state && { status: filters.state }),
+      ...(filters.startDate && { startDate: filters.startDate }),
+      ...(filters.endDate && { endDate: filters.endDate }),
     };
 
     return findEvidences({

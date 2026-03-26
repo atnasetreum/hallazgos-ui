@@ -11,12 +11,7 @@ import {
   StyledTableCell,
   StyledTableRow,
 } from "@shared/components/TableDefault";
-import {
-  ROLE_ADMINISTRADOR,
-  STATUS_CLOSED,
-  STATUS_OPEN,
-  ROLE_SUPERVISOR,
-} from "@shared/constants";
+import { STATUS_CLOSED, STATUS_OPEN, ROLE_SUPERVISOR } from "@shared/constants";
 import EvidencePreview from "./EvidencePreview";
 import CloseEvidence from "./CloseEvidence";
 import { useUserSessionStore } from "@store";

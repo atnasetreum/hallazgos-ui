@@ -208,6 +208,7 @@ export default function TableEvidences({
                     "dtrujillo@hadamexico.com",
                     "gsanchez@hadamexico.com",
                     "cseguridad@hadainternational.com",
+                    "eduardo-266@hotmail.com",
                   ].includes(email) && (
                     //&& role === ROLE_ADMINISTRADOR
                     <Chip

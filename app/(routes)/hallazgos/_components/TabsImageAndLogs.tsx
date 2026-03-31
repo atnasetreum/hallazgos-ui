@@ -66,6 +66,30 @@ export default function TabsImageAndLogs({
     evidenceCurrent.comments,
   );
 
+  const imageContainerSx = {
+    width: "100%",
+    mx: "auto",
+    borderRadius: 2,
+    overflow: "hidden",
+    border: "1px solid",
+    borderColor: "divider",
+    backgroundColor: "grey.100",
+    maxWidth: {
+      xs: "100%",
+      sm: 560,
+      md: 620,
+      lg: 720,
+    },
+  };
+
+  const imageSx = {
+    display: "block",
+    width: "100%",
+    height: "auto",
+    maxHeight: "65vh",
+    objectFit: "contain" as const,
+  };
+
   const handleChange = (_: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -116,14 +140,16 @@ export default function TabsImageAndLogs({
                 <Typography variant="h6" gutterBottom>
                   Hallazgo
                 </Typography>
-                <Image
-                  src={baseUrlImage(evidenceCurrent.imgEvidence || "")}
-                  alt="Hallazgo imagen"
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  style={{ width: "100%", height: "auto" }}
-                />
+                <Box sx={imageContainerSx}>
+                  <Image
+                    src={baseUrlImage(evidenceCurrent.imgEvidence || "")}
+                    alt="Hallazgo imagen"
+                    width={0}
+                    height={0}
+                    sizes="(max-width: 600px) 100vw, (max-width: 900px) 560px, 720px"
+                    style={imageSx}
+                  />
+                </Box>
               </Grid>
             )}
 
@@ -138,14 +164,16 @@ export default function TabsImageAndLogs({
                 <Typography variant="h6" gutterBottom>
                   Solución
                 </Typography>
-                <Image
-                  src={baseUrlImage(evidenceCurrent?.imgSolution || "")}
-                  alt="Imagen Solución"
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  style={{ width: "100%", height: "auto" }}
-                />
+                <Box sx={imageContainerSx}>
+                  <Image
+                    src={baseUrlImage(evidenceCurrent?.imgSolution || "")}
+                    alt="Imagen Solución"
+                    width={0}
+                    height={0}
+                    sizes="(max-width: 600px) 100vw, (max-width: 900px) 560px, 720px"
+                    style={imageSx}
+                  />
+                </Box>
               </Grid>
             )}
           </Grid>

@@ -8,9 +8,10 @@ import { Toolbar } from "@mui/material";
 import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
+import { useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import { ButtonGroup } from "@mui/material";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 import { toast } from "sonner";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -24,6 +25,9 @@ import { useEvidences } from "@hooks";
 import { EvidencesService } from "@services";
 
 export default function HallazgosPage() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [filters, setFilters] = useState<FiltersEvidences>({
     manufacturingPlantId: "",
     mainTypeId: "",
@@ -53,7 +57,7 @@ export default function HallazgosPage() {
 
   const getData = useCallback(() => {
     findEvidences(filters);
-  }, [filters, page, rowsPerPage]);
+  }, [filters, findEvidences]);
 
   const createPdf = () => {
     if (!filters.manufacturingPlantId) {
@@ -84,26 +88,47 @@ export default function HallazgosPage() {
           md: 12,
         }}
       >
-        <Toolbar>
-          <Box sx={{ flexGrow: 1 }}>
+        <Toolbar
+          sx={{
+            px: { xs: 0, sm: 2 },
+            py: 1,
+            gap: 1,
+            alignItems: { xs: "stretch", sm: "center" },
+            flexDirection: { xs: "column", sm: "row" },
+          }}
+        >
+          <Box sx={{ flexGrow: 1, width: { xs: "100%", sm: "auto" } }}>
             <Button
               variant="contained"
               startIcon={<AddAPhotoIcon />}
               onClick={() => router.push("/hallazgos/form")}
+              fullWidth={isMobile}
+              sx={{ minHeight: 44 }}
             >
               Crear
             </Button>
           </Box>
 
-          <ButtonGroup
-            variant="contained"
-            aria-label="outlined primary button group"
+          <Box
+            sx={{
+              width: { xs: "100%", sm: "auto" },
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", sm: "auto auto auto" },
+              gap: 1,
+              "& .MuiButton-root": {
+                minHeight: 44,
+                width: { xs: "100%", sm: "auto" },
+              },
+            }}
           >
             <Button
               variant="contained"
               startIcon={<RefreshIcon />}
               onClick={() => getData()}
-            />
+              aria-label="Refrescar"
+            >
+              Refrescar
+            </Button>
             <LoadingButton
               variant="contained"
               startIcon={<SimCardDownloadIcon />}
@@ -125,7 +150,7 @@ export default function HallazgosPage() {
             >
               PDF
             </LoadingButton>
-          </ButtonGroup>
+          </Box>
         </Toolbar>
       </Grid>
       <Grid

@@ -42,7 +42,12 @@ export const baseUrlImage = (image: string, path?: string) => {
     path = "/static/images/evidences/";
   }
 
-  return `https://api.comportarte.com${path}${image}`;
+  const apiBaseUrl = process.env.NEXT_PUBLIC_URL_API_RAW;
+  const url = `${apiBaseUrl}${path}${image}`;
+
+  console.log({ url });
+
+  return url;
 };
 
 export const stringToDateWithTime = (date: string | Date) => {

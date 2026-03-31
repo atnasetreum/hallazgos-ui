@@ -318,8 +318,8 @@ const DashboardPage = () => {
 
   if (!currentCountry) return null;
 
-  //if (currentCountry === "México" && currentUser?.id !== 1) {
-  if (currentCountry === "México") {
+  if (currentCountry === "México" && currentUser?.id !== 1) {
+    //if (currentCountry === "México") {
     return (
       <Box sx={{ bgcolor: "background.paper", width: "100%" }}>
         <AppBar position="static">

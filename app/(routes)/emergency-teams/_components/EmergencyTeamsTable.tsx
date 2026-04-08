@@ -39,7 +39,7 @@ interface Props {
   rows: EmergencyTeam[];
   selectedIds: number[];
   setSelectedIds: (ids: number[]) => void;
-  onPrintRows: (rows: EmergencyTeam[]) => void;
+  onPrintRows: (rows: EmergencyTeam[]) => void | Promise<void>;
   getData: () => void;
 }
 
@@ -234,6 +234,7 @@ export default function EmergencyTeamsTable({
                 />
               </StyledTableCell>
               <StyledTableCell>ID</StyledTableCell>
+              <StyledTableCell>Planta</StyledTableCell>
               <StyledTableCell>Ubicación</StyledTableCell>
               <StyledTableCell>N. Extintor</StyledTableCell>
               <StyledTableCell>Tipo</StyledTableCell>
@@ -256,6 +257,9 @@ export default function EmergencyTeamsTable({
                   />
                 </StyledTableCell>
                 <StyledTableCell>{row.id}</StyledTableCell>
+                <StyledTableCell>
+                  {row.manufacturingPlant?.name || "-"}
+                </StyledTableCell>
                 <StyledTableCell>{row.location}</StyledTableCell>
                 <StyledTableCell>{row.extinguisherNumber}</StyledTableCell>
                 <StyledTableCell>{row.typeOfExtinguisher}</StyledTableCell>
@@ -301,7 +305,7 @@ export default function EmergencyTeamsTable({
             ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={12} />
+                <TableCell colSpan={13} />
               </TableRow>
             )}
           </TableBody>
@@ -309,7 +313,7 @@ export default function EmergencyTeamsTable({
             <StyledTableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={12}
+                colSpan={13}
                 count={rows.length}
                 rowsPerPage={rowsPerPage}
                 page={page}

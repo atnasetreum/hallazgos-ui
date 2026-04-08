@@ -14,6 +14,7 @@ import PrintIcon from "@mui/icons-material/Print";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { useDebouncedCallback } from "use-debounce";
 import Typography from "@mui/material/Typography";
+import QRCode from "qrcode";
 
 import LoadingLinear from "@shared/components/LoadingLinear";
 import { notify } from "@shared/utils";
@@ -30,6 +31,7 @@ const EmergencyTeamsPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [filters, setFilters] = useState<IFiltersEmergencyTeams>({
     search: "",
+    manufacturingPlantId: "",
   });
 
   const router = useRouter();
@@ -51,13 +53,18 @@ const EmergencyTeamsPage = () => {
     );
   }, [data]);
 
-  const printQrs = (rowsToPrint: EmergencyTeam[]) => {
-    const validRows = rowsToPrint.filter((row) => !!row.qrCode);
-
-    if (!validRows.length) {
+  const printQrs = async (rowsToPrint: EmergencyTeam[]) => {
+    if (!rowsToPrint.length) {
       notify("Seleccione al menos un registro con QR para imprimir");
       return;
     }
+
+    const rowsWithQr = await Promise.all(
+      rowsToPrint.map(async (row) => ({
+        ...row,
+        generatedQrCode: await QRCode.toDataURL(row.id.toString()),
+      })),
+    );
 
     const printWindow = window.open(
       "about:blank",
@@ -71,9 +78,9 @@ const EmergencyTeamsPage = () => {
     }
 
     const perPage = 12;
-    const pages: EmergencyTeam[][] = [];
-    for (let i = 0; i < validRows.length; i += perPage) {
-      pages.push(validRows.slice(i, i + perPage));
+    const pages: Array<Array<EmergencyTeam & { generatedQrCode: string }>> = [];
+    for (let i = 0; i < rowsWithQr.length; i += perPage) {
+      pages.push(rowsWithQr.slice(i, i + perPage));
     }
 
     const pagesHtml = pages
@@ -86,7 +93,7 @@ const EmergencyTeamsPage = () => {
                   (row) => `
                     <div class="item">
                       <div class="qr-box">
-                        <img src="${row.qrCode}" alt="QR equipo ${row.id}" />
+                        <img src="${row.generatedQrCode}" alt="QR equipo ${row.id}" />
                       </div>
                       <div class="qr-id">ID: ${row.id}</div>
                     </div>
@@ -189,7 +196,7 @@ const EmergencyTeamsPage = () => {
 
   const printSelectedQrs = () => {
     const selectedRows = data.filter((row) => selectedIds.includes(row.id));
-    printQrs(selectedRows);
+    void printQrs(selectedRows);
   };
 
   return (

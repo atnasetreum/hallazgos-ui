@@ -10,12 +10,17 @@ export interface EmergencyTeam {
   extinguisherNumber: number;
   typeOfExtinguisher: ExtinguisherType;
   capacity: number;
-  qrCode: string;
+  manufacturingPlant: EmergencyTeamManufacturingPlant;
   isActive: boolean;
   createdBy: EmergencyTeamUser;
   updatedBy: EmergencyTeamUser | null;
   createdAt: Date;
   updatedAt: Date;
+}
+
+interface EmergencyTeamManufacturingPlant {
+  id: number;
+  name: string;
 }
 
 interface EmergencyTeamUser {

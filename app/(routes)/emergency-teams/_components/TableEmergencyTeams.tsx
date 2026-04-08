@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import QRCode from "qrcode";
 
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
@@ -64,9 +65,10 @@ export default function TableEmergencyTeams({ rows, getData }: Props) {
       .finally(() => setIsLoading(false));
   };
 
-  const openQr = (row: EmergencyTeam) => {
+  const openQr = async (row: EmergencyTeam) => {
     setIdCurrent(row.id);
-    setQrCodeCurrent(row.qrCode);
+    const generatedQrCode = await QRCode.toDataURL(row.id.toString());
+    setQrCodeCurrent(generatedQrCode);
     setOpenQrModal(true);
   };
 

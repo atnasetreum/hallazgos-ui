@@ -205,6 +205,11 @@ export const MainListItems = () => {
           )}
           <CreateLink url="/epp" title="EPP" icon={<DescriptionIcon />} />
           <CreateLink url="/ciael" title="CIAEL" icon={<WarningIcon />} />
+          <CreateLink
+            url="/extinguisher-inspection"
+            title="Inspección de extintores"
+            icon={<FireExtinguisherIcon />}
+          />
         </>
       )}
       {!userEpp.includes(email) && (

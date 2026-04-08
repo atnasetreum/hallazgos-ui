@@ -17,6 +17,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import MenuItem from "@mui/material/MenuItem";
 import { toast } from "sonner";
 
+import SelectManufacturingPlants from "@components/SelectManufacturingPlants";
 import { EmergencyTeamsService } from "@services";
 import { ExtinguisherType } from "@interfaces";
 
@@ -29,6 +30,7 @@ const extinguisherTypes = [
 const EmergencyTeamsFormPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [form, setForm] = useState({
+    manufacturingPlantId: "",
     location: "",
     extinguisherNumber: "",
     typeOfExtinguisher: "" as ExtinguisherType | "",
@@ -43,6 +45,11 @@ const EmergencyTeamsFormPage = () => {
     const locationClean = form.location.trim();
     const extinguisherNumberClean = form.extinguisherNumber.trim();
     const capacityClean = form.capacity.trim();
+
+    if (!form.manufacturingPlantId) {
+      toast.error("La planta es requerida");
+      return;
+    }
 
     if (!locationClean) {
       toast.error("La ubicación es requerida");
@@ -71,6 +78,7 @@ const EmergencyTeamsFormPage = () => {
       extinguisherNumber: Number(extinguisherNumberClean),
       typeOfExtinguisher: form.typeOfExtinguisher as ExtinguisherType,
       capacity: Number(capacityClean),
+      manufacturingPlantId: Number(form.manufacturingPlantId),
     };
 
     if (!idCurrent) {
@@ -96,6 +104,7 @@ const EmergencyTeamsFormPage = () => {
 
   const isValidateForm = useMemo(
     () =>
+      !form.manufacturingPlantId ||
       !form.location?.trim() ||
       !form.extinguisherNumber?.trim() ||
       !form.typeOfExtinguisher ||
@@ -110,6 +119,7 @@ const EmergencyTeamsFormPage = () => {
     setIdCurrent(id);
     EmergencyTeamsService.findOne(id).then((data) => {
       setForm({
+        manufacturingPlantId: data.manufacturingPlant?.id?.toString() || "",
         location: data.location,
         extinguisherNumber: data.extinguisherNumber.toString(),
         typeOfExtinguisher: data.typeOfExtinguisher,
@@ -128,12 +138,32 @@ const EmergencyTeamsFormPage = () => {
         }}
       >
         <Paper>
+          <SelectManufacturingPlants
+            value={form.manufacturingPlantId}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                manufacturingPlantId: e.target.value,
+              })
+            }
+          />
+        </Paper>
+      </Grid>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 6,
+          md: 3,
+        }}
+      >
+        <Paper>
           <TextField
             label="Ubicación"
             variant="outlined"
             fullWidth
             autoComplete="off"
             value={form.location}
+            disabled={!form.manufacturingPlantId}
             onChange={(e) =>
               setForm({
                 ...form,
@@ -162,6 +192,7 @@ const EmergencyTeamsFormPage = () => {
             fullWidth
             autoComplete="off"
             value={form.extinguisherNumber}
+            disabled={!form.manufacturingPlantId}
             onChange={(e) =>
               setForm({
                 ...form,
@@ -185,6 +216,7 @@ const EmergencyTeamsFormPage = () => {
             variant="outlined"
             fullWidth
             value={form.typeOfExtinguisher}
+            disabled={!form.manufacturingPlantId}
             onChange={(e) =>
               setForm({
                 ...form,
@@ -217,6 +249,7 @@ const EmergencyTeamsFormPage = () => {
             fullWidth
             autoComplete="off"
             value={form.capacity}
+            disabled={!form.manufacturingPlantId}
             onChange={(e) =>
               setForm({
                 ...form,

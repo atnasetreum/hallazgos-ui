@@ -6,6 +6,7 @@ interface Payload {
   extinguisherNumber: number;
   typeOfExtinguisher: ExtinguisherType;
   capacity: number;
+  manufacturingPlantId: number;
 }
 
 const api = axiosWrapper({
@@ -17,11 +18,17 @@ const create = async (payload: Payload) => {
   return data;
 };
 
-const findAll = async (filters: { search?: string }) => {
+const findAll = async (filters: {
+  search?: string;
+  manufacturingPlantId?: string;
+}) => {
   const { data } = await api.get<EmergencyTeam[]>("", {
     params: {
       ...(filters?.search && {
         search: filters.search,
+      }),
+      ...(filters?.manufacturingPlantId && {
+        manufacturingPlantId: filters.manufacturingPlantId,
       }),
     },
   });

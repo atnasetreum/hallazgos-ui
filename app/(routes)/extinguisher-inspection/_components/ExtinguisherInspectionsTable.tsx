@@ -8,6 +8,7 @@ import TableDefault, {
   StyledTableRow,
 } from "@shared/components/TableDefault";
 import { ExtinguisherInspection } from "@interfaces";
+import { ExtinguisherInspectionsService } from "@services";
 
 interface Props {
   rows: ExtinguisherInspection[];
@@ -44,7 +45,12 @@ export default function ExtinguisherInspectionsTable({ rows }: Props) {
           <StyledTableCell>{row.createdBy?.name || "-"}</StyledTableCell>
           <StyledTableCell>
             <Tooltip title="Descargar Excel">
-              <IconButton color="primary">
+              <IconButton
+                color="primary"
+                onClick={() =>
+                  ExtinguisherInspectionsService.downloadFile(row.id)
+                }
+              >
                 <SimCardDownloadIcon />
               </IconButton>
             </Tooltip>

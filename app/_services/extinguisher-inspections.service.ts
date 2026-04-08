@@ -57,7 +57,27 @@ const findAll = async (filters: Filters) => {
   return data;
 };
 
+const downloadFile = async (id: number) => {
+  const { data } = await api.get(`/download/file/${id}`, {
+    responseType: "blob",
+  });
+
+  const url = window.URL.createObjectURL(new Blob([data]));
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", `RGOSGSST49_Inspeccion_${id}.xlsx`);
+  document.body.appendChild(link);
+  link.click();
+
+  link.remove();
+  window.URL.revokeObjectURL(url);
+
+  return "ok";
+};
+
 export const ExtinguisherInspectionsService = {
   create,
   findAll,
+  downloadFile,
 };

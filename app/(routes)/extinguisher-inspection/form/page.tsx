@@ -705,7 +705,7 @@ const ExtinguisherInspectionFormPage = () => {
                           label: "Capacidad",
                           value: evaluation.capacity || "-",
                         },
-                      ].map((item, itemIndex) => (
+                      ].map((item) => (
                         <Grid key={item.label} size={{ xs: 12, sm: 6, md: 12 }}>
                           <Box
                             sx={{

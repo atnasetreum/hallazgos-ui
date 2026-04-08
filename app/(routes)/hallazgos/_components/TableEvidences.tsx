@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
+import { toast } from "sonner";
 
 import { Chip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
@@ -69,6 +70,21 @@ export default function TableEvidences({
         getData();
       })
       .finally(() => setIsLoading(false));
+  };
+
+  const confirmRemoveEvidence = (row: EvidenceGraphql) => {
+    toast.warning("Confirmar cancelación", {
+      description: `¿Desea cancelar/eliminar el hallazgo #${row.id}?`,
+      duration: 10000,
+      cancel: {
+        label: "Cancelar",
+        onClick: () => undefined,
+      },
+      action: {
+        label: "Cancelar",
+        onClick: () => removeEvicence(row.id),
+      },
+    });
   };
 
   // !Atention: Force close evidence if the user is a supervisor
@@ -181,11 +197,7 @@ export default function TableEvidences({
               <Stack direction="row" spacing={1}>
                 <Chip
                   icon={<InfoIcon />}
-                  label={`Detalles ${
-                    row.status === STATUS_CLOSED && row?.solutionDate
-                      ? durantionToTime(row.createdAt, row.solutionDate)
-                      : ""
-                  }`}
+                  label={`Detalles ${durantionToTime(row)}`}
                   color="secondary"
                   onClick={() => setEvidenceCurrent(row)}
                 />
@@ -215,7 +227,7 @@ export default function TableEvidences({
                       icon={<DeleteIcon />}
                       label="Cancelar"
                       color="error"
-                      onClick={() => removeEvicence(row.id)}
+                      onClick={() => confirmRemoveEvidence(row)}
                       disabled={isLoading}
                     />
                   )}

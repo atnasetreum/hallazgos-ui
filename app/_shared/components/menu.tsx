@@ -31,6 +31,7 @@ import FolderSharedIcon from "@mui/icons-material/FolderShared";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import FolderIcon from "@mui/icons-material/Folder";
 import ConstructionIcon from "@mui/icons-material/Construction";
+import FireExtinguisherIcon from "@mui/icons-material/FireExtinguisher";
 
 import { useCategoriesStore, useUserSessionStore } from "@store";
 import { ROLE_ADMINISTRADOR } from "@shared/constants";
@@ -191,6 +192,12 @@ export const MainListItems = () => {
                     url="/equipments"
                     title="Equipo de protección"
                     icon={<ConstructionIcon />}
+                  />
+                  <CreateLink
+                    nested
+                    url="/emergency-teams"
+                    title="Equipos de emergencia"
+                    icon={<FireExtinguisherIcon />}
                   />
                 </List>
               </Collapse>

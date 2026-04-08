@@ -69,7 +69,7 @@ export default function TableMainTypes({ rows, getData }: Props) {
               />
               <Chip
                 icon={<DeleteIcon />}
-                label="Cancelar"
+                label="Eliminar"
                 color="error"
                 onClick={() => remove(row.id)}
                 disabled={isLoading}

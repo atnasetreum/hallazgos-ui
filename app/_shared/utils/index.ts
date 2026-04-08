@@ -1,3 +1,5 @@
+import { EvidenceGraphql } from "@hooks";
+import { STATUS_CLOSED } from "@shared/constants";
 import moment from "moment-timezone";
 import { toast } from "sonner";
 
@@ -58,11 +60,30 @@ export const stringToDateWithTime = (date: string | Date) => {
 export const stringToDate = (date: string | Date) =>
   moment(date).format("DD MMMM YYYY");
 
-export const durantionToTime = (startTime: Date, end: Date) => {
-  const duration = moment.duration(moment(end).diff(moment(startTime)));
+export const durantionToTime = (row: EvidenceGraphql) => {
+  const { createdAt, solutionDate, status } = row;
+
+  if (!solutionDate || status !== STATUS_CLOSED) return "";
+
+  const duration = moment.duration(
+    moment(solutionDate).diff(moment(createdAt)),
+  );
+
   const hours = duration.hours();
   const minutes = duration.minutes();
   const seconds = duration.seconds();
+
+  if (Number(row.id) === 3) {
+    console.log({
+      id: row.id,
+      hours,
+      minutes,
+      seconds,
+      createdAt: moment(createdAt).format("DD/MM/YYYY h:mm a"),
+      solutionDate: moment(solutionDate).format("DD/MM/YYYY h:mm a"),
+    });
+  }
+
   return `${hours ? hours + "h" : ""} ${minutes ? minutes + "m" : ""} ${
     seconds ? seconds + "s" : ""
   }`;

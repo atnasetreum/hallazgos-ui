@@ -10,6 +10,7 @@ export * from "./cie-diagnoses.service";
 export * from "./config.tg.service";
 export * from "./dashboard.service";
 export * from "./employees.service";
+export * from "./emergency-teams.service";
 export * from "./epp.service";
 export * from "./equipments.service";
 export * from "./evidences.service";

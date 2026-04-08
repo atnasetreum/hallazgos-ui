@@ -8,6 +8,7 @@ export * from "./ciaels.interfaces";
 export * from "./cie-diagnoses.interfaces";
 export * from "./dashboard.interfaces";
 export * from "./employees.interfaces";
+export * from "./emergency-teams.interfaces";
 export * from "./epps.interfaces";
 export * from "./equipments.interfaces";
 export * from "./evicences.interfaces";

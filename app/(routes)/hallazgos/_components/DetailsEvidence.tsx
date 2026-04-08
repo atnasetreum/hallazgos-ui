@@ -30,7 +30,7 @@ export default function DetailsTabs({
 
   useEffect(() => {
     setWithImages(
-      !!evidenceCurrent.imgEvidence || !!evidenceCurrent.imgSolution
+      !!evidenceCurrent.imgEvidence || !!evidenceCurrent.imgSolution,
     );
   }, [evidenceCurrent]);
 
@@ -47,8 +47,9 @@ export default function DetailsTabs({
         size={{
           xs: 12,
           sm: 4,
-          md: 4
-        }}>
+          md: 4,
+        }}
+      >
         <List dense={true}>
           <ListItem>
             <ListItemButton>
@@ -106,8 +107,8 @@ export default function DetailsTabs({
                         evidenceCurrent.status === STATUS_OPEN
                           ? theme.palette.warning.main
                           : evidenceCurrent.status === STATUS_CLOSED
-                          ? theme.palette.success.main
-                          : theme.palette.error.main,
+                            ? theme.palette.success.main
+                            : theme.palette.error.main,
                       textDecoration: "underline",
                     }}
                   >
@@ -210,14 +211,9 @@ export default function DetailsTabs({
               <ListItemButton>
                 <ListItemText
                   primary={stringToDateWithTime(evidenceCurrent.solutionDate)}
-                  secondary={`Fecha de cierre, tiempo de solución ${
-                    evidenceCurrent.status === STATUS_CLOSED
-                      ? durantionToTime(
-                          evidenceCurrent.createdAt,
-                          evidenceCurrent.solutionDate
-                        )
-                      : ""
-                  }`}
+                  secondary={`Fecha de cierre, tiempo de solución ${durantionToTime(
+                    evidenceCurrent,
+                  )}`}
                 />
               </ListItemButton>
             </ListItem>
@@ -237,8 +233,9 @@ export default function DetailsTabs({
         size={{
           xs: 12,
           sm: 8,
-          md: 8
-        }}>
+          md: 8,
+        }}
+      >
         <TabsImageAndLogs
           evidenceCurrent={evidenceCurrent}
           setRefreshData={setRefreshData}

@@ -10,7 +10,6 @@ import SelectManufacturingPlantsOwn from "@components/SelectManufacturingPlantsO
 export interface IFiltersExtinguisherInspections {
   search: string;
   manufacturingPlantId: string;
-  inspectionDate: string;
 }
 
 interface Props {
@@ -78,31 +77,6 @@ const FiltersExtinguisherInspections = ({
               setFilters({
                 ...filters,
                 search: e.target.value,
-              })
-            }
-          />
-        </Paper>
-      </Grid>
-
-      <Grid
-        size={{
-          xs: 12,
-          sm: 6,
-          md: 3,
-        }}
-      >
-        <Paper>
-          <TextField
-            id="extinguisher-inspections-date"
-            label="Fecha de inspección"
-            type="date"
-            fullWidth
-            InputLabelProps={{ shrink: true }}
-            value={filters.inspectionDate}
-            onChange={(e) =>
-              setFilters({
-                ...filters,
-                inspectionDate: e.target.value,
               })
             }
           />

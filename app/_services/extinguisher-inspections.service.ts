@@ -26,7 +26,6 @@ interface EvaluationPayload {
 }
 
 interface Payload {
-  inspectionDate: string;
   manufacturingPlantId: number;
   evaluations: EvaluationPayload[];
 }
@@ -34,7 +33,6 @@ interface Payload {
 interface Filters {
   search?: string;
   manufacturingPlantId?: string;
-  inspectionDate?: string;
 }
 
 const api = axiosWrapper({
@@ -52,9 +50,6 @@ const findAll = async (filters: Filters) => {
       ...(filters?.search && { search: filters.search }),
       ...(filters?.manufacturingPlantId && {
         manufacturingPlantId: filters.manufacturingPlantId,
-      }),
-      ...(filters?.inspectionDate && {
-        inspectionDate: filters.inspectionDate,
       }),
     },
   });

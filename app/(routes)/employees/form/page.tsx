@@ -18,7 +18,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TextField, TextFieldProps } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { esES } from "@mui/x-date-pickers/locales";
 import dayjs, { Dayjs } from "dayjs";
+import "dayjs/locale/es";
 
 import { EmployeesService } from "@services";
 import { CatalogEmployee } from "@interfaces";
@@ -160,7 +162,7 @@ const EmployeesFormPage = () => {
       !form.manufacturingPlantNames.length ||
       !form.birthdate.isValid() ||
       !form.dateOfAdmission.isValid(),
-    [form]
+    [form],
   );
 
   useEffect(() => {
@@ -187,7 +189,7 @@ const EmployeesFormPage = () => {
   const onChangeSelect = (
     event:
       | SelectChangeEvent<string>
-      | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = event.target;
     setForm({
@@ -203,8 +205,9 @@ const EmployeesFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <Paper>
             <TextField
               label="Código de empleado *"
@@ -221,8 +224,9 @@ const EmployeesFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <Paper>
             <TextField
               label="Nombre completo *"
@@ -239,10 +243,17 @@ const EmployeesFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <Paper>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider
+              dateAdapter={AdapterDayjs}
+              adapterLocale="es"
+              localeText={
+                esES.components.MuiLocalizationProvider.defaultProps.localeText
+              }
+            >
               <DatePicker
                 label="Fecha de nacimiento *"
                 format="DD/MM/YYYY"
@@ -264,10 +275,17 @@ const EmployeesFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <Paper>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider
+              dateAdapter={AdapterDayjs}
+              adapterLocale="es"
+              localeText={
+                esES.components.MuiLocalizationProvider.defaultProps.localeText
+              }
+            >
               <DatePicker
                 label="Fecha de admisión *"
                 format="DD/MM/YYYY"
@@ -289,8 +307,9 @@ const EmployeesFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <SelectDefault
             data={catalogs?.areas || []}
             label="Area *"
@@ -303,8 +322,9 @@ const EmployeesFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <SelectDefault
             data={catalogs?.positions || []}
             label="Puesto *"
@@ -317,8 +337,9 @@ const EmployeesFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <SelectDefault
             data={catalogs?.genres || []}
             label="Género *"
@@ -331,8 +352,9 @@ const EmployeesFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <Paper>
             <MultiSelectManufacturingPlants
               values={form.manufacturingPlantNames}
@@ -357,8 +379,9 @@ const EmployeesFormPage = () => {
           size={{
             xs: 12,
             sm: 3,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <Button
             variant="contained"
             color="error"
@@ -373,8 +396,9 @@ const EmployeesFormPage = () => {
           size={{
             xs: 12,
             sm: 3,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <LoadingButton
             loading={isLoading}
             loadingPosition="start"

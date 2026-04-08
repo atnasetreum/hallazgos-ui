@@ -21,8 +21,6 @@ const columns = [
   "Evaluaciones",
   "Creación",
   "Creado por",
-  "Ultima actualización",
-  "Actualizado por",
   "Acciones",
 ];
 
@@ -44,10 +42,6 @@ export default function ExtinguisherInspectionsTable({ rows }: Props) {
             {stringToDateWithTime(row.createdAt)}
           </StyledTableCell>
           <StyledTableCell>{row.createdBy?.name || "-"}</StyledTableCell>
-          <StyledTableCell>
-            {stringToDateWithTime(row.updatedAt)}
-          </StyledTableCell>
-          <StyledTableCell>{row.updatedBy?.name || "-"}</StyledTableCell>
           <StyledTableCell>
             <Tooltip title="Descargar Excel">
               <IconButton color="primary">

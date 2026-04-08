@@ -45,7 +45,9 @@ import { useDebouncedCallback } from "use-debounce";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { esES } from "@mui/x-date-pickers/locales";
 import dayjs, { type Dayjs } from "dayjs";
+import "dayjs/locale/es";
 import { Switch } from "@mui/material";
 import { FormGroup } from "@mui/material";
 import { Skeleton } from "@mui/material";
@@ -673,7 +675,14 @@ function ScreenEdition({
                 <ListItemButton>
                   <p>Fecha de inicio del entrenamiento * </p>
                   <Paper style={{ marginLeft: 10 }}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <LocalizationProvider
+                      dateAdapter={AdapterDayjs}
+                      adapterLocale="es"
+                      localeText={
+                        esES.components.MuiLocalizationProvider.defaultProps
+                          .localeText
+                      }
+                    >
                       <DatePicker
                         disabled={!emailsEditors.includes(email)}
                         format="DD/MM/YYYY"
@@ -924,7 +933,14 @@ function ScreenEdition({
                         <StyledTableCell>{row.topic.name}</StyledTableCell>
                         <StyledTableCell>
                           <Paper>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <LocalizationProvider
+                              dateAdapter={AdapterDayjs}
+                              adapterLocale="es"
+                              localeText={
+                                esES.components.MuiLocalizationProvider
+                                  .defaultProps.localeText
+                              }
+                            >
                               <DatePicker
                                 disabled={!emailsEditors.includes(email)}
                                 format="DD/MM/YYYY"

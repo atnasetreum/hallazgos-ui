@@ -9,6 +9,8 @@ import { Paper } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { esES } from "@mui/x-date-pickers/locales";
+import "dayjs/locale/es";
 
 import { useCategoriesStore, useUserSessionStore } from "@store";
 import SelectDefault from "@components/SelectDefault";
@@ -214,7 +216,13 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
         }}
       >
         <Paper>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider
+            dateAdapter={AdapterDayjs}
+            adapterLocale="es"
+            localeText={
+              esES.components.MuiLocalizationProvider.defaultProps.localeText
+            }
+          >
             <DatePicker
               label="Fecha inicio"
               format="DD/MM/YYYY"
@@ -251,7 +259,13 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
         }}
       >
         <Paper>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider
+            dateAdapter={AdapterDayjs}
+            adapterLocale="es"
+            localeText={
+              esES.components.MuiLocalizationProvider.defaultProps.localeText
+            }
+          >
             <DatePicker
               label="Fecha fin"
               format="DD/MM/YYYY"

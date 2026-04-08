@@ -15,6 +15,7 @@ import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuItem from "@mui/material/MenuItem";
 import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
@@ -24,8 +25,19 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import { alpha } from "@mui/material/styles";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { esES } from "@mui/x-date-pickers/locales";
 import { toast } from "sonner";
 import jsQR from "jsqr";
+import dayjs, { Dayjs } from "dayjs";
+import "dayjs/locale/es";
 
 import SelectManufacturingPlantsOwn from "@components/SelectManufacturingPlantsOwn";
 import {
@@ -33,6 +45,29 @@ import {
   ExtinguisherInspectionsService,
 } from "@services";
 import { EmergencyTeam, EvaluationValues, ExtinguisherType } from "@interfaces";
+import {
+  StyledTableCell,
+  StyledTableRow,
+} from "@shared/components/TableDefault";
+
+type GroupedConceptKey =
+  | "pressureManometer"
+  | "valve"
+  | "hose"
+  | "cylinder"
+  | "barrette"
+  | "seal"
+  | "cornet"
+  | "access"
+  | "support"
+  | "signaling";
+
+type GroupedConceptStatus = EvaluationValues.NC | EvaluationValues.NA;
+
+interface EvaluationNoveltyRecord {
+  conceptKey: GroupedConceptKey;
+  status: GroupedConceptStatus;
+}
 
 interface LocalEvaluation {
   emergencyTeamId: number;
@@ -50,19 +85,13 @@ interface LocalEvaluation {
   access: EvaluationValues;
   support: EvaluationValues;
   signaling: EvaluationValues;
+  noveltyRecords: EvaluationNoveltyRecord[];
   observations: string;
+  newNoveltyConcept: GroupedConceptKey | "";
+  newNoveltyStatus: GroupedConceptStatus | "";
 }
 
-const evaluationValues = [
-  EvaluationValues.C,
-  EvaluationValues.NC,
-  EvaluationValues.NA,
-];
-
-const evaluationSelectFields: Array<{
-  key: keyof LocalEvaluation;
-  label: string;
-}> = [
+const groupedConceptFields: Array<{ key: GroupedConceptKey; label: string }> = [
   { key: "pressureManometer", label: "Manómetro" },
   { key: "valve", label: "Válvula" },
   { key: "hose", label: "Manguera" },
@@ -74,6 +103,25 @@ const evaluationSelectFields: Array<{
   { key: "support", label: "Soporte" },
   { key: "signaling", label: "Señalización" },
 ];
+
+const groupedStatusValues: GroupedConceptStatus[] = [
+  EvaluationValues.NC,
+  EvaluationValues.NA,
+];
+
+const statusLegendMap: Record<EvaluationValues, string> = {
+  [EvaluationValues.C]: "C: CUMPLE",
+  [EvaluationValues.NC]: "NC: NO CUMPLE",
+  [EvaluationValues.NA]: "NA: No Aplica",
+};
+
+const groupedConceptLabelMap = groupedConceptFields.reduce(
+  (acc, field) => {
+    acc[field.key] = field.label;
+    return acc;
+  },
+  {} as Record<GroupedConceptKey, string>,
+);
 
 const getDefaultEvaluationFromEmergencyTeam = (
   emergencyTeam: EmergencyTeam,
@@ -93,18 +141,19 @@ const getDefaultEvaluationFromEmergencyTeam = (
   access: EvaluationValues.C,
   support: EvaluationValues.C,
   signaling: EvaluationValues.C,
+  noveltyRecords: [],
   observations: "",
+  newNoveltyConcept: "",
+  newNoveltyStatus: "",
 });
 
 const ExtinguisherInspectionFormPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isScannerOpen, setIsScannerOpen] = useState<boolean>(false);
   const [scannerError, setScannerError] = useState<string>("");
-  const [scannerInfo, setScannerInfo] = useState<string>("");
 
   const [form, setForm] = useState({
     manufacturingPlantId: "",
-    inspectionDate: "",
     sharedNextRechargeDate: "",
     evaluations: [] as LocalEvaluation[],
   });
@@ -112,7 +161,6 @@ const ExtinguisherInspectionFormPage = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const detectorRef = useRef<any>(null);
   const scanningRef = useRef<boolean>(false);
 
   const router = useRouter();
@@ -123,7 +171,6 @@ const ExtinguisherInspectionFormPage = () => {
 
   const stopScanner = () => {
     scanningRef.current = false;
-    detectorRef.current = null;
 
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((track) => track.stop());
@@ -215,8 +262,8 @@ const ExtinguisherInspectionFormPage = () => {
         return {
           ...prev,
           evaluations: [
-            ...prev.evaluations,
             getDefaultEvaluationFromEmergencyTeam(emergencyTeam),
+            ...prev.evaluations,
           ],
         };
       });
@@ -231,22 +278,8 @@ const ExtinguisherInspectionFormPage = () => {
 
   const startScanner = async () => {
     setScannerError("");
-    setScannerInfo("");
-
-    const BarcodeDetectorConstructor = (window as any).BarcodeDetector;
 
     try {
-      if (BarcodeDetectorConstructor) {
-        detectorRef.current = new BarcodeDetectorConstructor({
-          formats: ["qr_code"],
-        });
-      } else {
-        detectorRef.current = null;
-        setScannerInfo(
-          "Escaneo en modo compatible activado para este navegador (fallback).",
-        );
-      }
-
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: { ideal: "environment" } },
       });
@@ -265,16 +298,7 @@ const ExtinguisherInspectionFormPage = () => {
         }
 
         try {
-          let rawValue: string | null = null;
-
-          if (detectorRef.current) {
-            const barcodes = await detectorRef.current.detect(videoRef.current);
-            if (barcodes.length && barcodes[0]?.rawValue) {
-              rawValue = barcodes[0].rawValue;
-            }
-          } else {
-            rawValue = detectWithJsQr();
-          }
+          const rawValue = detectWithJsQr();
 
           if (rawValue) {
             await handleDetectedQr(rawValue);
@@ -292,7 +316,6 @@ const ExtinguisherInspectionFormPage = () => {
       setScannerError(
         "No se pudo acceder a la cámara. Verifique permisos del navegador.",
       );
-      setScannerInfo("");
     }
   };
 
@@ -322,19 +345,6 @@ const ExtinguisherInspectionFormPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isScannerOpen]);
 
-  const updateEvaluation = (
-    index: number,
-    key: keyof LocalEvaluation,
-    value: string,
-  ) => {
-    setForm((prev) => ({
-      ...prev,
-      evaluations: prev.evaluations.map((evaluation, idx) =>
-        idx === index ? { ...evaluation, [key]: value } : evaluation,
-      ),
-    }));
-  };
-
   const removeEvaluation = (index: number) => {
     setForm((prev) => ({
       ...prev,
@@ -342,14 +352,104 @@ const ExtinguisherInspectionFormPage = () => {
     }));
   };
 
-  const save = () => {
-    if (!form.manufacturingPlantId) {
-      toast.error("La planta es requerida");
+  const updateNoveltyDraft = (
+    index: number,
+    key: "newNoveltyConcept" | "newNoveltyStatus" | "observations",
+    value: string,
+  ) => {
+    setForm((prev) => ({
+      ...prev,
+      evaluations: prev.evaluations.map((evaluation, idx) => {
+        if (idx !== index) {
+          return evaluation;
+        }
+
+        return {
+          ...evaluation,
+          [key]: value,
+        };
+      }),
+    }));
+  };
+
+  const addNoveltyRecord = (index: number) => {
+    const evaluation = form.evaluations[index];
+    if (!evaluation) {
       return;
     }
 
-    if (!form.inspectionDate) {
-      toast.error("La fecha de inspección es requerida");
+    if (!evaluation.newNoveltyConcept || !evaluation.newNoveltyStatus) {
+      toast.error("Seleccione novedad y estado para agregar");
+      return;
+    }
+
+    const noveltyRecord: EvaluationNoveltyRecord = {
+      conceptKey: evaluation.newNoveltyConcept,
+      status: evaluation.newNoveltyStatus,
+    };
+
+    setForm((prev) => ({
+      ...prev,
+      evaluations: prev.evaluations.map((item, idx) => {
+        if (idx !== index) {
+          return item;
+        }
+
+        const existingIndex = item.noveltyRecords.findIndex(
+          (record) => record.conceptKey === noveltyRecord.conceptKey,
+        );
+
+        const nextRecords = [...item.noveltyRecords];
+        if (existingIndex >= 0) {
+          nextRecords[existingIndex] = noveltyRecord;
+        } else {
+          nextRecords.push(noveltyRecord);
+        }
+
+        return {
+          ...item,
+          noveltyRecords: nextRecords,
+          newNoveltyConcept: "",
+          newNoveltyStatus: "",
+        };
+      }),
+    }));
+
+    if (
+      evaluation.noveltyRecords.some(
+        (record) => record.conceptKey === noveltyRecord.conceptKey,
+      )
+    ) {
+      toast.success("Novedad actualizada");
+    } else {
+      toast.success("Novedad agregada");
+    }
+  };
+
+  const removeNoveltyRecord = (
+    evaluationIndex: number,
+    recordIndex: number,
+  ) => {
+    setForm((prev) => ({
+      ...prev,
+      evaluations: prev.evaluations.map((evaluation, idx) => {
+        if (idx !== evaluationIndex) {
+          return evaluation;
+        }
+
+        return {
+          ...evaluation,
+          noveltyRecords: evaluation.noveltyRecords.filter(
+            (_record, currentIndex) => currentIndex !== recordIndex,
+          ),
+        };
+      }),
+    }));
+  };
+
+  const save = () => {
+    if (!form.manufacturingPlantId) {
+      toast.error("La planta es requerida");
       return;
     }
 
@@ -366,27 +466,40 @@ const ExtinguisherInspectionFormPage = () => {
     setIsLoading(true);
 
     const payload = {
-      inspectionDate: form.inspectionDate,
       manufacturingPlantId: Number(form.manufacturingPlantId),
-      evaluations: form.evaluations.map((evaluation) => ({
-        location: evaluation.location.trim(),
-        extinguisherNumber: Number(evaluation.extinguisherNumber),
-        typeOfExtinguisher: evaluation.typeOfExtinguisher,
-        capacity: Number(evaluation.capacity),
-        pressureManometer: evaluation.pressureManometer,
-        valve: evaluation.valve,
-        hose: evaluation.hose,
-        cylinder: evaluation.cylinder,
-        barrette: evaluation.barrette,
-        seal: evaluation.seal,
-        cornet: evaluation.cornet,
-        access: evaluation.access,
-        support: evaluation.support,
-        signaling: evaluation.signaling,
-        nextRechargeDate: form.sharedNextRechargeDate,
-        maintenanceDate: form.sharedNextRechargeDate,
-        observations: evaluation.observations.trim() || undefined,
-      })),
+      evaluations: form.evaluations.map((evaluation) => {
+        const conceptStatuses = groupedConceptFields.reduce(
+          (acc, field) => {
+            acc[field.key] = EvaluationValues.C;
+            return acc;
+          },
+          {} as Record<GroupedConceptKey, EvaluationValues>,
+        );
+
+        evaluation.noveltyRecords.forEach((record) => {
+          conceptStatuses[record.conceptKey] = record.status;
+        });
+
+        return {
+          location: evaluation.location.trim(),
+          extinguisherNumber: Number(evaluation.extinguisherNumber),
+          typeOfExtinguisher: evaluation.typeOfExtinguisher,
+          capacity: Number(evaluation.capacity),
+          pressureManometer: conceptStatuses.pressureManometer,
+          valve: conceptStatuses.valve,
+          hose: conceptStatuses.hose,
+          cylinder: conceptStatuses.cylinder,
+          barrette: conceptStatuses.barrette,
+          seal: conceptStatuses.seal,
+          cornet: conceptStatuses.cornet,
+          access: conceptStatuses.access,
+          support: conceptStatuses.support,
+          signaling: conceptStatuses.signaling,
+          nextRechargeDate: form.sharedNextRechargeDate,
+          maintenanceDate: form.sharedNextRechargeDate,
+          observations: evaluation.observations.trim() || undefined,
+        };
+      }),
     };
 
     ExtinguisherInspectionsService.create(payload)
@@ -400,7 +513,6 @@ const ExtinguisherInspectionFormPage = () => {
   const isValidateForm = useMemo(
     () =>
       !form.manufacturingPlantId ||
-      !form.inspectionDate ||
       !form.sharedNextRechargeDate ||
       !form.evaluations.length,
     [form],
@@ -428,19 +540,44 @@ const ExtinguisherInspectionFormPage = () => {
           }}
         >
           <Paper>
-            <TextField
-              type="date"
-              label="Fecha inspección"
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              value={form.inspectionDate}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  inspectionDate: e.target.value,
-                }))
+            <LocalizationProvider
+              dateAdapter={AdapterDayjs}
+              adapterLocale="es"
+              localeText={
+                esES.components.MuiLocalizationProvider.defaultProps.localeText
               }
-            />
+            >
+              <DatePicker
+                label="Próxima recarga"
+                format="DD/MM/YYYY"
+                value={
+                  form.sharedNextRechargeDate
+                    ? dayjs(form.sharedNextRechargeDate)
+                    : null
+                }
+                onChange={(newValue: Dayjs | null) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    sharedNextRechargeDate: newValue
+                      ? newValue.format("YYYY-MM-DD")
+                      : "",
+                  }))
+                }
+                slotProps={{
+                  field: {
+                    clearable: true,
+                    onClear: () =>
+                      setForm((prev) => ({
+                        ...prev,
+                        sharedNextRechargeDate: "",
+                      })),
+                  },
+                  textField: {
+                    fullWidth: true,
+                  },
+                }}
+              />
+            </LocalizationProvider>
           </Paper>
         </Grid>
 
@@ -448,24 +585,63 @@ const ExtinguisherInspectionFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3,
+            md: 2,
           }}
         >
-          <Paper>
-            <TextField
-              type="date"
-              label="Próxima recarga"
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              value={form.sharedNextRechargeDate}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  sharedNextRechargeDate: e.target.value,
-                }))
-              }
-            />
-          </Paper>
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            fullWidth
+            startIcon={<QrCodeScannerIcon />}
+            onClick={openScanner}
+            sx={{ mt: 1, minHeight: 40 }}
+          >
+            Crear evaluación
+          </Button>
+        </Grid>
+
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 2,
+          }}
+        >
+          <Button
+            variant="contained"
+            color="error"
+            size="small"
+            fullWidth
+            startIcon={<CloseIcon />}
+            onClick={cancel}
+            sx={{ mt: 1, minHeight: 40 }}
+          >
+            Cancelar
+          </Button>
+        </Grid>
+
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 2,
+          }}
+        >
+          <LoadingButton
+            loading={isLoading}
+            loadingPosition="start"
+            startIcon={<SaveIcon />}
+            variant="contained"
+            color="primary"
+            size="small"
+            fullWidth
+            onClick={save}
+            disabled={isValidateForm || isLoading}
+            sx={{ mt: 1, minHeight: 40 }}
+          >
+            Guardar
+          </LoadingButton>
         </Grid>
 
         <Grid
@@ -479,22 +655,6 @@ const ExtinguisherInspectionFormPage = () => {
           <Typography variant="h6">Evaluaciones</Typography>
         </Grid>
 
-        <Grid
-          size={{
-            xs: 12,
-            sm: 12,
-            md: 12,
-          }}
-        >
-          <Button
-            variant="outlined"
-            startIcon={<QrCodeScannerIcon />}
-            onClick={openScanner}
-          >
-            Crear evaluación
-          </Button>
-        </Grid>
-
         {form.evaluations.map((evaluation, index) => (
           <Grid
             key={`evaluation-${evaluation.emergencyTeamId}-${index}`}
@@ -506,105 +666,218 @@ const ExtinguisherInspectionFormPage = () => {
           >
             <Paper sx={{ p: 2 }}>
               <Grid container spacing={2}>
-                <Grid
-                  size={{
-                    xs: 12,
-                    sm: 6,
-                    md: 3,
-                  }}
-                >
-                  <TextField
-                    label={`Ubicación #${index + 1}`}
-                    fullWidth
-                    value={evaluation.location}
-                    disabled
-                  />
-                </Grid>
-
-                <Grid
-                  size={{
-                    xs: 12,
-                    sm: 6,
-                    md: 2,
-                  }}
-                >
-                  <TextField
-                    label="N. Extintor"
-                    fullWidth
-                    value={evaluation.extinguisherNumber}
-                    disabled
-                  />
-                </Grid>
-
-                <Grid
-                  size={{
-                    xs: 12,
-                    sm: 6,
-                    md: 2,
-                  }}
-                >
-                  <TextField
-                    label="Tipo"
-                    fullWidth
-                    value={evaluation.typeOfExtinguisher}
-                    disabled
-                  />
-                </Grid>
-
-                <Grid
-                  size={{
-                    xs: 12,
-                    sm: 6,
-                    md: 2,
-                  }}
-                >
-                  <TextField
-                    label="Capacidad"
-                    fullWidth
-                    value={evaluation.capacity}
-                    disabled
-                  />
-                </Grid>
-
-                {evaluationSelectFields.map((field) => (
-                  <Grid
-                    key={`${field.key}-${evaluation.emergencyTeamId}`}
-                    size={{ xs: 12, sm: 6, md: 3 }}
+                <Grid size={{ xs: 12, sm: 12, md: 4 }}>
+                  <Paper
+                    variant="outlined"
+                    sx={{
+                      borderColor: "primary.main",
+                      overflow: "hidden",
+                    }}
                   >
-                    <TextField
-                      select
-                      label={field.label}
-                      fullWidth
-                      value={String(
-                        evaluation[field.key] || EvaluationValues.C,
-                      )}
-                      onChange={(e) =>
-                        updateEvaluation(index, field.key, e.target.value)
-                      }
+                    <Box
+                      sx={{
+                        px: 1.5,
+                        py: 1,
+                        backgroundColor: "primary.main",
+                        color: "primary.contrastText",
+                      }}
                     >
-                      {evaluationValues.map((value) => (
-                        <MenuItem key={value} value={value}>
-                          {value}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
-                ))}
+                      <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+                        Datos del equipo
+                      </Typography>
+                    </Box>
 
-                <Grid size={{ xs: 12, sm: 12, md: 6 }}>
-                  <TextField
-                    label="Observaciones"
-                    fullWidth
-                    value={evaluation.observations}
-                    onChange={(e) =>
-                      updateEvaluation(index, "observations", e.target.value)
-                    }
-                  />
+                    <Grid container spacing={1.5} sx={{ p: 1.5 }}>
+                      {[
+                        {
+                          label: "Ubicación",
+                          value: evaluation.location || "-",
+                        },
+                        {
+                          label: "N. Extintor",
+                          value: evaluation.extinguisherNumber || "-",
+                        },
+                        {
+                          label: "Tipo",
+                          value: evaluation.typeOfExtinguisher || "-",
+                        },
+                        {
+                          label: "Capacidad",
+                          value: evaluation.capacity || "-",
+                        },
+                      ].map((item, itemIndex) => (
+                        <Grid key={item.label} size={{ xs: 12, sm: 6, md: 12 }}>
+                          <Box
+                            sx={{
+                              px: 1.5,
+                              py: 1,
+                              borderRadius: 1,
+                              border: "1px solid",
+                              borderColor: "primary.main",
+                              backgroundColor: alpha("#1976d2", 0.08),
+                            }}
+                          >
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                fontWeight: 700,
+                                color: "primary.main",
+                              }}
+                            >
+                              {item.label}
+                            </Typography>
+                            <Typography
+                              variant="body1"
+                              sx={{ fontWeight: 600 }}
+                            >
+                              {item.value}
+                            </Typography>
+                          </Box>
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Paper>
                 </Grid>
+
+                <Grid size={{ xs: 12, sm: 12, md: 8 }}>
+                  <Grid container spacing={2}>
+                    <Grid size={{ xs: 12, sm: 8, md: 8 }}>
+                      <Paper>
+                        <TextField
+                          select
+                          label="Novedad"
+                          fullWidth
+                          value={evaluation.newNoveltyConcept}
+                          onChange={(e) =>
+                            updateNoveltyDraft(
+                              index,
+                              "newNoveltyConcept",
+                              e.target.value,
+                            )
+                          }
+                        >
+                          <MenuItem value="">Seleccione</MenuItem>
+                          {groupedConceptFields.map((field) => (
+                            <MenuItem key={field.key} value={field.key}>
+                              {field.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </Paper>
+                    </Grid>
+
+                    <Grid size={{ xs: 12, sm: 4, md: 4 }}>
+                      <Paper>
+                        <TextField
+                          select
+                          label="Estado"
+                          fullWidth
+                          value={evaluation.newNoveltyStatus}
+                          onChange={(e) =>
+                            updateNoveltyDraft(
+                              index,
+                              "newNoveltyStatus",
+                              e.target.value,
+                            )
+                          }
+                        >
+                          <MenuItem value="">Seleccione</MenuItem>
+                          {groupedStatusValues.map((status) => (
+                            <MenuItem key={status} value={status}>
+                              {statusLegendMap[status]}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </Paper>
+                    </Grid>
+
+                    <Grid size={{ xs: 12, sm: 12, md: 12 }}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        onClick={() => addNoveltyRecord(index)}
+                      >
+                        Agregar
+                      </Button>
+                    </Grid>
+
+                    <Grid size={{ xs: 12, sm: 12, md: 12 }}>
+                      <Paper>
+                        <TextField
+                          label="Observaciones generales"
+                          fullWidth
+                          multiline
+                          minRows={6}
+                          autoComplete="off"
+                          value={evaluation.observations}
+                          onChange={(e) =>
+                            updateNoveltyDraft(
+                              index,
+                              "observations",
+                              e.target.value,
+                            )
+                          }
+                        />
+                      </Paper>
+                    </Grid>
+
+                    <Grid size={{ xs: 12, sm: 12, md: 12 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        Los conceptos no agregados en la tabla se enviarán como
+                        C: CUMPLE.
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+
+                {!!evaluation.noveltyRecords.length && (
+                  <Grid size={{ xs: 12, sm: 12, md: 12 }}>
+                    <TableContainer component={Paper} variant="outlined">
+                      <Table>
+                        <TableHead>
+                          <StyledTableRow>
+                            <StyledTableCell>Novedad</StyledTableCell>
+                            <StyledTableCell>Estado</StyledTableCell>
+                            <StyledTableCell>Acción</StyledTableCell>
+                          </StyledTableRow>
+                        </TableHead>
+                        <TableBody>
+                          {evaluation.noveltyRecords.map(
+                            (record, recordIndex) => (
+                              <StyledTableRow
+                                key={`${record.conceptKey}-${recordIndex}`}
+                              >
+                                <StyledTableCell>
+                                  {groupedConceptLabelMap[record.conceptKey]}
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  {statusLegendMap[record.status]}
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                  <IconButton
+                                    color="error"
+                                    size="small"
+                                    aria-label="Quitar novedad"
+                                    onClick={() =>
+                                      removeNoveltyRecord(index, recordIndex)
+                                    }
+                                  >
+                                    <DeleteIcon fontSize="small" />
+                                  </IconButton>
+                                </StyledTableCell>
+                              </StyledTableRow>
+                            ),
+                          )}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Grid>
+                )}
 
                 <Grid size={{ xs: 12, sm: 12, md: 12 }}>
                   <Button
-                    variant="outlined"
+                    variant="contained"
                     color="error"
                     startIcon={<DeleteIcon />}
                     onClick={() => removeEvaluation(index)}
@@ -616,45 +889,6 @@ const ExtinguisherInspectionFormPage = () => {
             </Paper>
           </Grid>
         ))}
-
-        <Grid
-          size={{
-            xs: 12,
-            sm: 3,
-            md: 3,
-          }}
-        >
-          <Button
-            variant="contained"
-            color="error"
-            fullWidth
-            startIcon={<CloseIcon />}
-            onClick={cancel}
-          >
-            Cancelar
-          </Button>
-        </Grid>
-
-        <Grid
-          size={{
-            xs: 12,
-            sm: 3,
-            md: 3,
-          }}
-        >
-          <LoadingButton
-            loading={isLoading}
-            loadingPosition="start"
-            startIcon={<SaveIcon />}
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={save}
-            disabled={isValidateForm || isLoading}
-          >
-            Guardar
-          </LoadingButton>
-        </Grid>
       </Grid>
 
       <Dialog
@@ -665,8 +899,6 @@ const ExtinguisherInspectionFormPage = () => {
       >
         <DialogTitle>Escanear QR de Equipo de Emergencia</DialogTitle>
         <DialogContent>
-          {!!scannerInfo && <Alert severity="info">{scannerInfo}</Alert>}
-
           {scannerError ? (
             <Alert severity="warning">{scannerError}</Alert>
           ) : (

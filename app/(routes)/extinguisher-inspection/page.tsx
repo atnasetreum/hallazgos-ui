@@ -29,7 +29,6 @@ const ExtinguisherInspectionPage = () => {
   const [filters, setFilters] = useState<IFiltersExtinguisherInspections>({
     search: "",
     manufacturingPlantId: "",
-    inspectionDate: "",
   });
 
   const router = useRouter();

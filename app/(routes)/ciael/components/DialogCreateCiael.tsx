@@ -4,6 +4,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TextField, TextFieldProps } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { esES } from "@mui/x-date-pickers/locales";
 import { IconButton } from "@mui/material";
 import { Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -16,6 +17,7 @@ import { Paper } from "@mui/material";
 import { Grid } from "@mui/material";
 import { toast } from "sonner";
 import dayjs, { Dayjs } from "dayjs";
+import "dayjs/locale/es";
 
 import { AssociatedTasksService } from "_services/associated-tasks.service";
 import { Transition } from "@routes/hallazgos/_components/EvidencePreview";
@@ -500,7 +502,13 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
           }}
         >
           <Paper>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider
+              dateAdapter={AdapterDayjs}
+              adapterLocale="es"
+              localeText={
+                esES.components.MuiLocalizationProvider.defaultProps.localeText
+              }
+            >
               <DatePicker
                 label="Fecha del evento *"
                 format="DD/MM/YYYY"

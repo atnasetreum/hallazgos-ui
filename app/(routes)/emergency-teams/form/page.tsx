@@ -17,7 +17,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import MenuItem from "@mui/material/MenuItem";
 import { toast } from "sonner";
 
-import SelectManufacturingPlants from "@components/SelectManufacturingPlants";
+import SelectManufacturingPlantsOwn from "@components/SelectManufacturingPlantsOwn";
 import { EmergencyTeamsService } from "@services";
 import { ExtinguisherType } from "@interfaces";
 
@@ -130,25 +130,15 @@ const EmergencyTeamsFormPage = () => {
 
   return (
     <Grid container spacing={2}>
-      <Grid
-        size={{
-          xs: 12,
-          sm: 6,
-          md: 3,
-        }}
-      >
-        <Paper>
-          <SelectManufacturingPlants
-            value={form.manufacturingPlantId}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                manufacturingPlantId: e.target.value,
-              })
-            }
-          />
-        </Paper>
-      </Grid>
+      <SelectManufacturingPlantsOwn
+        value={form.manufacturingPlantId}
+        onChange={(e) =>
+          setForm({
+            ...form,
+            manufacturingPlantId: e.target.value,
+          })
+        }
+      />
       <Grid
         size={{
           xs: 12,

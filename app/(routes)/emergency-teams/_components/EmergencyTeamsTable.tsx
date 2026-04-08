@@ -199,12 +199,16 @@ export default function EmergencyTeamsTable({
   const selectedCurrentPageCount = paginatedRows.filter((row) =>
     selectedIds.includes(row.id),
   ).length;
+  const currentPageIdSet = new Set(paginatedRows.map((row) => row.id));
   const allChecked =
     paginatedRows.length > 0 &&
     selectedCurrentPageCount === paginatedRows.length;
+  const hasSelectionOutsideCurrentPage = selectedIds.some(
+    (selectedId) => !currentPageIdSet.has(selectedId),
+  );
   const someChecked =
-    selectedCurrentPageCount > 0 &&
-    selectedCurrentPageCount < paginatedRows.length;
+    !allChecked &&
+    (selectedCurrentPageCount > 0 || hasSelectionOutsideCurrentPage);
 
   const handleChangePage = (
     _event: MouseEvent<HTMLButtonElement> | null,
@@ -231,6 +235,15 @@ export default function EmergencyTeamsTable({
                   checked={allChecked}
                   indeterminate={someChecked}
                   onChange={(e) => handleSelectAll(e.target.checked)}
+                  sx={{
+                    color: "rgba(255, 255, 255, 0.85)",
+                    "&.Mui-checked": {
+                      color: "#fff",
+                    },
+                    "&.MuiCheckbox-indeterminate": {
+                      color: "#fff",
+                    },
+                  }}
                 />
               </StyledTableCell>
               <StyledTableCell>ID</StyledTableCell>
@@ -239,11 +252,11 @@ export default function EmergencyTeamsTable({
               <StyledTableCell>N. Extintor</StyledTableCell>
               <StyledTableCell>Tipo</StyledTableCell>
               <StyledTableCell>Capacidad</StyledTableCell>
-              <StyledTableCell>Creado por</StyledTableCell>
-              <StyledTableCell>Actualizado por</StyledTableCell>
               <StyledTableCell>QR</StyledTableCell>
               <StyledTableCell>Creación</StyledTableCell>
+              <StyledTableCell>Creado por</StyledTableCell>
               <StyledTableCell>Ultima actualización</StyledTableCell>
+              <StyledTableCell>Actualizado por</StyledTableCell>
               <StyledTableCell>Acciones</StyledTableCell>
             </StyledTableRow>
           </TableHead>
@@ -264,8 +277,7 @@ export default function EmergencyTeamsTable({
                 <StyledTableCell>{row.extinguisherNumber}</StyledTableCell>
                 <StyledTableCell>{row.typeOfExtinguisher}</StyledTableCell>
                 <StyledTableCell>{row.capacity}</StyledTableCell>
-                <StyledTableCell>{row.createdBy?.name || "-"}</StyledTableCell>
-                <StyledTableCell>{row.updatedBy?.name || "-"}</StyledTableCell>
+
                 <StyledTableCell>
                   <Tooltip title="Imprimir QR">
                     <IconButton
@@ -279,9 +291,11 @@ export default function EmergencyTeamsTable({
                 <StyledTableCell>
                   {stringToDateWithTime(row.createdAt)}
                 </StyledTableCell>
+                <StyledTableCell>{row.createdBy?.name || "-"}</StyledTableCell>
                 <StyledTableCell>
                   {stringToDateWithTime(row.updatedAt)}
                 </StyledTableCell>
+                <StyledTableCell>{row.updatedBy?.name || "-"}</StyledTableCell>
                 <StyledTableCell>
                   <Stack direction="row" spacing={1}>
                     <Chip

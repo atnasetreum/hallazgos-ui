@@ -3,8 +3,9 @@ import Typography from "@mui/material/Typography";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
+import { useTheme } from "@mui/material/styles";
 
-import SelectManufacturingPlants from "@components/SelectManufacturingPlants";
+import SelectManufacturingPlantsOwn from "@components/SelectManufacturingPlantsOwn";
 
 export interface IFiltersEmergencyTeams {
   search: string;
@@ -18,6 +19,8 @@ interface Props {
 }
 
 const FiltersEmergencyTeams = ({ filters, setFilters, count }: Props) => {
+  const theme = useTheme();
+
   return (
     <Grid container spacing={2} sx={{ mb: 2 }}>
       <Grid
@@ -27,30 +30,28 @@ const FiltersEmergencyTeams = ({ filters, setFilters, count }: Props) => {
           md: 12,
         }}
       >
-        <Typography variant="subtitle1" gutterBottom>
+        <Typography
+          variant="subtitle1"
+          gutterBottom
+          color={
+            theme.palette.mode === "light"
+              ? theme.palette.common.black
+              : theme.palette.common.white
+          }
+        >
           <FilterListIcon sx={{ pt: 1 }} /> Filtros ({count})
         </Typography>
       </Grid>
-      <Grid
-        size={{
-          xs: 12,
-          sm: 6,
-          md: 3,
-        }}
-      >
-        <Paper>
-          <SelectManufacturingPlants
-            value={filters.manufacturingPlantId}
-            onChange={(e) =>
-              setFilters({
-                ...filters,
-                manufacturingPlantId: e.target.value,
-              })
-            }
-            isFilter={true}
-          />
-        </Paper>
-      </Grid>
+      <SelectManufacturingPlantsOwn
+        value={filters.manufacturingPlantId}
+        onChange={(e) =>
+          setFilters({
+            ...filters,
+            manufacturingPlantId: e.target.value,
+          })
+        }
+        isFilter={true}
+      />
       <Grid
         size={{
           xs: 12,

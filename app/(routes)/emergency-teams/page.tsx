@@ -79,7 +79,7 @@ const EmergencyTeamsPage = () => {
       return;
     }
 
-    const perPage = 12;
+    const perPage = 9;
     const pages: Array<Array<EmergencyTeam & { generatedQrCode: string }>> = [];
     for (let i = 0; i < rowsWithQr.length; i += perPage) {
       pages.push(rowsWithQr.slice(i, i + perPage));
@@ -97,7 +97,12 @@ const EmergencyTeamsPage = () => {
                       <div class="qr-box">
                         <img src="${row.generatedQrCode}" alt="QR equipo ${row.id}" />
                       </div>
-                      <div class="qr-id">ID: ${row.id}</div>
+                      <div class="qr-meta">
+                        <div><strong>Ubicación:</strong> ${row.location || "-"}</div>
+                        <div><strong>No. Extintor:</strong> ${row.extinguisherNumber ?? "-"}</div>
+                        <div><strong>Tipo:</strong> ${row.typeOfExtinguisher || "-"}</div>
+                        <div><strong>Capacidad:</strong> ${row.capacity ?? "-"}</div>
+                      </div>
                     </div>
                   `,
                 )
@@ -125,12 +130,10 @@ const EmergencyTeamsPage = () => {
 
             .page {
               width: 100%;
-              min-height: calc(29.7cm - 2cm);
-              display: flex;
-              align-items: flex-start;
-              justify-content: center;
-              padding-top: 0.5cm;
+              display: block;
               box-sizing: border-box;
+              page-break-inside: avoid;
+              break-inside: avoid;
             }
 
             .page:not(:last-child) {
@@ -141,18 +144,21 @@ const EmergencyTeamsPage = () => {
               width: 100%;
               display: grid;
               grid-template-columns: repeat(3, 5cm);
-              grid-auto-rows: 6cm;
+              grid-auto-rows: 7.8cm;
               gap: 0.5cm;
               justify-content: center;
+              align-content: start;
             }
 
             .item {
               width: 5cm;
-              height: 6cm;
+              height: 7.8cm;
               display: flex;
               flex-direction: column;
               align-items: center;
               justify-content: flex-start;
+              page-break-inside: avoid;
+              break-inside: avoid;
             }
 
             .qr-box {
@@ -172,12 +178,17 @@ const EmergencyTeamsPage = () => {
               object-fit: contain;
             }
 
-            .qr-id {
+            .qr-meta {
               width: 5cm;
               margin-top: 0.3cm;
-              text-align: center;
-              font-size: 11pt;
-              font-weight: 700;
+              font-size: 8.5pt;
+              line-height: 1.3;
+            }
+
+            .qr-meta > div {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
           </style>
         </head>
@@ -287,7 +298,6 @@ const EmergencyTeamsPage = () => {
             rows={data}
             selectedIds={selectedIds}
             setSelectedIds={setSelectedIds}
-            onPrintRows={printQrs}
             getData={getData}
           />
         )}

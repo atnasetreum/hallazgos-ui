@@ -148,13 +148,16 @@ const getDefaultEvaluationFromEmergencyTeam = (
 });
 
 const ExtinguisherInspectionFormPage = () => {
+  const today = dayjs().startOf("day");
+  const defaultNextRechargeDate = dayjs().add(1, "year").format("YYYY-MM-DD");
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isScannerOpen, setIsScannerOpen] = useState<boolean>(false);
   const [scannerError, setScannerError] = useState<string>("");
 
   const [form, setForm] = useState({
     manufacturingPlantId: "",
-    sharedNextRechargeDate: "",
+    sharedNextRechargeDate: defaultNextRechargeDate,
     evaluations: [] as LocalEvaluation[],
   });
 
@@ -458,6 +461,11 @@ const ExtinguisherInspectionFormPage = () => {
       return;
     }
 
+    if (dayjs(form.sharedNextRechargeDate).isBefore(today, "day")) {
+      toast.error("La fecha de próxima recarga no puede ser anterior a hoy");
+      return;
+    }
+
     if (!form.evaluations.length) {
       toast.error("Debe agregar al menos una evaluación");
       return;
@@ -550,6 +558,8 @@ const ExtinguisherInspectionFormPage = () => {
               <DatePicker
                 label="Próxima recarga"
                 format="DD/MM/YYYY"
+                disablePast
+                minDate={today}
                 value={
                   form.sharedNextRechargeDate
                     ? dayjs(form.sharedNextRechargeDate)

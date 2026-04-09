@@ -17,14 +17,12 @@ import Checkbox from "@mui/material/Checkbox";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import QrCode2Icon from "@mui/icons-material/QrCode2";
 import { toast } from "sonner";
 
 import { notify, stringToDateWithTime } from "@shared/utils";
@@ -39,7 +37,6 @@ interface Props {
   rows: EmergencyTeam[];
   selectedIds: number[];
   setSelectedIds: (ids: number[]) => void;
-  onPrintRows: (rows: EmergencyTeam[]) => void | Promise<void>;
   getData: () => void;
 }
 
@@ -120,7 +117,6 @@ export default function EmergencyTeamsTable({
   rows,
   selectedIds,
   setSelectedIds,
-  onPrintRows,
   getData,
 }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -252,7 +248,6 @@ export default function EmergencyTeamsTable({
               <StyledTableCell>N. Extintor</StyledTableCell>
               <StyledTableCell>Tipo</StyledTableCell>
               <StyledTableCell>Capacidad</StyledTableCell>
-              <StyledTableCell>QR</StyledTableCell>
               <StyledTableCell>Creación</StyledTableCell>
               <StyledTableCell>Creado por</StyledTableCell>
               <StyledTableCell>Ultima actualización</StyledTableCell>
@@ -277,17 +272,6 @@ export default function EmergencyTeamsTable({
                 <StyledTableCell>{row.extinguisherNumber}</StyledTableCell>
                 <StyledTableCell>{row.typeOfExtinguisher}</StyledTableCell>
                 <StyledTableCell>{row.capacity}</StyledTableCell>
-
-                <StyledTableCell>
-                  <Tooltip title="Imprimir QR">
-                    <IconButton
-                      color="primary"
-                      onClick={() => onPrintRows([row])}
-                    >
-                      <QrCode2Icon />
-                    </IconButton>
-                  </Tooltip>
-                </StyledTableCell>
                 <StyledTableCell>
                   {stringToDateWithTime(row.createdAt)}
                 </StyledTableCell>
@@ -319,7 +303,7 @@ export default function EmergencyTeamsTable({
             ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={13} />
+                <TableCell colSpan={12} />
               </TableRow>
             )}
           </TableBody>
@@ -327,7 +311,7 @@ export default function EmergencyTeamsTable({
             <StyledTableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={13}
+                colSpan={12}
                 count={rows.length}
                 rowsPerPage={rowsPerPage}
                 page={page}

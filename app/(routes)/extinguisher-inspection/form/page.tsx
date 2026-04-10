@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
@@ -49,6 +49,11 @@ import {
   StyledTableCell,
   StyledTableRow,
 } from "@shared/components/TableDefault";
+
+import {
+  ExtinguisherInspection,
+  ExtinguisherInspectionEvaluation,
+} from "@interfaces";
 
 type GroupedConceptKey =
   | "pressureManometer"
@@ -114,7 +119,6 @@ const statusLegendMap: Record<EvaluationValues, string> = {
   [EvaluationValues.NC]: "NC: NO CUMPLE",
   [EvaluationValues.NA]: "NA: No Aplica",
 };
-
 const groupedConceptLabelMap = groupedConceptFields.reduce(
   (acc, field) => {
     acc[field.key] = field.label;
@@ -122,6 +126,8 @@ const groupedConceptLabelMap = groupedConceptFields.reduce(
   },
   {} as Record<GroupedConceptKey, string>,
 );
+
+const DUPLICATE_EVALUATION_TOAST_ID = "duplicate-evaluation";
 
 const getDefaultEvaluationFromEmergencyTeam = (
   emergencyTeam: EmergencyTeam,
@@ -152,6 +158,7 @@ const ExtinguisherInspectionFormPage = () => {
   const defaultNextRechargeDate = dayjs().add(1, "year").format("YYYY-MM-DD");
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [idCurrent, setIdCurrent] = useState<number>(0);
   const [isScannerOpen, setIsScannerOpen] = useState<boolean>(false);
   const [scannerError, setScannerError] = useState<string>("");
 
@@ -165,8 +172,49 @@ const ExtinguisherInspectionFormPage = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const scanningRef = useRef<boolean>(false);
+  const lastScannedValueRef = useRef<string>("");
+  const lastScannedAtRef = useRef<number>(0);
+  const evaluationsRef = useRef<LocalEvaluation[]>([]);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const mapEvaluationToLocal = (
+    evaluation: ExtinguisherInspectionEvaluation,
+  ): LocalEvaluation => {
+    const noveltyRecords = groupedConceptFields
+      .filter(
+        (field) =>
+          evaluation[field.key] === EvaluationValues.NC ||
+          evaluation[field.key] === EvaluationValues.NA,
+      )
+      .map((field) => ({
+        conceptKey: field.key,
+        status: evaluation[field.key] as GroupedConceptStatus,
+      }));
+
+    return {
+      emergencyTeamId: evaluation.id,
+      location: evaluation.location,
+      extinguisherNumber: String(evaluation.extinguisherNumber),
+      typeOfExtinguisher: evaluation.typeOfExtinguisher,
+      capacity: String(evaluation.capacity),
+      pressureManometer: evaluation.pressureManometer,
+      valve: evaluation.valve,
+      hose: evaluation.hose,
+      cylinder: evaluation.cylinder,
+      barrette: evaluation.barrette,
+      seal: evaluation.seal,
+      cornet: evaluation.cornet,
+      access: evaluation.access,
+      support: evaluation.support,
+      signaling: evaluation.signaling,
+      noveltyRecords,
+      observations: evaluation.observations || "",
+      newNoveltyConcept: "",
+      newNoveltyStatus: "",
+    };
+  };
 
   const cancel = () => {
     router.push("/extinguisher-inspection");
@@ -252,24 +300,32 @@ const ExtinguisherInspectionFormPage = () => {
         return;
       }
 
-      setForm((prev) => {
-        const alreadyExists = prev.evaluations.some(
-          (evaluation) => evaluation.emergencyTeamId === emergencyTeam.id,
-        );
+      const emergencyTeamExtinguisherNumber = String(
+        emergencyTeam.extinguisherNumber,
+      );
 
-        if (alreadyExists) {
-          toast.error("Ese equipo ya fue agregado en las evaluaciones");
-          return prev;
-        }
+      const alreadyExists = evaluationsRef.current.some(
+        (evaluation) =>
+          evaluation.emergencyTeamId === emergencyTeam.id ||
+          evaluation.extinguisherNumber === emergencyTeamExtinguisherNumber,
+      );
 
-        return {
-          ...prev,
-          evaluations: [
-            getDefaultEvaluationFromEmergencyTeam(emergencyTeam),
-            ...prev.evaluations,
-          ],
-        };
-      });
+      if (alreadyExists) {
+        setIsScannerOpen(false);
+        stopScanner();
+        toast.error("Ese equipo ya fue agregado en las evaluaciones", {
+          id: DUPLICATE_EVALUATION_TOAST_ID,
+        });
+        return;
+      }
+
+      setForm((prev) => ({
+        ...prev,
+        evaluations: [
+          getDefaultEvaluationFromEmergencyTeam(emergencyTeam),
+          ...prev.evaluations,
+        ],
+      }));
 
       setIsScannerOpen(false);
       stopScanner();
@@ -281,6 +337,8 @@ const ExtinguisherInspectionFormPage = () => {
 
   const startScanner = async () => {
     setScannerError("");
+    lastScannedValueRef.current = "";
+    lastScannedAtRef.current = 0;
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -304,6 +362,19 @@ const ExtinguisherInspectionFormPage = () => {
           const rawValue = detectWithJsQr();
 
           if (rawValue) {
+            const normalizedValue = rawValue.trim();
+            const now = Date.now();
+            const isRepeatedScan =
+              normalizedValue === lastScannedValueRef.current &&
+              now - lastScannedAtRef.current < 2000;
+
+            if (isRepeatedScan) {
+              requestAnimationFrame(scanFrame);
+              return;
+            }
+
+            lastScannedValueRef.current = normalizedValue;
+            lastScannedAtRef.current = now;
             await handleDetectedQr(rawValue);
             return;
           }
@@ -337,6 +408,10 @@ const ExtinguisherInspectionFormPage = () => {
   };
 
   useEffect(() => {
+    evaluationsRef.current = form.evaluations;
+  }, [form.evaluations]);
+
+  useEffect(() => {
     if (!isScannerOpen) {
       stopScanner();
       return;
@@ -347,6 +422,31 @@ const ExtinguisherInspectionFormPage = () => {
     return () => stopScanner();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isScannerOpen]);
+
+  useEffect(() => {
+    const id = Number(searchParams.get("id") || 0);
+    if (!id) {
+      return;
+    }
+
+    setIdCurrent(id);
+    setIsLoading(true);
+
+    ExtinguisherInspectionsService.findOne(id)
+      .then((inspection: ExtinguisherInspection) => {
+        const firstEvaluation = inspection.evaluations?.[0];
+
+        setForm({
+          manufacturingPlantId: String(inspection.manufacturingPlant?.id || ""),
+          sharedNextRechargeDate: firstEvaluation?.nextRechargeDate
+            ? dayjs(firstEvaluation.nextRechargeDate).format("YYYY-MM-DD")
+            : defaultNextRechargeDate,
+          evaluations: (inspection.evaluations || []).map(mapEvaluationToLocal),
+        });
+      })
+      .finally(() => setIsLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const removeEvaluation = (index: number) => {
     setForm((prev) => ({
@@ -471,6 +571,36 @@ const ExtinguisherInspectionFormPage = () => {
       return;
     }
 
+    const duplicatedEmergencyTeamIds = new Set<number>();
+    const duplicatedExtinguisherNumbers = new Set<string>();
+    const emergencyTeamIds = new Set<number>();
+    const extinguisherNumbers = new Set<string>();
+
+    form.evaluations.forEach((evaluation) => {
+      if (evaluation.emergencyTeamId > 0) {
+        if (emergencyTeamIds.has(evaluation.emergencyTeamId)) {
+          duplicatedEmergencyTeamIds.add(evaluation.emergencyTeamId);
+        }
+        emergencyTeamIds.add(evaluation.emergencyTeamId);
+      }
+
+      const extinguisherNumber = evaluation.extinguisherNumber.trim();
+      if (extinguisherNumbers.has(extinguisherNumber)) {
+        duplicatedExtinguisherNumbers.add(extinguisherNumber);
+      }
+      extinguisherNumbers.add(extinguisherNumber);
+    });
+
+    if (
+      duplicatedEmergencyTeamIds.size > 0 ||
+      duplicatedExtinguisherNumbers.size > 0
+    ) {
+      toast.error(
+        "No se pueden guardar evaluaciones con IDs o números de extintor repetidos",
+      );
+      return;
+    }
+
     setIsLoading(true);
 
     const payload = {
@@ -510,9 +640,17 @@ const ExtinguisherInspectionFormPage = () => {
       }),
     };
 
-    ExtinguisherInspectionsService.create(payload)
+    const request = idCurrent
+      ? ExtinguisherInspectionsService.update(idCurrent, payload)
+      : ExtinguisherInspectionsService.create(payload);
+
+    request
       .then(() => {
-        toast.success("Inspección creada correctamente");
+        toast.success(
+          idCurrent
+            ? "Evaluaciones agregadas correctamente"
+            : "Inspección creada correctamente",
+        );
         cancel();
       })
       .finally(() => setIsLoading(false));

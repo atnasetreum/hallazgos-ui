@@ -44,6 +44,16 @@ const create = async (payload: Payload) => {
   return data;
 };
 
+const findOne = async (id: number) => {
+  const { data } = await api.get<ExtinguisherInspection>(`/${id}`);
+  return data;
+};
+
+const update = async (id: number, payload: Payload) => {
+  const { data } = await api.patch<ExtinguisherInspection>(`/${id}`, payload);
+  return data;
+};
+
 const findAll = async (filters: Filters) => {
   const { data } = await api.get<ExtinguisherInspection[]>("", {
     params: {
@@ -78,6 +88,8 @@ const downloadFile = async (id: number) => {
 
 export const ExtinguisherInspectionsService = {
   create,
+  findOne,
+  update,
   findAll,
   downloadFile,
 };

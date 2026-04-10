@@ -1,14 +1,18 @@
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
+import Stack from "@mui/material/Stack";
+import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
 
 import { stringToDate, stringToDateWithTime } from "@shared/utils";
+import { ExtinguisherInspectionsService } from "@services";
+import { ExtinguisherInspection } from "@interfaces";
 import TableDefault, {
   StyledTableCell,
   StyledTableRow,
 } from "@shared/components/TableDefault";
-import { ExtinguisherInspection } from "@interfaces";
-import { ExtinguisherInspectionsService } from "@services";
 
 interface Props {
   rows: ExtinguisherInspection[];
@@ -26,6 +30,8 @@ const columns = [
 ];
 
 export default function ExtinguisherInspectionsTable({ rows }: Props) {
+  const router = useRouter();
+
   return (
     <TableDefault
       rows={rows}
@@ -44,16 +50,31 @@ export default function ExtinguisherInspectionsTable({ rows }: Props) {
           </StyledTableCell>
           <StyledTableCell>{row.createdBy?.name || "-"}</StyledTableCell>
           <StyledTableCell>
-            <Tooltip title="Descargar Excel">
-              <IconButton
-                color="primary"
-                onClick={() =>
-                  ExtinguisherInspectionsService.downloadFile(row.id)
-                }
-              >
-                <SimCardDownloadIcon />
-              </IconButton>
-            </Tooltip>
+            <Stack direction="row" spacing={1}>
+              <Tooltip title="Descargar Excel">
+                <IconButton
+                  color="primary"
+                  onClick={() =>
+                    ExtinguisherInspectionsService.downloadFile(row.id)
+                  }
+                >
+                  <SimCardDownloadIcon />
+                </IconButton>
+              </Tooltip>
+
+              {dayjs(row.inspectionDate).isSame(dayjs(), "day") && (
+                <Tooltip title="Agregar más evaluaciones">
+                  <IconButton
+                    color="secondary"
+                    onClick={() =>
+                      router.push(`/extinguisher-inspection/form?id=${row.id}`)
+                    }
+                  >
+                    <AddCircleOutlineIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </Stack>
           </StyledTableCell>
         </StyledTableRow>
       )}

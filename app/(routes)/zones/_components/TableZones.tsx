@@ -26,6 +26,8 @@ const columns = [
   "Nombre",
   "Planta",
   "Área",
+  "Creado por",
+  "Actualizado por",
   "Creación",
   "Ultima actualización",
   "Acciones",
@@ -73,6 +75,8 @@ export default function TableZones({ rows, getData }: Props) {
           <StyledTableCell>{row.name}</StyledTableCell>
           <StyledTableCell>{row.manufacturingPlant.name}</StyledTableCell>
           <StyledTableCell>{row.area?.name || "-"}</StyledTableCell>
+          <StyledTableCell>{row.createdBy?.name || "-"}</StyledTableCell>
+          <StyledTableCell>{row.updatedBy?.name || "-"}</StyledTableCell>
           <StyledTableCell>
             {stringToDateWithTime(row.createdAt)}
           </StyledTableCell>

@@ -24,6 +24,8 @@ interface Props {
 const columns = [
   "ID",
   "Nombre",
+  "Creado por",
+  "Actualizado por",
   "Creación",
   "Ultima actualización",
   "Acciones",
@@ -69,6 +71,8 @@ export default function TableAreas({ rows, getData }: Props) {
             {row.id}
           </StyledTableCell>
           <StyledTableCell>{row.name}</StyledTableCell>
+          <StyledTableCell>{row.createdBy?.name || "-"}</StyledTableCell>
+          <StyledTableCell>{row.updatedBy?.name || "-"}</StyledTableCell>
           <StyledTableCell>
             {stringToDateWithTime(row.createdAt)}
           </StyledTableCell>

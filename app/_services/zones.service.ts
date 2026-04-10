@@ -4,6 +4,7 @@ import { Zone } from "@interfaces";
 interface Payload {
   name: string;
   manufacturingPlantId: number;
+  areaId?: number | null;
 }
 
 const api = axiosWrapper({
@@ -18,6 +19,7 @@ const create = async (payload: Payload) => {
 const findAll = async (filters: {
   name?: string;
   manufacturingPlantId?: string;
+  areaId?: string;
   manufacturingPlantNames?: string[];
   withArea?: boolean;
 }) => {
@@ -28,6 +30,9 @@ const findAll = async (filters: {
       }),
       ...(filters?.manufacturingPlantId && {
         manufacturingPlantId: filters.manufacturingPlantId,
+      }),
+      ...(filters?.areaId && {
+        areaId: filters.areaId,
       }),
       ...(filters?.manufacturingPlantNames && {
         manufacturingPlantNames: filters.manufacturingPlantNames,

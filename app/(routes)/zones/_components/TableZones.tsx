@@ -6,6 +6,7 @@ import { Chip } from "@mui/material";
 import { Stack } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { toast } from "sonner";
 
 import { notify, stringToDateWithTime } from "@shared/utils";
 import TableDefault, {
@@ -24,6 +25,7 @@ const columns = [
   "ID",
   "Nombre",
   "Planta",
+  "Área",
   "Creación",
   "Ultima actualización",
   "Acciones",
@@ -44,6 +46,21 @@ export default function TableZones({ rows, getData }: Props) {
       .finally(() => setIsLoading(false));
   };
 
+  const confirmRemove = (row: Zone) => {
+    toast.warning("Confirmar eliminación", {
+      description: `¿Desea eliminar la zona #${row.id} (${row.name})?`,
+      duration: 10000,
+      cancel: {
+        label: "Cancelar",
+        onClick: () => undefined,
+      },
+      action: {
+        label: "Eliminar",
+        onClick: () => remove(row.id),
+      },
+    });
+  };
+
   return (
     <TableDefault
       rows={rows}
@@ -55,6 +72,7 @@ export default function TableZones({ rows, getData }: Props) {
           </StyledTableCell>
           <StyledTableCell>{row.name}</StyledTableCell>
           <StyledTableCell>{row.manufacturingPlant.name}</StyledTableCell>
+          <StyledTableCell>{row.area?.name || "-"}</StyledTableCell>
           <StyledTableCell>
             {stringToDateWithTime(row.createdAt)}
           </StyledTableCell>
@@ -73,7 +91,7 @@ export default function TableZones({ rows, getData }: Props) {
                 icon={<DeleteIcon />}
                 label="Eliminar"
                 color="error"
-                onClick={() => remove(row.id)}
+                onClick={() => confirmRemove(row)}
                 disabled={isLoading}
               />
             </Stack>

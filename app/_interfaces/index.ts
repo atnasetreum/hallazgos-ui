@@ -1,5 +1,6 @@
 export * from "./accident-positions.interfaces";
 export * from "./associated-tasks.interfaces";
+export * from "./areas.interfaces";
 export * from "./at-agents.interfaces";
 export * from "./at-mechanisms.interfaces";
 export * from "./body-part.interfaces";

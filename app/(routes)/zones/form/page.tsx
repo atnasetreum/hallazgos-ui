@@ -15,16 +15,21 @@ import SaveIcon from "@mui/icons-material/Save";
 import { Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "sonner";
+import Box from "@mui/material/Box";
 
-import { ZonesService } from "@services";
+import { AreasService, ZonesService } from "@services";
 import SelectManufacturingPlants from "@components/SelectManufacturingPlants";
+import SelectDefault from "@components/SelectDefault";
+import { Area } from "@interfaces";
 
 const ZonesFormPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [form, setForm] = useState({
     name: "",
     manufacturingPlantId: "",
+    areaId: "",
   });
+  const [areas, setAreas] = useState<Area[]>([]);
   const [idCurrent, setIdCurrent] = useState<number>(0);
 
   const router = useRouter();
@@ -50,6 +55,7 @@ const ZonesFormPage = () => {
       ZonesService.create({
         name: nameClean,
         manufacturingPlantId,
+        areaId: form.areaId ? Number(form.areaId) : null,
       })
         .then(() => {
           toast.success("Zona creada correctamente");
@@ -60,6 +66,7 @@ const ZonesFormPage = () => {
       ZonesService.update(idCurrent, {
         name: nameClean,
         manufacturingPlantId,
+        areaId: form.areaId ? Number(form.areaId) : null,
       })
         .then(() => {
           toast.success("Zona actualizada correctamente");
@@ -75,7 +82,7 @@ const ZonesFormPage = () => {
 
   const isValidateForm = useMemo(
     () => !form.name?.trim() || !form.manufacturingPlantId,
-    [form]
+    [form],
   );
 
   useEffect(() => {
@@ -87,9 +94,20 @@ const ZonesFormPage = () => {
       setForm({
         name: data.name,
         manufacturingPlantId: `${data.manufacturingPlant.id}`,
+        areaId: data.area?.id ? `${data.area.id}` : "",
       });
     });
   }, [searchParams]);
+
+  useEffect(() => {
+    AreasService.findAll({}).then((data) => {
+      const orderedAreas = [...data].sort((a, b) =>
+        a.name.localeCompare(b.name, "es", { sensitivity: "base" }),
+      );
+
+      setAreas(orderedAreas);
+    });
+  }, []);
 
   return (
     <Grid container spacing={2}>
@@ -97,8 +115,9 @@ const ZonesFormPage = () => {
         size={{
           xs: 12,
           sm: 6,
-          md: 3
-        }}>
+          md: 4,
+        }}
+      >
         <Paper>
           <TextField
             label="Nombre"
@@ -119,8 +138,9 @@ const ZonesFormPage = () => {
         size={{
           xs: 12,
           sm: 6,
-          md: 3
-        }}>
+          md: 4,
+        }}
+      >
         <Paper>
           <SelectManufacturingPlants
             value={form.manufacturingPlantId}
@@ -137,36 +157,61 @@ const ZonesFormPage = () => {
         size={{
           xs: 12,
           sm: 3,
-          md: 3
-        }}>
-        <Button
-          variant="contained"
-          color="error"
-          fullWidth
-          startIcon={<CloseIcon />}
-          onClick={cancel}
-        >
-          Cancelar
-        </Button>
+          md: 4,
+        }}
+      >
+        <SelectDefault
+          data={areas}
+          label="Área (opcional)"
+          value={form.areaId}
+          onChange={(e) =>
+            setForm({
+              ...form,
+              areaId: e.target.value,
+            })
+          }
+          isFilter={true}
+        />
       </Grid>
       <Grid
         size={{
           xs: 12,
-          sm: 3,
-          md: 3
-        }}>
-        <LoadingButton
-          loading={isLoading}
-          loadingPosition="start"
-          startIcon={<SaveIcon />}
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={save}
-          disabled={isValidateForm || isLoading}
+          sm: 12,
+          md: 12,
+        }}
+      >
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 2,
+          }}
         >
-          Guardar
-        </LoadingButton>
+          <Button
+            variant="contained"
+            color="error"
+            startIcon={<CloseIcon />}
+            onClick={cancel}
+            fullWidth
+          >
+            Cancelar
+          </Button>
+
+          <LoadingButton
+            loading={isLoading}
+            loadingPosition="start"
+            startIcon={<SaveIcon />}
+            variant="contained"
+            color="primary"
+            onClick={save}
+            disabled={isValidateForm || isLoading}
+            fullWidth
+          >
+            Guardar
+          </LoadingButton>
+        </Box>
       </Grid>
     </Grid>
   );

@@ -171,6 +171,12 @@ export const MainListItems = () => {
                   />
                   <CreateLink
                     nested
+                    url="/areas"
+                    title="Áreas"
+                    icon={<HubIcon />}
+                  />
+                  <CreateLink
+                    nested
                     url="/processes"
                     title="Procesos"
                     icon={<AccountTreeIcon />}

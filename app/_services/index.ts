@@ -1,5 +1,6 @@
 export * from "./accident-positions.service";
 export * from "./associated-tasks.service";
+export * from "./areas.service";
 export * from "./at-agents.service";
 export * from "./at-mechanisms.service";
 export * from "./auth.service";

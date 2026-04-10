@@ -26,6 +26,7 @@ const ZonesPage = () => {
   const [filters, setFilters] = useState<IFiltersZones>({
     name: "",
     manufacturingPlantId: "",
+    areaId: "",
   });
 
   const router = useRouter();
@@ -47,8 +48,9 @@ const ZonesPage = () => {
         size={{
           xs: 12,
           sm: 12,
-          md: 12
-        }}>
+          md: 12,
+        }}
+      >
         <Typography variant="h4" gutterBottom>
           Zonas
         </Typography>
@@ -57,8 +59,9 @@ const ZonesPage = () => {
         size={{
           xs: 12,
           sm: 12,
-          md: 12
-        }}>
+          md: 12,
+        }}
+      >
         <Toolbar>
           <Box sx={{ flexGrow: 1 }}>
             <Button
@@ -86,8 +89,9 @@ const ZonesPage = () => {
         size={{
           xs: 12,
           sm: 12,
-          md: 12
-        }}>
+          md: 12,
+        }}
+      >
         <FiltersZones
           filters={filters}
           setFilters={setFilters}
@@ -98,8 +102,9 @@ const ZonesPage = () => {
         size={{
           xs: 12,
           sm: 12,
-          md: 12
-        }}>
+          md: 12,
+        }}
+      >
         {isLoading ? (
           <LoadingLinear />
         ) : (

@@ -22,6 +22,7 @@ import {
   ResponseDashboardEvidencesByMonth,
   ResponseDashboardMainTypes,
   ResponseDashboardAssignedResponsiblesByFilters,
+  ResponseDashboardHistoricalByMonth,
   ResponseDashboardMultiNivel,
   ResponseDashboardStatusByFilters,
   ResponseOpenVsClosed,
@@ -142,6 +143,13 @@ const findAssignedResponsiblesByFilters = async ({
         },
       },
     );
+  return data;
+};
+
+const findHistoricalByMonth = async () => {
+  const { data } = await api.get<ResponseDashboardHistoricalByMonth>(
+    "/historical-by-month",
+  );
   return data;
 };
 
@@ -483,6 +491,7 @@ const findBusinessIntelligenceEpp = async ({
 };
 
 export const DashboardService = {
+  findHistoricalByMonth,
   findAssignedResponsiblesByFilters,
   findAreasByFilters,
   findResponsiblesByFilters,

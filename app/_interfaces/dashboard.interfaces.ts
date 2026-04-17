@@ -39,6 +39,16 @@ export interface ResponseDashboardAssignedResponsiblesByFilters {
   }[];
 }
 
+export interface ResponseDashboardHistoricalByMonth {
+  startMonth: string;
+  endMonth: string;
+  categories: string[];
+  series: {
+    name: string;
+    data: number[];
+  }[];
+}
+
 interface StatusDatum {
   name: string;
   y: number;

@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 
-import { Grid, Paper, SelectChangeEvent } from "@mui/material";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import HistoryOutlinedIcon from "@mui/icons-material/HistoryOutlined";
+import { Button, Grid, Paper, SelectChangeEvent } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -18,6 +20,7 @@ import { useUserSessionStore } from "@store";
 import AreasChart from "./charts/AreasChart";
 import StatusChart from "./charts/StatusChart";
 import AssignedResponsibleChart from "./charts/AssignedResponsibleChart";
+import HistoricalChart from "./charts/HistoricalChart";
 
 interface DashboardFilters {
   manufacturingPlantId: string;
@@ -50,6 +53,7 @@ const DashboardPage = () => {
   });
   const [areas, setAreas] = useState<Area[]>([]);
   const [responsibles, setResponsibles] = useState<User[]>([]);
+  const [isHistoricalView, setIsHistoricalView] = useState(false);
 
   const parseDate = (value: string): Dayjs | null => {
     if (!value) return null;
@@ -129,188 +133,242 @@ const DashboardPage = () => {
 
   return (
     <Grid container spacing={2}>
-      <SelectManufacturingPlantsOwn
-        value={filters.manufacturingPlantId}
-        onChange={handlePlantChange}
-        isFilter={true}
-      />
-
-      <Grid
-        size={{
-          xs: 12,
-          sm: 6,
-          md: 2,
-        }}
-      >
-        <Paper>
-          <LocalizationProvider
-            dateAdapter={AdapterDayjs}
-            adapterLocale="es"
-            localeText={
-              esES.components.MuiLocalizationProvider.defaultProps.localeText
-            }
+      {isHistoricalView ? (
+        <>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 12,
+            }}
           >
-            <DatePicker
-              label="Fecha inicio"
-              format="DD/MM/YYYY"
-              value={parseDate(filters.startDate)}
-              maxDate={parseDate(filters.endDate) || dayjs().endOf("month")}
-              onChange={(newValue: Dayjs | null) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  startDate: newValue ? newValue.format("DD/MM/YYYY") : "",
-                }))
-              }
-              slotProps={{
-                field: {
-                  clearable: true,
-                  onClear: () =>
+            <Button
+              variant="contained"
+              startIcon={<ArrowBackOutlinedIcon />}
+              onClick={() => setIsHistoricalView(false)}
+            >
+              Regresar
+            </Button>
+          </Grid>
+
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 12,
+            }}
+          >
+            <Paper sx={{ minHeight: 500, p: 2 }}>
+              <HistoricalChart />
+            </Paper>
+          </Grid>
+        </>
+      ) : (
+        <>
+          <SelectManufacturingPlantsOwn
+            value={filters.manufacturingPlantId}
+            onChange={handlePlantChange}
+            isFilter={true}
+          />
+
+          <Grid
+            size={{
+              xs: 12,
+              sm: 6,
+              md: 2,
+            }}
+          >
+            <Paper>
+              <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+                adapterLocale="es"
+                localeText={
+                  esES.components.MuiLocalizationProvider.defaultProps
+                    .localeText
+                }
+              >
+                <DatePicker
+                  label="Fecha inicio"
+                  format="DD/MM/YYYY"
+                  value={parseDate(filters.startDate)}
+                  maxDate={parseDate(filters.endDate) || dayjs().endOf("month")}
+                  onChange={(newValue: Dayjs | null) =>
                     setFilters((prev) => ({
                       ...prev,
-                      startDate: "",
-                    })),
-                },
-                textField: {
-                  fullWidth: true,
-                },
-              }}
-            />
-          </LocalizationProvider>
-        </Paper>
-      </Grid>
+                      startDate: newValue ? newValue.format("DD/MM/YYYY") : "",
+                    }))
+                  }
+                  slotProps={{
+                    field: {
+                      clearable: true,
+                      onClear: () =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          startDate: "",
+                        })),
+                    },
+                    textField: {
+                      fullWidth: true,
+                    },
+                  }}
+                />
+              </LocalizationProvider>
+            </Paper>
+          </Grid>
 
-      <Grid
-        size={{
-          xs: 12,
-          sm: 6,
-          md: 2,
-        }}
-      >
-        <Paper>
-          <LocalizationProvider
-            dateAdapter={AdapterDayjs}
-            adapterLocale="es"
-            localeText={
-              esES.components.MuiLocalizationProvider.defaultProps.localeText
-            }
+          <Grid
+            size={{
+              xs: 12,
+              sm: 6,
+              md: 2,
+            }}
           >
-            <DatePicker
-              label="Fecha fin"
-              format="DD/MM/YYYY"
-              value={parseDate(filters.endDate)}
-              minDate={parseDate(filters.startDate) || undefined}
-              maxDate={dayjs().endOf("month")}
-              onChange={(newValue: Dayjs | null) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  endDate: newValue ? newValue.format("DD/MM/YYYY") : "",
-                }))
-              }
-              slotProps={{
-                field: {
-                  clearable: true,
-                  onClear: () =>
+            <Paper>
+              <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+                adapterLocale="es"
+                localeText={
+                  esES.components.MuiLocalizationProvider.defaultProps
+                    .localeText
+                }
+              >
+                <DatePicker
+                  label="Fecha fin"
+                  format="DD/MM/YYYY"
+                  value={parseDate(filters.endDate)}
+                  minDate={parseDate(filters.startDate) || undefined}
+                  maxDate={dayjs().endOf("month")}
+                  onChange={(newValue: Dayjs | null) =>
                     setFilters((prev) => ({
                       ...prev,
-                      endDate: "",
-                    })),
-                },
-                textField: {
-                  fullWidth: true,
-                },
-              }}
+                      endDate: newValue ? newValue.format("DD/MM/YYYY") : "",
+                    }))
+                  }
+                  slotProps={{
+                    field: {
+                      clearable: true,
+                      onClear: () =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          endDate: "",
+                        })),
+                    },
+                    textField: {
+                      fullWidth: true,
+                    },
+                  }}
+                />
+              </LocalizationProvider>
+            </Paper>
+          </Grid>
+
+          <Grid
+            size={{
+              xs: 12,
+              sm: 6,
+              md: 2,
+            }}
+          >
+            <SelectDefault
+              data={areas}
+              label="Zonas"
+              isFilter={true}
+              value={filters.areaId}
+              onChange={(_, newValue) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  areaId: newValue ? String(newValue.id) : "",
+                  areaName: newValue?.name || "",
+                  responsibleId: "",
+                  responsibleName: "",
+                }))
+              }
+              helperText={
+                !filters.manufacturingPlantId ? "Seleccione una planta" : ""
+              }
             />
-          </LocalizationProvider>
-        </Paper>
-      </Grid>
+          </Grid>
 
-      <Grid
-        size={{
-          xs: 12,
-          sm: 6,
-          md: 2,
-        }}
-      >
-        <SelectDefault
-          data={areas}
-          label="Zonas"
-          isFilter={true}
-          value={filters.areaId}
-          onChange={(_, newValue) =>
-            setFilters((prev) => ({
-              ...prev,
-              areaId: newValue ? String(newValue.id) : "",
-              areaName: newValue?.name || "",
-              responsibleId: "",
-              responsibleName: "",
-            }))
-          }
-          helperText={
-            !filters.manufacturingPlantId ? "Seleccione una planta" : ""
-          }
-        />
-      </Grid>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 6,
+              md: 2,
+            }}
+          >
+            <SelectDefault
+              data={responsibles}
+              label="Responsable"
+              isFilter={true}
+              value={filters.responsibleId}
+              onChange={(_, newValue) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  responsibleId: newValue ? String(newValue.id) : "",
+                  responsibleName: newValue?.name || "",
+                }))
+              }
+              helperText={
+                !filters.manufacturingPlantId ? "Seleccione una planta" : ""
+              }
+            />
+          </Grid>
 
-      <Grid
-        size={{
-          xs: 12,
-          sm: 6,
-          md: 3,
-        }}
-      >
-        <SelectDefault
-          data={responsibles}
-          label="Responsable"
-          isFilter={true}
-          value={filters.responsibleId}
-          onChange={(_, newValue) =>
-            setFilters((prev) => ({
-              ...prev,
-              responsibleId: newValue ? String(newValue.id) : "",
-              responsibleName: newValue?.name || "",
-            }))
-          }
-          helperText={
-            !filters.manufacturingPlantId ? "Seleccione una planta" : ""
-          }
-        />
-      </Grid>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 6,
+              md: 1,
+            }}
+          >
+            <Button
+              variant="contained"
+              fullWidth
+              startIcon={<HistoryOutlinedIcon />}
+              sx={{ height: 40 }}
+              onClick={() => setIsHistoricalView(true)}
+            >
+              Histórico
+            </Button>
+          </Grid>
 
-      <Grid
-        size={{
-          xs: 12,
-          sm: 12,
-          md: 6,
-        }}
-      >
-        <Paper>
-          <StatusChart filters={filters} />
-        </Paper>
-      </Grid>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 6,
+            }}
+          >
+            <Paper sx={{ p: 2 }}>
+              <StatusChart filters={filters} />
+            </Paper>
+          </Grid>
 
-      <Grid
-        size={{
-          xs: 12,
-          sm: 12,
-          md: 6,
-        }}
-      >
-        <Paper>
-          <AreasChart filters={filters} />
-        </Paper>
-      </Grid>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 6,
+            }}
+          >
+            <Paper sx={{ p: 2 }}>
+              <AreasChart filters={filters} />
+            </Paper>
+          </Grid>
 
-      <Grid
-        size={{
-          xs: 12,
-          sm: 12,
-          md: 12,
-        }}
-      >
-        <Paper sx={{ minHeight: 400 }}>
-          <AssignedResponsibleChart filters={filters} />
-        </Paper>
-      </Grid>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 12,
+            }}
+          >
+            <Paper sx={{ minHeight: 400, p: 2 }}>
+              <AssignedResponsibleChart filters={filters} />
+            </Paper>
+          </Grid>
+        </>
+      )}
     </Grid>
   );
 };

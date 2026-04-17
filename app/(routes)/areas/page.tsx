@@ -25,6 +25,7 @@ const AreasPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [filters, setFilters] = useState<IFiltersAreas>({
     name: "",
+    manufacturingPlantId: "",
   });
 
   const router = useRouter();
@@ -50,7 +51,7 @@ const AreasPage = () => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          Áreas
+          Zonas
         </Typography>
       </Grid>
       <Grid

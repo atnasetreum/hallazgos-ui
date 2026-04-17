@@ -3,6 +3,7 @@ import { Area } from "@interfaces";
 
 interface Payload {
   name: string;
+  manufacturingPlantId: number;
 }
 
 const api = axiosWrapper({
@@ -14,11 +15,17 @@ const create = async (payload: Payload) => {
   return data;
 };
 
-const findAll = async (filters: { name?: string }) => {
+const findAll = async (filters: {
+  name?: string;
+  manufacturingPlantId?: string;
+}) => {
   const { data } = await api.get<Area[]>("", {
     params: {
       ...(filters?.name && {
         name: filters.name,
+      }),
+      ...(filters?.manufacturingPlantId && {
+        manufacturingPlantId: filters.manufacturingPlantId,
       }),
     },
   });

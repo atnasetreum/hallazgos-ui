@@ -3,9 +3,11 @@ import { Typography } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { TextField } from "@mui/material";
 import { Paper } from "@mui/material";
+import SelectManufacturingPlantsOwn from "@components/SelectManufacturingPlantsOwn";
 
 export interface IFiltersAreas {
   name: string;
+  manufacturingPlantId: string;
 }
 
 interface Props {
@@ -51,6 +53,16 @@ const FiltersAreas = ({ filters, setFilters, count }: Props) => {
           />
         </Paper>
       </Grid>
+      <SelectManufacturingPlantsOwn
+        value={filters.manufacturingPlantId}
+        onChange={(e) =>
+          setFilters({
+            ...filters,
+            manufacturingPlantId: e.target.value,
+          })
+        }
+        isFilter={true}
+      />
     </Grid>
   );
 };

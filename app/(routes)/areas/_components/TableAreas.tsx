@@ -24,6 +24,7 @@ interface Props {
 const columns = [
   "ID",
   "Nombre",
+  "Planta",
   "Creado por",
   "Actualizado por",
   "Creación",
@@ -71,6 +72,9 @@ export default function TableAreas({ rows, getData }: Props) {
             {row.id}
           </StyledTableCell>
           <StyledTableCell>{row.name}</StyledTableCell>
+          <StyledTableCell>
+            {row.manufacturingPlant?.name || "-"}
+          </StyledTableCell>
           <StyledTableCell>{row.createdBy?.name || "-"}</StyledTableCell>
           <StyledTableCell>{row.updatedBy?.name || "-"}</StyledTableCell>
           <StyledTableCell>

@@ -25,7 +25,7 @@ const columns = [
   "Planta",
   "Grupo",
   "Tipo de hallazgo",
-  "Zona",
+  "Lugar",
   "Processo",
   "Creado por",
   "Supervisores",

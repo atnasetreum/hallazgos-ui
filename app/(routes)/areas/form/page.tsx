@@ -17,11 +17,13 @@ import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "sonner";
 
 import { AreasService } from "@services";
+import SelectManufacturingPlantsOwn from "@components/SelectManufacturingPlantsOwn";
 
 const AreasFormPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [form, setForm] = useState({
     name: "",
+    manufacturingPlantId: "",
   });
   const [idCurrent, setIdCurrent] = useState<number>(0);
 
@@ -30,9 +32,15 @@ const AreasFormPage = () => {
 
   const save = () => {
     const nameClean = form.name.trim();
+    const manufacturingPlantId = Number(form.manufacturingPlantId);
 
     if (!nameClean) {
       toast.error("El nombre es requerido");
+      return;
+    }
+
+    if (!manufacturingPlantId) {
+      toast.error("La planta es requerida");
       return;
     }
 
@@ -41,6 +49,7 @@ const AreasFormPage = () => {
     if (!idCurrent) {
       AreasService.create({
         name: nameClean,
+        manufacturingPlantId,
       })
         .then(() => {
           toast.success("Área creada correctamente");
@@ -50,6 +59,7 @@ const AreasFormPage = () => {
     } else {
       AreasService.update(idCurrent, {
         name: nameClean,
+        manufacturingPlantId,
       })
         .then(() => {
           toast.success("Área actualizada correctamente");
@@ -63,7 +73,10 @@ const AreasFormPage = () => {
     router.push("/areas");
   };
 
-  const isValidateForm = useMemo(() => !form.name?.trim(), [form]);
+  const isValidateForm = useMemo(
+    () => !form.name?.trim() || !form.manufacturingPlantId,
+    [form],
+  );
 
   useEffect(() => {
     const id = Number(searchParams.get("id") || 0);
@@ -73,6 +86,7 @@ const AreasFormPage = () => {
     AreasService.findOne(id).then((data) => {
       setForm({
         name: data.name,
+        manufacturingPlantId: `${data.manufacturingPlant?.id || ""}`,
       });
     });
   }, [searchParams]);
@@ -83,7 +97,7 @@ const AreasFormPage = () => {
         size={{
           xs: 12,
           sm: 6,
-          md: 6,
+          md: 4,
         }}
       >
         <Paper>
@@ -102,11 +116,20 @@ const AreasFormPage = () => {
           />
         </Paper>
       </Grid>
+      <SelectManufacturingPlantsOwn
+        value={form.manufacturingPlantId}
+        onChange={(e) =>
+          setForm({
+            ...form,
+            manufacturingPlantId: e.target.value,
+          })
+        }
+      />
       <Grid
         size={{
           xs: 12,
-          sm: 3,
-          md: 3,
+          sm: 6,
+          md: 2.5,
         }}
       >
         <Button
@@ -122,8 +145,8 @@ const AreasFormPage = () => {
       <Grid
         size={{
           xs: 12,
-          sm: 3,
-          md: 3,
+          sm: 6,
+          md: 2.5,
         }}
       >
         <LoadingButton

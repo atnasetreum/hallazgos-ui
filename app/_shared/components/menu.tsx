@@ -166,13 +166,13 @@ export const MainListItems = () => {
                   <CreateLink
                     nested
                     url="/zones"
-                    title="Zonas"
+                    title="Lugares"
                     icon={<HubIcon />}
                   />
                   <CreateLink
                     nested
                     url="/areas"
-                    title="Áreas"
+                    title="Zonas"
                     icon={<HubIcon />}
                   />
                   <CreateLink

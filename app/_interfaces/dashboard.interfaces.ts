@@ -28,6 +28,17 @@ export interface ResponseDashboardStatusByFilters {
   }[];
 }
 
+export interface ResponseDashboardAssignedResponsiblesByFilters {
+  total: number;
+  startDate: string;
+  endDate: string;
+  categories: string[];
+  series: {
+    name: string;
+    data: number[];
+  }[];
+}
+
 interface StatusDatum {
   name: string;
   y: number;

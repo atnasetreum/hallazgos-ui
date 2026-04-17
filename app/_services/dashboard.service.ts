@@ -21,6 +21,7 @@ import {
   ResponseAccidents,
   ResponseDashboardEvidencesByMonth,
   ResponseDashboardMainTypes,
+  ResponseDashboardAssignedResponsiblesByFilters,
   ResponseDashboardMultiNivel,
   ResponseDashboardStatusByFilters,
   ResponseOpenVsClosed,
@@ -65,6 +66,34 @@ const findStatusByFilters = async ({
   return data;
 };
 
+const findAreasByFilters = async ({
+  manufacturingPlantId,
+  startDate,
+  endDate,
+  areaId,
+  responsibleId,
+}: {
+  manufacturingPlantId: string;
+  startDate: string;
+  endDate: string;
+  areaId?: string;
+  responsibleId?: string;
+}) => {
+  const { data } = await api.get<ResponseDashboardStatusByFilters>(
+    "/areas-by-filters",
+    {
+      params: {
+        manufacturingPlantId,
+        startDate,
+        endDate,
+        ...(areaId && { areaId }),
+        ...(responsibleId && { responsibleId }),
+      },
+    },
+  );
+  return data;
+};
+
 const findResponsiblesByFilters = async ({
   manufacturingPlantId,
   startDate,
@@ -84,6 +113,35 @@ const findResponsiblesByFilters = async ({
       areaId,
     },
   });
+  return data;
+};
+
+const findAssignedResponsiblesByFilters = async ({
+  manufacturingPlantId,
+  startDate,
+  endDate,
+  areaId,
+  responsibleId,
+}: {
+  manufacturingPlantId: string;
+  startDate: string;
+  endDate: string;
+  areaId?: string;
+  responsibleId?: string;
+}) => {
+  const { data } =
+    await api.get<ResponseDashboardAssignedResponsiblesByFilters>(
+      "/assigned-responsibles-by-filters",
+      {
+        params: {
+          manufacturingPlantId,
+          startDate,
+          endDate,
+          ...(areaId && { areaId }),
+          ...(responsibleId && { responsibleId }),
+        },
+      },
+    );
   return data;
 };
 
@@ -425,6 +483,8 @@ const findBusinessIntelligenceEpp = async ({
 };
 
 export const DashboardService = {
+  findAssignedResponsiblesByFilters,
+  findAreasByFilters,
   findResponsiblesByFilters,
   findStatusByFilters,
   findBusinessIntelligenceEpp,

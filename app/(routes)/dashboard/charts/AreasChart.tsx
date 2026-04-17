@@ -30,11 +30,9 @@ interface Props {
   };
 }
 
-const statusOrder = ["Abierto", "En progreso", "Cerrado", "Cancelado"];
-
-const StatusChart = ({ filters }: Props) => {
+const AreasChart = ({ filters }: Props) => {
   const theme = useTheme();
-  const [statusData, setStatusData] =
+  const [areasData, setAreasData] =
     useState<ResponseDashboardStatusByFilters | null>(null);
 
   const hasCompleteFilters =
@@ -42,43 +40,36 @@ const StatusChart = ({ filters }: Props) => {
 
   useEffect(() => {
     if (!hasCompleteFilters) {
-      setStatusData(null);
+      setAreasData(null);
       return;
     }
 
-    DashboardService.findStatusByFilters({
+    DashboardService.findAreasByFilters({
       manufacturingPlantId: filters.manufacturingPlantId,
       startDate: filters.startDate,
       endDate: filters.endDate,
       ...(filters.areaId && { areaId: filters.areaId }),
       ...(filters.responsibleId && { responsibleId: filters.responsibleId }),
-    }).then(setStatusData);
+    }).then(setAreasData);
   }, [
     hasCompleteFilters,
-    filters.areaId,
-    filters.responsibleId,
     filters.manufacturingPlantId,
     filters.startDate,
     filters.endDate,
+    filters.areaId,
+    filters.responsibleId,
   ]);
 
   const seriesData = useMemo(() => {
-    const dataMap = new Map(
-      (statusData?.seriesData || []).map((item) => [item.name, item.y]),
-    );
-
-    return statusOrder.map((name) => ({
-      name,
-      y: dataMap.get(name) || 0,
-    }));
-  }, [statusData]);
+    return areasData?.seriesData || [];
+  }, [areasData]);
 
   const chartSeriesData = useMemo(
     () => seriesData.filter((item) => item.y > 0),
     [seriesData],
   );
 
-  const total = statusData?.total || 0;
+  const total = areasData?.total || 0;
   const isDarkMode = theme.palette.mode === "dark";
   const chartTextColor = isDarkMode ? "#f1f5f9" : "#111827";
   const chartSubtleTextColor = isDarkMode ? "#cbd5e1" : "#374151";
@@ -130,7 +121,6 @@ const StatusChart = ({ filters }: Props) => {
                   text: centerLabelHtml,
                 });
 
-                // Set font size based on chart diameter
                 customLabel.css({
                   fontSize: `${series.center[2] / 12}px`,
                 });
@@ -155,7 +145,7 @@ const StatusChart = ({ filters }: Props) => {
           },
           title: {
             text: (() => {
-              const titleParts = ["Hallazgos por estatus"];
+              const titleParts = ["Hallazgos por Zona"];
 
               if (filters.areaName) {
                 titleParts.push(filters.areaName);
@@ -220,7 +210,7 @@ const StatusChart = ({ filters }: Props) => {
           },
           series: [
             {
-              name: "Estatus",
+              name: "Áreas",
               colorByPoint: true,
               innerSize: "75%",
               data: chartSeriesData,
@@ -232,4 +222,4 @@ const StatusChart = ({ filters }: Props) => {
   );
 };
 
-export default StatusChart;
+export default AreasChart;

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 
-import { Grid, Paper, SelectChangeEvent, Typography } from "@mui/material";
+import { Grid, Paper, SelectChangeEvent } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -14,10 +14,14 @@ import SelectManufacturingPlantsOwn from "@components/SelectManufacturingPlantsO
 import SelectDefault from "@components/SelectDefault";
 import { Area, User } from "@interfaces";
 import { AreasService, DashboardService, UsersService } from "@services";
+import { useUserSessionStore } from "@store";
+import AreasChart from "./charts/AreasChart";
 import StatusChart from "./charts/StatusChart";
+import AssignedResponsibleChart from "./charts/AssignedResponsibleChart";
 
 interface DashboardFilters {
   manufacturingPlantId: string;
+  manufacturingPlantName: string;
   startDate: string;
   endDate: string;
   areaId: string;
@@ -27,11 +31,16 @@ interface DashboardFilters {
 }
 
 const DashboardPage = () => {
+  const manufacturingPlants = useUserSessionStore(
+    (state) => state.manufacturingPlants || [],
+  );
+
   const currentMonthStart = dayjs().startOf("month").format("DD/MM/YYYY");
   const currentMonthEnd = dayjs().endOf("month").format("DD/MM/YYYY");
 
   const [filters, setFilters] = useState<DashboardFilters>({
     manufacturingPlantId: "",
+    manufacturingPlantName: "",
     startDate: currentMonthStart,
     endDate: currentMonthEnd,
     areaId: "",
@@ -54,9 +63,14 @@ const DashboardPage = () => {
   };
 
   const handlePlantChange = (event: SelectChangeEvent<string>) => {
+    const selectedPlant = manufacturingPlants.find(
+      (item) => String(item.id) === event.target.value,
+    );
+
     setFilters((prev) => ({
       ...prev,
       manufacturingPlantId: event.target.value,
+      manufacturingPlantName: selectedPlant?.name || "",
       areaId: "",
       areaName: "",
       responsibleId: "",
@@ -115,12 +129,6 @@ const DashboardPage = () => {
 
   return (
     <Grid container spacing={2}>
-      <Grid size={12}>
-        <Typography variant="h5" fontWeight={700}>
-          Dashboard
-        </Typography>
-      </Grid>
-
       <SelectManufacturingPlantsOwn
         value={filters.manufacturingPlantId}
         onChange={handlePlantChange}
@@ -268,9 +276,39 @@ const DashboardPage = () => {
         />
       </Grid>
 
-      <Grid size={12}>
-        <Paper sx={{ p: 2, minHeight: 420 }}>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 12,
+          md: 6,
+        }}
+      >
+        <Paper>
           <StatusChart filters={filters} />
+        </Paper>
+      </Grid>
+
+      <Grid
+        size={{
+          xs: 12,
+          sm: 12,
+          md: 6,
+        }}
+      >
+        <Paper>
+          <AreasChart filters={filters} />
+        </Paper>
+      </Grid>
+
+      <Grid
+        size={{
+          xs: 12,
+          sm: 12,
+          md: 12,
+        }}
+      >
+        <Paper sx={{ minHeight: 400 }}>
+          <AssignedResponsibleChart filters={filters} />
         </Paper>
       </Grid>
     </Grid>

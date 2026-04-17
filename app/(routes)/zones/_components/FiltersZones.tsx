@@ -45,16 +45,21 @@ const FiltersZones = ({ filters, setFilters, count }: Props) => {
           md: 12,
         }}
       >
-        <Typography variant="subtitle1" gutterBottom>
+        <Typography
+          variant="subtitle1"
+          gutterBottom
+          sx={{
+            color: (theme) =>
+              theme.palette.mode === "light"
+                ? theme.palette.common.black
+                : theme.palette.common.white,
+          }}
+        >
           <FilterListIcon
             sx={{
               pt: 1,
-              color: (theme) =>
-                theme.palette.mode === "light"
-                  ? theme.palette.common.black
-                  : theme.palette.common.white,
             }}
-          />{" "}
+          />
           Filtros ({count})
         </Typography>
       </Grid>

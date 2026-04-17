@@ -222,8 +222,9 @@ const IcsFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <SelectDefault
             data={manufacturingPlants}
             label="Planta *"
@@ -236,8 +237,9 @@ const IcsFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <SelectDefault
             data={catalogs || []}
             label="Regla de vida *"
@@ -254,8 +256,9 @@ const IcsFormPage = () => {
             size={{
               xs: 12,
               sm: 6,
-              md: 3
-            }}>
+              md: 3,
+            }}
+          >
             <SelectDefault
               data={
                 catalogs.find(
@@ -280,8 +283,9 @@ const IcsFormPage = () => {
             size={{
               xs: 12,
               sm: 6,
-              md: 3
-            }}>
+              md: 3,
+            }}
+          >
             <SelectDefault
               data={
                 (
@@ -303,8 +307,9 @@ const IcsFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <Paper>
             <TextField
               fullWidth
@@ -340,8 +345,9 @@ const IcsFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           {!!employees.length ? (
             <Paper>
               <Autocomplete
@@ -390,8 +396,9 @@ const IcsFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 6
-          }}>
+            md: 6,
+          }}
+        >
           <Paper sx={{ p: 2 }}>
             <TextField
               id="description-multiline"
@@ -407,12 +414,20 @@ const IcsFormPage = () => {
             />
           </Paper>
         </Grid>
-        <ImageORCamera
-          setImage={setImage}
-          image={image}
-          setAttachedFile={setAttachedFile}
-          attachedFile={attachedFile}
-        />
+        <Grid
+          size={{
+            xs: 12,
+            sm: 12,
+            md: 12,
+          }}
+        >
+          <ImageORCamera
+            setImage={setImage}
+            image={image}
+            setAttachedFile={setAttachedFile}
+            attachedFile={attachedFile}
+          />
+        </Grid>
       </Grid>
       <Grid
         container
@@ -425,8 +440,9 @@ const IcsFormPage = () => {
           size={{
             xs: 12,
             sm: 3,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <Button
             variant="contained"
             color="error"
@@ -441,8 +457,9 @@ const IcsFormPage = () => {
           size={{
             xs: 12,
             sm: 3,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <LoadingButton
             loading={isLoading}
             loadingPosition="start"

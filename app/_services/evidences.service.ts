@@ -24,6 +24,11 @@ const paramsFilter = (params: FiltersEvidences) => {
   };
 };
 
+interface PermissionsConfigResponse {
+  supervisorOverrideEmails: string[];
+  cancelEvidenceEmails: string[];
+}
+
 const findAll = async (params: FiltersEvidences) => {
   const { data } = await api.get<Evidence[]>("", {
     params: paramsFilter(params),
@@ -61,6 +66,21 @@ const solution = async (id: number, formData: FormData) => {
   return data;
 };
 
+const processStart = async (id: number, formData: FormData) => {
+  const { data } = await axios.post<Evidence>(
+    `${process.env.NEXT_PUBLIC_URL_API}${baseURL}/process/${id}`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        ["x-app-key"]: process.env.NEXT_PUBLIC_APP_KEY,
+      },
+      withCredentials: true,
+    },
+  );
+  return data;
+};
+
 const remove = async (id: number) => {
   const { data } = await api.delete<Evidence>(`/${id}`);
   return data;
@@ -68,6 +88,12 @@ const remove = async (id: number) => {
 
 const addComment = async (id: number, comment: string) => {
   const { data } = await api.post<Evidence>(`/add/comment/${id}`, { comment });
+  return data;
+};
+
+const getPermissionsConfig = async () => {
+  const { data } =
+    await api.get<PermissionsConfigResponse>(`/permissions/config`);
   return data;
 };
 
@@ -114,7 +140,9 @@ export const EvidencesService = {
   create,
   remove,
   solution,
+  processStart,
   addComment,
+  getPermissionsConfig,
   downloadExcel,
   downloadPdf,
 };

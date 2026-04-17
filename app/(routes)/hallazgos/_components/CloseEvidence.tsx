@@ -55,7 +55,7 @@ export default function CloseEvidence({
 
   const currentDescriptionSolution = useMemo(
     () => descriptionSolution.trim(),
-    [descriptionSolution]
+    [descriptionSolution],
   );
 
   const saveSolution = () => {
@@ -128,8 +128,9 @@ export default function CloseEvidence({
               size={{
                 xs: 12,
                 sm: 6,
-                md: 6
-              }}>
+                md: 6,
+              }}
+            >
               <b>
                 {evidenceCurrent?.description
                   ? `Descripción del comportamiento inseguro: `
@@ -144,8 +145,9 @@ export default function CloseEvidence({
               size={{
                 xs: 12,
                 sm: 6,
-                md: 6
-              }}>
+                md: 6,
+              }}
+            >
               <Paper sx={{ p: 2 }}>
                 <TextField
                   id="description-multiline-solution"
@@ -175,8 +177,9 @@ export default function CloseEvidence({
           size={{
             xs: 12,
             sm: 12,
-            md: 12
-          }}>
+            md: 12,
+          }}
+        >
           <ImageORCamera
             setImage={setImage}
             image={image}
@@ -185,7 +188,7 @@ export default function CloseEvidence({
           />
         </Grid>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ justifyContent: "center" }}>
         <Button
           onClick={saveSolution}
           variant="contained"

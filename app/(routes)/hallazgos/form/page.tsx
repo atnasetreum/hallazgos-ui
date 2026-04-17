@@ -19,6 +19,10 @@ import ImageORCamera from "@shared/components/ImageORCamera";
 import { dataURLtoFile, notify } from "@shared/utils";
 import SelectDefault from "@components/SelectDefault";
 import { SecondaryType, User } from "@interfaces";
+import {
+  formatDayLabel,
+  priorityOptions,
+} from "@routes/hallazgos/_constants/priorityOptions";
 
 import "./form.css";
 
@@ -37,6 +41,7 @@ export default function HallazgosFormPage() {
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
   const [isUnsafeBehavior, setIsUnsafeBehavior] = useState<boolean>(false);
   const [description, setDescription] = useState<string>("");
+  const [priorityDays, setPriorityDays] = useState<string>("");
 
   const { mainTypes, zones, processes } = useCategoriesStore();
 
@@ -45,11 +50,11 @@ export default function HallazgosFormPage() {
   }, []);
 
   const manufacturingPlants = useUserSessionStore(
-    (state) => state.manufacturingPlants
+    (state) => state.manufacturingPlants,
   );
 
   const manufacturingPlantsCurrent = useUserSessionStore(
-    (state) => state.manufacturingPlantsCurrent
+    (state) => state.manufacturingPlantsCurrent,
   );
 
   const router = useRouter();
@@ -66,7 +71,7 @@ export default function HallazgosFormPage() {
     if (typeHallazgo) {
       setSecondaryTypes(
         mainTypes.find((data) => data.id === Number(typeHallazgo))
-          ?.secondaryTypes || []
+          ?.secondaryTypes || [],
       );
     }
   }, [typeHallazgo, mainTypes]);
@@ -78,10 +83,10 @@ export default function HallazgosFormPage() {
           return (
             manufacturingPlants.some(
               (manufacturingPlant) =>
-                Number(manufacturingPlant.id) === Number(manufacturingPlantId)
+                Number(manufacturingPlant.id) === Number(manufacturingPlantId),
             ) && zones.some((zoneData) => Number(zoneData.id) === Number(zone))
           );
-        }
+        },
       );
 
       setSupervisorsCurrent(supervisorsFilter);
@@ -137,6 +142,10 @@ export default function HallazgosFormPage() {
     formData.append("process", process);
     formData.append("description", currentDescription);
 
+    if (priorityDays) {
+      formData.append("priorityDays", priorityDays);
+    }
+
     if (supervisor) {
       formData.append("supervisor", supervisor);
     }
@@ -166,7 +175,7 @@ export default function HallazgosFormPage() {
   const validateUnsafeBehavior = (value: string) => {
     const unsafeBehaviorId = Number(value ?? 0);
     const mainTypeCurrent = mainTypes.find(
-      (data) => data.id === unsafeBehaviorId
+      (data) => data.id === unsafeBehaviorId,
     );
 
     if (!mainTypeCurrent) return;
@@ -184,8 +193,9 @@ export default function HallazgosFormPage() {
         size={{
           xs: 12,
           sm: 6,
-          md: 3
-        }}>
+          md: 3,
+        }}
+      >
         <SelectDefault
           data={manufacturingPlants}
           label="Planta"
@@ -198,8 +208,9 @@ export default function HallazgosFormPage() {
         size={{
           xs: 12,
           sm: 6,
-          md: 3
-        }}>
+          md: 3,
+        }}
+      >
         <SelectDefault
           data={mainTypes}
           label="Hallazgo"
@@ -216,8 +227,9 @@ export default function HallazgosFormPage() {
         size={{
           xs: 12,
           sm: 6,
-          md: 3
-        }}>
+          md: 3,
+        }}
+      >
         <SelectDefault
           data={secondaryTypes}
           label="Tipo"
@@ -231,14 +243,15 @@ export default function HallazgosFormPage() {
         size={{
           xs: 12,
           sm: 6,
-          md: 3
-        }}>
+          md: 3,
+        }}
+      >
         <SelectDefault
           data={zones.filter(
             (data) =>
-              data.manufacturingPlant.id === Number(manufacturingPlantId)
+              data.manufacturingPlant.id === Number(manufacturingPlantId),
           )}
-          label="Zona"
+          label="Lugar"
           value={zone}
           onChange={(e) => setZone(e.target.value)}
           helperText={!manufacturingPlantId ? "Seleccione una planta" : ""}
@@ -249,12 +262,13 @@ export default function HallazgosFormPage() {
         size={{
           xs: 12,
           sm: 6,
-          md: 3
-        }}>
+          md: 3,
+        }}
+      >
         <SelectDefault
           data={processes.filter(
             (data) =>
-              data.manufacturingPlant.id === Number(manufacturingPlantId)
+              data.manufacturingPlant.id === Number(manufacturingPlantId),
           )}
           label="Proceso"
           value={process}
@@ -267,8 +281,9 @@ export default function HallazgosFormPage() {
         size={{
           xs: 12,
           sm: 6,
-          md: 3
-        }}>
+          md: 3,
+        }}
+      >
         <SelectDefault
           data={supervisorsCurrent}
           label="Supervisor"
@@ -288,8 +303,27 @@ export default function HallazgosFormPage() {
         size={{
           xs: 12,
           sm: 6,
-          md: 6
-        }}>
+          md: 2,
+        }}
+      >
+        <SelectDefault
+          data={priorityOptions.map((item) => ({
+            id: item.days,
+            name: `${item.name} (${formatDayLabel(item.days)})`,
+          }))}
+          label="Prioridad (opcional)"
+          value={priorityDays}
+          onChange={(e) => setPriorityDays(e.target.value)}
+          isFilter={true}
+        />
+      </Grid>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 6,
+          md: 4,
+        }}
+      >
         <Paper sx={{ p: 2 }}>
           <TextField
             id="description-multiline"
@@ -313,18 +347,27 @@ export default function HallazgosFormPage() {
           />
         </Paper>
       </Grid>
-      <ImageORCamera
-        setImage={setImage}
-        image={image}
-        setAttachedFile={setAttachedFile}
-        attachedFile={attachedFile}
-      />
       <Grid
         size={{
           xs: 12,
           sm: 12,
-          md: 12
-        }}>
+          md: 12,
+        }}
+      >
+        <ImageORCamera
+          setImage={setImage}
+          image={image}
+          setAttachedFile={setAttachedFile}
+          attachedFile={attachedFile}
+        />
+      </Grid>
+      <Grid
+        size={{
+          xs: 12,
+          sm: 12,
+          md: 12,
+        }}
+      >
         <Paper sx={{ p: 2 }}>
           <ButtonGroup
             variant="contained"

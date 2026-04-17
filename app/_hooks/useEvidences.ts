@@ -34,10 +34,13 @@ const query = gql`
       data {
         id
         status
+        priorityDays
         createdAt
         updatedAt
         solutionDate
+        startProcessDate
         imgEvidence
+        imgProcess
         imgSolution
         description
         descriptionSolution
@@ -102,10 +105,13 @@ export interface CommentEvidenceGraphql {
 export interface EvidenceGraphql {
   id: number;
   status: string;
+  priorityDays?: number | null;
   createdAt: Date;
   updatedAt: Date;
   solutionDate: Date | null;
+  startProcessDate: Date | null;
   imgEvidence: string;
+  imgProcess: string;
   imgSolution: string;
   manufacturingPlant: OnlyName;
   user: OnlyName;

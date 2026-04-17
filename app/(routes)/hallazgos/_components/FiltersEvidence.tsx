@@ -194,6 +194,7 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
         <SelectDefault
           data={[
             { id: "Abierto", name: "Abierto" },
+            { id: "En progreso", name: "En progreso" },
             { id: "Cerrado", name: "Cerrado" },
             { id: "Cancelado", name: "Cancelado" },
           ]}

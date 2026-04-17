@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Chip } from "@mui/material";
@@ -6,19 +6,36 @@ import InfoIcon from "@mui/icons-material/Info";
 import { Stack } from "@mui/material";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import DeleteIcon from "@mui/icons-material/Delete";
+import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import PendingActionsIcon from "@mui/icons-material/PendingActions";
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 
 import { durantionToTime, notify, stringToDateWithTime } from "@shared/utils";
 import {
   StyledTableCell,
   StyledTableRow,
 } from "@shared/components/TableDefault";
-import { STATUS_CLOSED, STATUS_OPEN, ROLE_SUPERVISOR } from "@shared/constants";
+import {
+  ROLE_ADMINISTRADOR,
+  ROLE_SUPERVISOR,
+  STATUS_CLOSED,
+  STATUS_IN_PROGRESS,
+  STATUS_OPEN,
+} from "@shared/constants";
 import EvidencePreview from "./EvidencePreview";
 import CloseEvidence from "./CloseEvidence";
+import StartProcessEvidence from "./StartProcessEvidence";
 import { useUserSessionStore } from "@store";
 import { EvidencesService } from "@services";
 import { EvidenceGraphql } from "@hooks";
 import TableDefaultServer from "@shared/components/TableDefaultServer";
+import {
+  formatDayLabel,
+  getPriorityLabel,
+  getRemainingDays,
+} from "@routes/hallazgos/_constants/priorityOptions";
 
 const columns = [
   "ID",
@@ -31,6 +48,8 @@ const columns = [
   "Supervisores",
   "Responsables",
   "Estatus",
+  "Prioridad",
+  "Tiempo restante (días)",
   "Creación",
   "Ultima actualización",
   "Fecha de cierre",
@@ -59,8 +78,27 @@ export default function TableEvidences({
   const [evidenceCurrent, setEvidenceCurrent] =
     useState<EvidenceGraphql | null>(null);
   const [idRow, setIdRow] = useState<number>(0);
+  const [idRowProcess, setIdRowProcess] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [supervisorOverrideEmails, setSupervisorOverrideEmails] = useState<
+    string[]
+  >([]);
+  const [cancelEvidenceEmails, setCancelEvidenceEmails] = useState<string[]>(
+    [],
+  );
   const { id: userId, role, email } = useUserSessionStore();
+
+  useEffect(() => {
+    EvidencesService.getPermissionsConfig()
+      .then((config) => {
+        setSupervisorOverrideEmails(config.supervisorOverrideEmails || []);
+        setCancelEvidenceEmails(config.cancelEvidenceEmails || []);
+      })
+      .catch(() => {
+        setSupervisorOverrideEmails([]);
+        setCancelEvidenceEmails([]);
+      });
+  }, []);
 
   const removeEvicence = (id: number) => {
     setIsLoading(true);
@@ -89,22 +127,7 @@ export default function TableEvidences({
 
   // !Atention: Force close evidence if the user is a supervisor
   const validateSupervisor = (row: EvidenceGraphql) => {
-    if (
-      [
-        "sst@hadamexico.com",
-        "klarios@hadamexico.com",
-        //"eduardo-266@hotmail.com",
-        "gsalgado@hadamexico.com",
-        "auxsistemadegestion@hadainternational.com",
-        "glora@hadainternational.com",
-        "mruiz@hadamexico.com",
-        "arodriguez@hadamexico.com",
-        "esanchez@hadamexico.com",
-        "cseguridad@hadainternational.com",
-        "gsanchez@hadamexico.com",
-        "bproyectos@hadamexico.com",
-      ].includes(email)
-    ) {
+    if (supervisorOverrideEmails.includes(email)) {
       return true;
     }
     return (
@@ -146,19 +169,64 @@ export default function TableEvidences({
         />
       )}
 
+      <StartProcessEvidence
+        isOpen={!!idRowProcess}
+        idRow={idRowProcess}
+        handleClose={(refresh) => {
+          if (refresh) {
+            getData();
+          }
+          setIdRowProcess(0);
+        }}
+      />
+
       <TableDefaultServer
         rows={rows}
         columns={columns}
         paintRows={(row: EvidenceGraphql) => (
           <StyledTableRow key={row.id}>
-            <StyledTableCell component="th" scope="row">
+            <StyledTableCell
+              component="th"
+              scope="row"
+              sx={{
+                width: 70,
+                minWidth: 70,
+                maxWidth: 70,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
               {row.id}
             </StyledTableCell>
-            <StyledTableCell>{row.manufacturingPlant.name}</StyledTableCell>
+            <StyledTableCell
+              sx={{
+                width: 100,
+                minWidth: 100,
+                maxWidth: 100,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+              title={row.manufacturingPlant.name}
+            >
+              {row.manufacturingPlant.name}
+            </StyledTableCell>
             <StyledTableCell>{row.mainType.name}</StyledTableCell>
             <StyledTableCell>{row.secondaryType.name}</StyledTableCell>
             <StyledTableCell>{row.zone.name}</StyledTableCell>
-            <StyledTableCell>{row.process?.name}</StyledTableCell>
+            <StyledTableCell
+              sx={{
+                width: 100,
+                minWidth: 100,
+                maxWidth: 100,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {row.process?.name}
+            </StyledTableCell>
             <StyledTableCell>{row.user.name}</StyledTableCell>
             <StyledTableCell>
               {row.supervisors
@@ -174,15 +242,63 @@ export default function TableEvidences({
             </StyledTableCell>
             <StyledTableCell>
               <Chip
+                icon={
+                  row.status === STATUS_OPEN ? (
+                    <HourglassEmptyIcon />
+                  ) : row.status === STATUS_CLOSED ? (
+                    <CheckCircleOutlineIcon />
+                  ) : row.status === STATUS_IN_PROGRESS ? (
+                    <PendingActionsIcon />
+                  ) : (
+                    <CancelOutlinedIcon />
+                  )
+                }
                 label={row.status}
                 color={
                   row.status === STATUS_OPEN
                     ? "warning"
                     : row.status === STATUS_CLOSED
                       ? "success"
-                      : "error"
+                      : row.status === STATUS_IN_PROGRESS
+                        ? "info"
+                        : "error"
                 }
               />
+            </StyledTableCell>
+            <StyledTableCell>
+              {getPriorityLabel(row.priorityDays)}
+            </StyledTableCell>
+            <StyledTableCell>
+              {(() => {
+                const remainingDays = getRemainingDays(
+                  row.createdAt,
+                  row.priorityDays,
+                );
+                const remainingDaysNumber = Number(remainingDays);
+
+                if (
+                  remainingDays !== "N/A" &&
+                  !Number.isNaN(remainingDaysNumber) &&
+                  remainingDaysNumber < 0
+                ) {
+                  return (
+                    <Chip
+                      label={formatDayLabel(remainingDaysNumber)}
+                      color="error"
+                      size="small"
+                    />
+                  );
+                }
+
+                if (
+                  remainingDays !== "N/A" &&
+                  !Number.isNaN(remainingDaysNumber)
+                ) {
+                  return formatDayLabel(remainingDaysNumber);
+                }
+
+                return remainingDays;
+              })()}
             </StyledTableCell>
             <StyledTableCell>
               {stringToDateWithTime(row.createdAt)}
@@ -194,13 +310,23 @@ export default function TableEvidences({
               {row.solutionDate && stringToDateWithTime(row.solutionDate)}
             </StyledTableCell>
             <StyledTableCell>
-              <Stack direction="row" spacing={1}>
+              <Stack direction="column" spacing={1} alignItems="flex-start">
                 <Chip
                   icon={<InfoIcon />}
                   label={`Detalles ${durantionToTime(row)}`}
                   color="secondary"
                   onClick={() => setEvidenceCurrent(row)}
                 />
+                {(role === ROLE_ADMINISTRADOR || validateSupervisor(row)) &&
+                  row.status === STATUS_OPEN &&
+                  !row.imgProcess && (
+                    <Chip
+                      icon={<PlayCircleOutlineIcon />}
+                      label="En progreso"
+                      color="info"
+                      onClick={() => setIdRowProcess(row.id)}
+                    />
+                  )}
                 {validateSupervisor(row) && row.status !== STATUS_CLOSED && (
                   <Chip
                     icon={<AddAPhotoIcon />}
@@ -214,14 +340,8 @@ export default function TableEvidences({
                 )}
 
                 {row.status === STATUS_OPEN &&
-                  [
-                    "glora@hadainternational.com",
-                    "sst@hadamexico.com",
-                    "dtrujillo@hadamexico.com",
-                    "gsanchez@hadamexico.com",
-                    "cseguridad@hadainternational.com",
-                    "eduardo-266@hotmail.com",
-                  ].includes(email) && (
+                  (role === ROLE_ADMINISTRADOR ||
+                    cancelEvidenceEmails.includes(email)) && (
                     //&& role === ROLE_ADMINISTRADOR
                     <Chip
                       icon={<DeleteIcon />}

@@ -81,9 +81,15 @@ const ImageORCamera = ({
             size={{
               xs: 12,
               sm: 12,
-              md: 12
-            }}>
-            <ButtonGroup variant="contained" aria-label="Basic button group">
+              md: 12,
+            }}
+            sx={{ display: "flex", justifyContent: "center" }}
+          >
+            <ButtonGroup
+              variant="contained"
+              aria-label="Basic button group"
+              sx={{ justifyContent: "center", width: "fit-content" }}
+            >
               <Button
                 startIcon={<PhotoCameraIcon />}
                 onClick={() => {
@@ -117,8 +123,9 @@ const ImageORCamera = ({
             size={{
               xs: 12,
               sm: 12,
-              md: 12
-            }}>
+              md: 12,
+            }}
+          >
             <Camera
               onTakePhoto={(dataUri) => {
                 setImage(dataUri);
@@ -142,8 +149,9 @@ const ImageORCamera = ({
             size={{
               xs: 12,
               sm: 12,
-              md: 12
-            }}>
+              md: 12,
+            }}
+          >
             <Paper>
               <Image
                 src={image}
@@ -161,8 +169,9 @@ const ImageORCamera = ({
             size={{
               xs: 12,
               md: 12,
-              sm: 3
-            }}>
+              sm: 3,
+            }}
+          >
             <Paper>
               <div
                 style={{

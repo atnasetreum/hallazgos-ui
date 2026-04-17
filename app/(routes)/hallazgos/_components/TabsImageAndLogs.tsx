@@ -90,6 +90,14 @@ export default function TabsImageAndLogs({
     objectFit: "contain" as const,
   };
 
+  const imageCount = [
+    evidenceCurrent?.imgEvidence,
+    evidenceCurrent?.imgProcess,
+    evidenceCurrent?.imgSolution,
+  ].filter(Boolean).length;
+
+  const mdSize = imageCount === 1 ? 12 : imageCount === 2 ? 6 : 4;
+
   const handleChange = (_: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -133,8 +141,8 @@ export default function TabsImageAndLogs({
               <Grid
                 size={{
                   xs: 12,
-                  sm: evidenceCurrent.imgSolution ? 6 : 12,
-                  md: evidenceCurrent.imgSolution ? 6 : 12,
+                  sm: imageCount > 1 ? 6 : 12,
+                  md: mdSize,
                 }}
               >
                 <Typography variant="h6" gutterBottom>
@@ -153,12 +161,36 @@ export default function TabsImageAndLogs({
               </Grid>
             )}
 
+            {evidenceCurrent.imgProcess && (
+              <Grid
+                size={{
+                  xs: 12,
+                  sm: imageCount > 1 ? 6 : 12,
+                  md: mdSize,
+                }}
+              >
+                <Typography variant="h6" gutterBottom>
+                  En progreso
+                </Typography>
+                <Box sx={imageContainerSx}>
+                  <Image
+                    src={baseUrlImage(evidenceCurrent?.imgProcess || "")}
+                    alt="Imagen en progreso"
+                    width={0}
+                    height={0}
+                    sizes="(max-width: 600px) 100vw, (max-width: 900px) 560px, 720px"
+                    style={imageSx}
+                  />
+                </Box>
+              </Grid>
+            )}
+
             {evidenceCurrent.imgSolution && (
               <Grid
                 size={{
                   xs: 12,
-                  sm: 6,
-                  md: 6,
+                  sm: imageCount > 1 ? 6 : 12,
+                  md: mdSize,
                 }}
               >
                 <Typography variant="h6" gutterBottom>

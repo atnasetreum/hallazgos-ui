@@ -10,7 +10,15 @@ import { List } from "@mui/material";
 import { Divider } from "@mui/material";
 
 import { durantionToTime, stringToDateWithTime } from "@shared/utils";
-import { STATUS_CLOSED, STATUS_OPEN } from "@shared/constants";
+import {
+  STATUS_CLOSED,
+  STATUS_IN_PROGRESS,
+  STATUS_OPEN,
+} from "@shared/constants";
+import {
+  getPriorityLabel,
+  getRemainingDays,
+} from "@routes/hallazgos/_constants/priorityOptions";
 import TabsImageAndLogs from "./TabsImageAndLogs";
 import { EvidenceGraphql } from "@hooks";
 
@@ -30,7 +38,9 @@ export default function DetailsTabs({
 
   useEffect(() => {
     setWithImages(
-      !!evidenceCurrent.imgEvidence || !!evidenceCurrent.imgSolution,
+      !!evidenceCurrent.imgEvidence ||
+        !!evidenceCurrent.imgProcess ||
+        !!evidenceCurrent.imgSolution,
     );
   }, [evidenceCurrent]);
 
@@ -99,6 +109,27 @@ export default function DetailsTabs({
           <ListItem>
             <ListItemButton>
               <ListItemText
+                primary={getPriorityLabel(evidenceCurrent.priorityDays)}
+                secondary="Prioridad"
+              />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <ListItemButton>
+              <ListItemText
+                primary={getRemainingDays(
+                  evidenceCurrent.createdAt,
+                  evidenceCurrent.priorityDays,
+                )}
+                secondary="Tiempo restante (dias)"
+              />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <ListItemButton>
+              <ListItemText
                 primary={
                   <Typography
                     variant="subtitle1"
@@ -108,7 +139,9 @@ export default function DetailsTabs({
                           ? theme.palette.warning.main
                           : evidenceCurrent.status === STATUS_CLOSED
                             ? theme.palette.success.main
-                            : theme.palette.error.main,
+                            : evidenceCurrent.status === STATUS_IN_PROGRESS
+                              ? theme.palette.info.main
+                              : theme.palette.error.main,
                       textDecoration: "underline",
                     }}
                   >
@@ -205,6 +238,19 @@ export default function DetailsTabs({
               />
             </ListItemButton>
           </ListItem>
+          <Divider />
+          {evidenceCurrent.startProcessDate && (
+            <ListItem>
+              <ListItemButton>
+                <ListItemText
+                  primary={stringToDateWithTime(
+                    evidenceCurrent.startProcessDate,
+                  )}
+                  secondary="Fecha de inicio de proceso"
+                />
+              </ListItemButton>
+            </ListItem>
+          )}
           <Divider />
           {evidenceCurrent.solutionDate && (
             <ListItem sx={{ backgroundColor: theme.palette.primary.main }}>

@@ -15,8 +15,11 @@ export interface Evidence {
   supervisors: User[];
   responsibles: User[];
   status: string;
+  priorityDays?: number | null;
   imgSolution: string;
+  imgProcess: string;
   solutionDate: Date;
+  startProcessDate: Date;
   comments: Comment[];
   description: string;
 }

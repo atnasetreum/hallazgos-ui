@@ -162,7 +162,7 @@ const ZonesFormPage = () => {
       >
         <SelectDefault
           data={areas}
-          label="Área (opcional)"
+          label="Zona (opcional)"
           value={form.areaId}
           onChange={(e) =>
             setForm({

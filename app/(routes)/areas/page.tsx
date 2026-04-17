@@ -50,7 +50,16 @@ const AreasPage = () => {
           md: 12,
         }}
       >
-        <Typography variant="h4" gutterBottom>
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
+            color: (theme) =>
+              theme.palette.mode === "light"
+                ? theme.palette.common.black
+                : theme.palette.common.white,
+          }}
+        >
           Zonas
         </Typography>
       </Grid>

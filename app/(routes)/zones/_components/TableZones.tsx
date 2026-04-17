@@ -25,7 +25,7 @@ const columns = [
   "ID",
   "Nombre",
   "Planta",
-  "Área",
+  "Zona",
   "Creado por",
   "Actualizado por",
   "Creación",

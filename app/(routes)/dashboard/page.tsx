@@ -1,568 +1,277 @@
-/* "use client";
-
-
-
-export default function DashboardPage() {
-  const theme = useTheme();
-  const [value, setValue] = useState(0);
-
-  const email = useUserSessionStore((state) => state.email);
-
-  const handleChange = (_: SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
-
-  if (email === "cosmeticostrujillo0023@gmail.com") {
-    return window.location.replace("/hds");
-  }
-
-  return (
-    <Box sx={{ bgcolor: "background.paper", width: "100%" }}>
-      <AppBar position="static">
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="secondary"
-          textColor="inherit"
-          variant="fullWidth"
-          scrollButtons="auto"
-          aria-label="scrollable tabs example"
-        >
-          <Tab label="Estatus / Criterios / Zonas" {...a11yProps(0)} />
-          <Tab label="Meses" {...a11yProps(1)} />
-          <Tab label="Epp" {...a11yProps(2)} />
-          <Tab label="Usuarios" {...a11yProps(3)} />
-        </Tabs>
-      </AppBar>
-
-      {value === 0 && (
-        <TabPanel value={value} index={0} dir={theme.direction}>
-          <Grid container spacing={2}>
-            <Grid
-              size={{
-                xs: 12,
-                md: 6,
-                lg: 3,
-              }}
-            >
-              <Paper
-                sx={{
-                  p: 2,
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <StatusChart />
-              </Paper>
-            </Grid>
-            <Grid
-              size={{
-                xs: 12,
-                md: 6,
-                lg: 6,
-              }}
-            >
-              <Paper
-                sx={{
-                  p: 2,
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <MainTypesChart />
-              </Paper>
-            </Grid>
-            <Grid
-              size={{
-                xs: 12,
-                md: 6,
-                lg: 3,
-              }}
-            >
-              <Paper
-                sx={{
-                  p: 2,
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <ZonesChart />
-              </Paper>
-            </Grid>
-            <Grid
-              size={{
-                xs: 12,
-                md: 6,
-                lg: 12,
-              }}
-            >
-              <Paper
-                sx={{
-                  p: 2,
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <ProductivityChart />
-              </Paper>
-            </Grid>
-          </Grid>
-        </TabPanel>
-      )}
-      {value === 1 && (
-        <TabPanel value={value} index={1} dir={theme.direction}>
-          <Grid container spacing={2}>
-            <Grid
-              size={{
-                xs: 12,
-                md: 6,
-                lg: 4,
-              }}
-            >
-              <Paper
-                sx={{
-                  p: 2,
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <EvidencePerMonthChart projections={true} />
-              </Paper>
-            </Grid>
-            <Grid
-              size={{
-                xs: 12,
-                md: 6,
-                lg: 4,
-              }}
-            >
-              <Paper
-                sx={{
-                  p: 2,
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <EvidencePerMonthChart />
-              </Paper>
-            </Grid>
-            <Grid
-              size={{
-                xs: 12,
-                md: 6,
-                lg: 4,
-              }}
-            >
-              <Paper
-                sx={{
-                  p: 2,
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <EvidencePerMonthChart year={2024} />
-              </Paper>
-            </Grid>
-          </Grid>
-        </TabPanel>
-      )}
-      {value === 2 && (
-        <TabPanel value={value} index={2} dir={theme.direction}>
-          ...
-        </TabPanel>
-      )}
-      {value === 3 && (
-        <TabPanel value={value} index={3} dir={theme.direction}>
-          <Grid container spacing={2}>
-            <Grid
-              size={{
-                xs: 12,
-                md: 12,
-                lg: 12,
-              }}
-            >
-              <Paper
-                sx={{
-                  p: 2,
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <TopUsersByPlantChart />
-              </Paper>
-            </Grid>
-          </Grid>
-        </TabPanel>
-      )}
-    </Box>
-  );
-}*/
-
 "use client";
 
-import { useEffect, useState, SyntheticEvent } from "react";
+import { useEffect, useState } from "react";
+import dayjs, { Dayjs } from "dayjs";
 
-import { Grid } from "@mui/material";
+import { Grid, Paper, SelectChangeEvent, Typography } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { esES } from "@mui/x-date-pickers/locales";
+import "dayjs/locale/es";
 
+import SelectManufacturingPlantsOwn from "@components/SelectManufacturingPlantsOwn";
 import SelectDefault from "@components/SelectDefault";
-import { useUserSessionStore } from "@store";
-import { UsersService } from "@services";
-import { User } from "@interfaces";
-import {
-  ROLE_ADMINISTRADOR,
-  ROLE_GENERAL,
-  ROLE_SUPERVISOR,
-} from "@shared/constants";
-import {
-  DashboardAdmin,
-  DashboardSupervisor,
-  DashboardGeneral,
-} from "./_components";
+import { Area, User } from "@interfaces";
+import { AreasService, DashboardService, UsersService } from "@services";
+import StatusChart from "./charts/StatusChart";
 
-import { useTheme } from "@mui/material/styles";
-import { AppBar } from "@mui/material";
-import { Paper } from "@mui/material";
-import { Tabs } from "@mui/material";
-import { Tab } from "@mui/material";
-import { Box } from "@mui/material";
-
-import {
-  a11yProps,
-  TabPanel,
-} from "@routes/hallazgos/_components/TabsImageAndLogs";
-import {
-  //AccidentRateIndicator,
-  EvidencePerMonthChart,
-  //HeatMapChart,
-  MainTypesChart,
-  ProductivityChart,
-  StatusChart,
-  TopUsersByPlantChart,
-  ZonesChart,
-} from "./_components";
+interface DashboardFilters {
+  manufacturingPlantId: string;
+  startDate: string;
+  endDate: string;
+  areaId: string;
+  areaName: string;
+  responsibleId: string;
+  responsibleName: string;
+}
 
 const DashboardPage = () => {
-  const [manufacturingPlantId, setManufacturingPlantId] = useState<string>("");
-  const [currentRole, setCurrentRole] = useState<string>("");
-  const [users, setUsers] = useState<User[]>([]);
-  const [userId, setUserId] = useState<string>("");
-  const [userSelected, setUserSelected] = useState<User | null>(null);
-  const [currentCountry, setCurrentCountry] = useState<string>("");
-  const theme = useTheme();
-  const [value, setValue] = useState(0);
+  const currentMonthStart = dayjs().startOf("month").format("DD/MM/YYYY");
+  const currentMonthEnd = dayjs().endOf("month").format("DD/MM/YYYY");
 
-  const email = useUserSessionStore((state) => state.email);
+  const [filters, setFilters] = useState<DashboardFilters>({
+    manufacturingPlantId: "",
+    startDate: currentMonthStart,
+    endDate: currentMonthEnd,
+    areaId: "",
+    areaName: "",
+    responsibleId: "",
+    responsibleName: "",
+  });
+  const [areas, setAreas] = useState<Area[]>([]);
+  const [responsibles, setResponsibles] = useState<User[]>([]);
 
-  const handleChange = (_: SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+  const parseDate = (value: string): Dayjs | null => {
+    if (!value) return null;
+
+    const [day, month, year] = value.split("/");
+
+    if (!day || !month || !year) return null;
+
+    const parsedDate = dayjs(`${year}-${month}-${day}`);
+    return parsedDate.isValid() ? parsedDate : null;
   };
 
-  const currentUser = useUserSessionStore();
-
-  const manufacturingPlants = useUserSessionStore(
-    (state) => state.manufacturingPlants,
-  );
-
-  useEffect(() => {
-    if (manufacturingPlants.length) {
-      setManufacturingPlantId(manufacturingPlants[0].id.toString());
-      setCurrentCountry(manufacturingPlants[0].country.name);
-    }
-  }, [manufacturingPlants]);
+  const handlePlantChange = (event: SelectChangeEvent<string>) => {
+    setFilters((prev) => ({
+      ...prev,
+      manufacturingPlantId: event.target.value,
+      areaId: "",
+      areaName: "",
+      responsibleId: "",
+      responsibleName: "",
+    }));
+  };
 
   useEffect(() => {
-    if (!currentRole && currentUser?.role) {
-      setCurrentRole(currentUser.role);
-    }
-  }, [currentRole, currentUser]);
-
-  useEffect(() => {
-    UsersService.findAll({
-      manufacturingPlantId,
-      orderBy: "name|ASC",
-    }).then((data) =>
-      setUsers(
-        data
-          .filter((user) => user.role !== ROLE_ADMINISTRADOR)
-          .map((user) => ({
-            ...user,
-            name: `# ${user.id} - ${user.name} (${user.role})`,
-          })),
-      ),
-    );
-  }, [manufacturingPlantId]);
-
-  useEffect(() => {
-    if (userId && users.length) {
-      const user = users.find((user) => Number(user.id) === Number(userId));
-      setUserSelected(user!);
-    } else if (!userId) {
-      setUserSelected(null);
-    }
-  }, [userId, users]);
-
-  useEffect(() => {
-    if (
-      !currentUser?.id ||
-      !currentRole ||
-      currentRole === ROLE_ADMINISTRADOR ||
-      userSelected
-    )
+    if (!filters.manufacturingPlantId) {
+      setAreas([]);
       return;
-    setUserId(currentUser.id.toString());
-  }, [currentUser, currentRole, userSelected]);
+    }
 
-  if (email === "cosmeticostrujillo0023@gmail.com") {
-    return window.location.replace("/hds");
-  }
+    AreasService.findAll({
+      manufacturingPlantId: filters.manufacturingPlantId,
+    }).then(setAreas);
 
-  if (!currentCountry) return null;
+    setFilters((prev) => ({
+      ...prev,
+      areaId: "",
+      areaName: "",
+      responsibleId: "",
+      responsibleName: "",
+    }));
+  }, [filters.manufacturingPlantId]);
 
-  if (currentCountry === "México" && currentUser?.id === 1) {
-    //if (currentCountry === "México") {
-    return (
-      <Box sx={{ bgcolor: "background.paper", width: "100%" }}>
-        <AppBar position="static">
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            indicatorColor="secondary"
-            textColor="inherit"
-            variant="fullWidth"
-            scrollButtons="auto"
-            aria-label="scrollable tabs example"
-          >
-            <Tab label="Estatus / Criterios / Zonas" {...a11yProps(0)} />
-            <Tab label="Meses" {...a11yProps(1)} />
-            <Tab label="Epp" {...a11yProps(2)} />
-            <Tab label="Usuarios" {...a11yProps(3)} />
-          </Tabs>
-        </AppBar>
+  useEffect(() => {
+    if (!filters.manufacturingPlantId) {
+      setResponsibles([]);
+      return;
+    }
 
-        {value === 0 && (
-          <TabPanel value={value} index={0} dir={theme.direction}>
-            <Grid container spacing={2}>
-              <Grid
-                size={{
-                  xs: 12,
-                  md: 6,
-                  lg: 3,
-                }}
-              >
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <StatusChart />
-                </Paper>
-              </Grid>
-              <Grid
-                size={{
-                  xs: 12,
-                  md: 6,
-                  lg: 6,
-                }}
-              >
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <MainTypesChart />
-                </Paper>
-              </Grid>
-              <Grid
-                size={{
-                  xs: 12,
-                  md: 6,
-                  lg: 3,
-                }}
-              >
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <ZonesChart />
-                </Paper>
-              </Grid>
-              <Grid
-                size={{
-                  xs: 12,
-                  md: 6,
-                  lg: 12,
-                }}
-              >
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <ProductivityChart />
-                </Paper>
-              </Grid>
-            </Grid>
-          </TabPanel>
-        )}
-        {value === 1 && (
-          <TabPanel value={value} index={1} dir={theme.direction}>
-            <Grid container spacing={2}>
-              <Grid
-                size={{
-                  xs: 12,
-                  md: 6,
-                  lg: 4,
-                }}
-              >
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <EvidencePerMonthChart projections={true} />
-                </Paper>
-              </Grid>
-              <Grid
-                size={{
-                  xs: 12,
-                  md: 6,
-                  lg: 4,
-                }}
-              >
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <EvidencePerMonthChart />
-                </Paper>
-              </Grid>
-              <Grid
-                size={{
-                  xs: 12,
-                  md: 6,
-                  lg: 4,
-                }}
-              >
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <EvidencePerMonthChart year={new Date().getFullYear() - 1} />
-                </Paper>
-              </Grid>
-            </Grid>
-          </TabPanel>
-        )}
-        {value === 2 && (
-          <TabPanel value={value} index={2} dir={theme.direction}>
-            ...
-          </TabPanel>
-        )}
-        {value === 3 && (
-          <TabPanel value={value} index={3} dir={theme.direction}>
-            <Grid container spacing={2}>
-              <Grid
-                size={{
-                  xs: 12,
-                  md: 12,
-                  lg: 12,
-                }}
-              >
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <TopUsersByPlantChart />
-                </Paper>
-              </Grid>
-            </Grid>
-          </TabPanel>
-        )}
-      </Box>
-    );
-  }
+    const shouldLoadByArea =
+      !!filters.areaId && !!filters.startDate && !!filters.endDate;
+
+    if (shouldLoadByArea) {
+      DashboardService.findResponsiblesByFilters({
+        manufacturingPlantId: filters.manufacturingPlantId,
+        startDate: filters.startDate,
+        endDate: filters.endDate,
+        areaId: filters.areaId,
+      }).then(setResponsibles);
+      return;
+    }
+
+    UsersService.findAll({
+      manufacturingPlantId: filters.manufacturingPlantId,
+    }).then(setResponsibles);
+  }, [
+    filters.manufacturingPlantId,
+    filters.areaId,
+    filters.responsibleId,
+    filters.startDate,
+    filters.endDate,
+  ]);
 
   return (
     <Grid container spacing={2}>
-      {manufacturingPlants.length > 1 && (
-        <Grid
-          size={{
-            xs: 12,
-            sm: 6,
-            md: 6,
-          }}
-        >
-          <SelectDefault
-            data={manufacturingPlants}
-            label="Planta"
-            value={manufacturingPlantId}
-            onChange={(e) => setManufacturingPlantId(e.target.value)}
-            validationEmpty
-          />
-        </Grid>
-      )}
-      {currentRole === ROLE_ADMINISTRADOR && (
-        <Grid
-          size={{
-            xs: 12,
-            sm: 6,
-            md: 6,
-          }}
-        >
-          <SelectDefault
-            data={users}
-            label="Colaborador"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-          />
-        </Grid>
-      )}
+      <Grid size={12}>
+        <Typography variant="h5" fontWeight={700}>
+          Dashboard
+        </Typography>
+      </Grid>
+
+      <SelectManufacturingPlantsOwn
+        value={filters.manufacturingPlantId}
+        onChange={handlePlantChange}
+        isFilter={true}
+      />
+
       <Grid
         size={{
           xs: 12,
-          sm: 12,
-          md: 12,
+          sm: 6,
+          md: 2,
         }}
       >
-        {currentRole === ROLE_ADMINISTRADOR &&
-          !userSelected &&
-          manufacturingPlantId && (
-            <DashboardAdmin manufacturingPlantId={manufacturingPlantId} />
-          )}
+        <Paper>
+          <LocalizationProvider
+            dateAdapter={AdapterDayjs}
+            adapterLocale="es"
+            localeText={
+              esES.components.MuiLocalizationProvider.defaultProps.localeText
+            }
+          >
+            <DatePicker
+              label="Fecha inicio"
+              format="DD/MM/YYYY"
+              value={parseDate(filters.startDate)}
+              maxDate={parseDate(filters.endDate) || dayjs().endOf("month")}
+              onChange={(newValue: Dayjs | null) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  startDate: newValue ? newValue.format("DD/MM/YYYY") : "",
+                }))
+              }
+              slotProps={{
+                field: {
+                  clearable: true,
+                  onClear: () =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      startDate: "",
+                    })),
+                },
+                textField: {
+                  fullWidth: true,
+                },
+              }}
+            />
+          </LocalizationProvider>
+        </Paper>
+      </Grid>
 
-        {userSelected?.role === ROLE_SUPERVISOR && (
-          <DashboardSupervisor
-            manufacturingPlantId={manufacturingPlantId}
-            user={userSelected}
-          />
-        )}
+      <Grid
+        size={{
+          xs: 12,
+          sm: 6,
+          md: 2,
+        }}
+      >
+        <Paper>
+          <LocalizationProvider
+            dateAdapter={AdapterDayjs}
+            adapterLocale="es"
+            localeText={
+              esES.components.MuiLocalizationProvider.defaultProps.localeText
+            }
+          >
+            <DatePicker
+              label="Fecha fin"
+              format="DD/MM/YYYY"
+              value={parseDate(filters.endDate)}
+              minDate={parseDate(filters.startDate) || undefined}
+              maxDate={dayjs().endOf("month")}
+              onChange={(newValue: Dayjs | null) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  endDate: newValue ? newValue.format("DD/MM/YYYY") : "",
+                }))
+              }
+              slotProps={{
+                field: {
+                  clearable: true,
+                  onClear: () =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      endDate: "",
+                    })),
+                },
+                textField: {
+                  fullWidth: true,
+                },
+              }}
+            />
+          </LocalizationProvider>
+        </Paper>
+      </Grid>
 
-        {userSelected?.role === ROLE_GENERAL && (
-          <DashboardGeneral
-            manufacturingPlantId={manufacturingPlantId}
-            user={userSelected}
-          />
-        )}
+      <Grid
+        size={{
+          xs: 12,
+          sm: 6,
+          md: 2,
+        }}
+      >
+        <SelectDefault
+          data={areas}
+          label="Zonas"
+          isFilter={true}
+          value={filters.areaId}
+          onChange={(_, newValue) =>
+            setFilters((prev) => ({
+              ...prev,
+              areaId: newValue ? String(newValue.id) : "",
+              areaName: newValue?.name || "",
+              responsibleId: "",
+              responsibleName: "",
+            }))
+          }
+          helperText={
+            !filters.manufacturingPlantId ? "Seleccione una planta" : ""
+          }
+        />
+      </Grid>
+
+      <Grid
+        size={{
+          xs: 12,
+          sm: 6,
+          md: 3,
+        }}
+      >
+        <SelectDefault
+          data={responsibles}
+          label="Responsable"
+          isFilter={true}
+          value={filters.responsibleId}
+          onChange={(_, newValue) =>
+            setFilters((prev) => ({
+              ...prev,
+              responsibleId: newValue ? String(newValue.id) : "",
+              responsibleName: newValue?.name || "",
+            }))
+          }
+          helperText={
+            !filters.manufacturingPlantId ? "Seleccione una planta" : ""
+          }
+        />
+      </Grid>
+
+      <Grid size={12}>
+        <Paper sx={{ p: 2, minHeight: 420 }}>
+          <StatusChart filters={filters} />
+        </Paper>
       </Grid>
     </Grid>
   );

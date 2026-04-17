@@ -17,10 +17,12 @@ import {
   PendingBySeniorityByUser,
   RankingOfResponsible,
   RecentEvidence,
+  User,
   ResponseAccidents,
   ResponseDashboardEvidencesByMonth,
   ResponseDashboardMainTypes,
   ResponseDashboardMultiNivel,
+  ResponseDashboardStatusByFilters,
   ResponseOpenVsClosed,
   ResponseTopUsersByPlant,
   TypeEvidenceByUser,
@@ -32,6 +34,56 @@ const api = axiosWrapper({
 
 const findAllStatus = async () => {
   const { data } = await api.get<ResponseDashboardMultiNivel>("/status");
+  return data;
+};
+
+const findStatusByFilters = async ({
+  manufacturingPlantId,
+  startDate,
+  endDate,
+  areaId,
+  responsibleId,
+}: {
+  manufacturingPlantId: string;
+  startDate: string;
+  endDate: string;
+  areaId?: string;
+  responsibleId?: string;
+}) => {
+  const { data } = await api.get<ResponseDashboardStatusByFilters>(
+    "/status-by-filters",
+    {
+      params: {
+        manufacturingPlantId,
+        startDate,
+        endDate,
+        ...(areaId && { areaId }),
+        ...(responsibleId && { responsibleId }),
+      },
+    },
+  );
+  return data;
+};
+
+const findResponsiblesByFilters = async ({
+  manufacturingPlantId,
+  startDate,
+  endDate,
+  areaId,
+}: {
+  manufacturingPlantId: string;
+  startDate: string;
+  endDate: string;
+  areaId: string;
+}) => {
+  const { data } = await api.get<User[]>("/responsibles-by-filters", {
+    params: {
+      manufacturingPlantId,
+      startDate,
+      endDate,
+      areaId,
+    },
+  });
   return data;
 };
 
@@ -373,6 +425,8 @@ const findBusinessIntelligenceEpp = async ({
 };
 
 export const DashboardService = {
+  findResponsiblesByFilters,
+  findStatusByFilters,
   findBusinessIntelligenceEpp,
   findPercentageComplianceByZone,
   findMainTypesGlobalTrendDetails,

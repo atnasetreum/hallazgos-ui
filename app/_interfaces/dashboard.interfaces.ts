@@ -18,6 +18,16 @@ export interface ResponseDashboardMultiNivel {
   statusSeries: StatusSery[];
 }
 
+export interface ResponseDashboardStatusByFilters {
+  total: number;
+  startDate: string;
+  endDate: string;
+  seriesData: {
+    name: string;
+    y: number;
+  }[];
+}
+
 interface StatusDatum {
   name: string;
   y: number;

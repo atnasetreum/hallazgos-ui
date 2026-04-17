@@ -150,7 +150,7 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
               data.manufacturingPlant.id ===
               Number(filters.manufacturingPlantId),
           )}
-          label="Zona"
+          label="Lugar"
           isFilter={true}
           value={filters.zone}
           onChange={(e) =>

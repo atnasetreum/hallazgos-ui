@@ -5,7 +5,15 @@ import dayjs, { Dayjs } from "dayjs";
 
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import HistoryOutlinedIcon from "@mui/icons-material/HistoryOutlined";
-import { Button, Grid, Paper, SelectChangeEvent } from "@mui/material";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import {
+  Button,
+  Fab,
+  Grid,
+  Paper,
+  SelectChangeEvent,
+  Zoom,
+} from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -21,6 +29,8 @@ import AreasChart from "./charts/AreasChart";
 import StatusChart from "./charts/StatusChart";
 import AssignedResponsibleChart from "./charts/AssignedResponsibleChart";
 import HistoricalChart from "./charts/HistoricalChart";
+import SankeyDiagramChart from "./charts/SankeyDiagramChart";
+import PackedBubbleChart from "./charts/PackedBubbleChart";
 
 interface DashboardFilters {
   manufacturingPlantId: string;
@@ -131,6 +141,28 @@ const DashboardPage = () => {
     filters.endDate,
   ]);
 
+  const handleScrollTop = () => {
+    const scrollableElements = Array.from(
+      document.querySelectorAll<HTMLElement>("*"),
+    ).filter((element) => {
+      const styles = window.getComputedStyle(element);
+      const overflowY = styles.overflowY;
+      const isScrollable = overflowY === "auto" || overflowY === "scroll";
+
+      return isScrollable && element.scrollHeight > element.clientHeight;
+    });
+
+    scrollableElements.forEach((element) => {
+      if (element.scrollTop > 0) {
+        element.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
+
+    document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+    document.body.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <Grid container spacing={2}>
       {isHistoricalView ? (
@@ -165,171 +197,209 @@ const DashboardPage = () => {
         </>
       ) : (
         <>
-          <SelectManufacturingPlantsOwn
-            value={filters.manufacturingPlantId}
-            onChange={handlePlantChange}
-            isFilter={true}
-          />
-
           <Grid
             size={{
               xs: 12,
-              sm: 6,
-              md: 2,
+              sm: 12,
+              md: 12,
+            }}
+            sx={{
+              position: "sticky",
+              top: {
+                xs: 56,
+                sm: 80,
+              },
+              zIndex: (theme) => theme.zIndex.appBar - 1,
             }}
           >
-            <Paper>
-              <LocalizationProvider
-                dateAdapter={AdapterDayjs}
-                adapterLocale="es"
-                localeText={
-                  esES.components.MuiLocalizationProvider.defaultProps
-                    .localeText
-                }
-              >
-                <DatePicker
-                  label="Fecha inicio"
-                  format="DD/MM/YYYY"
-                  value={parseDate(filters.startDate)}
-                  maxDate={parseDate(filters.endDate) || dayjs().endOf("month")}
-                  onChange={(newValue: Dayjs | null) =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      startDate: newValue ? newValue.format("DD/MM/YYYY") : "",
-                    }))
-                  }
-                  slotProps={{
-                    field: {
-                      clearable: true,
-                      onClear: () =>
-                        setFilters((prev) => ({
-                          ...prev,
-                          startDate: "",
-                        })),
-                    },
-                    textField: {
-                      fullWidth: true,
-                    },
-                  }}
-                />
-              </LocalizationProvider>
-            </Paper>
-          </Grid>
-
-          <Grid
-            size={{
-              xs: 12,
-              sm: 6,
-              md: 2,
-            }}
-          >
-            <Paper>
-              <LocalizationProvider
-                dateAdapter={AdapterDayjs}
-                adapterLocale="es"
-                localeText={
-                  esES.components.MuiLocalizationProvider.defaultProps
-                    .localeText
-                }
-              >
-                <DatePicker
-                  label="Fecha fin"
-                  format="DD/MM/YYYY"
-                  value={parseDate(filters.endDate)}
-                  minDate={parseDate(filters.startDate) || undefined}
-                  maxDate={dayjs().endOf("month")}
-                  onChange={(newValue: Dayjs | null) =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      endDate: newValue ? newValue.format("DD/MM/YYYY") : "",
-                    }))
-                  }
-                  slotProps={{
-                    field: {
-                      clearable: true,
-                      onClear: () =>
-                        setFilters((prev) => ({
-                          ...prev,
-                          endDate: "",
-                        })),
-                    },
-                    textField: {
-                      fullWidth: true,
-                    },
-                  }}
-                />
-              </LocalizationProvider>
-            </Paper>
-          </Grid>
-
-          <Grid
-            size={{
-              xs: 12,
-              sm: 6,
-              md: 2,
-            }}
-          >
-            <SelectDefault
-              data={areas}
-              label="Zonas"
-              isFilter={true}
-              value={filters.areaId}
-              onChange={(_, newValue) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  areaId: newValue ? String(newValue.id) : "",
-                  areaName: newValue?.name || "",
-                  responsibleId: "",
-                  responsibleName: "",
-                }))
-              }
-              helperText={
-                !filters.manufacturingPlantId ? "Seleccione una planta" : ""
-              }
-            />
-          </Grid>
-
-          <Grid
-            size={{
-              xs: 12,
-              sm: 6,
-              md: 2,
-            }}
-          >
-            <SelectDefault
-              data={responsibles}
-              label="Responsable"
-              isFilter={true}
-              value={filters.responsibleId}
-              onChange={(_, newValue) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  responsibleId: newValue ? String(newValue.id) : "",
-                  responsibleName: newValue?.name || "",
-                }))
-              }
-              helperText={
-                !filters.manufacturingPlantId ? "Seleccione una planta" : ""
-              }
-            />
-          </Grid>
-
-          <Grid
-            size={{
-              xs: 12,
-              sm: 6,
-              md: 1,
-            }}
-          >
-            <Button
-              variant="contained"
-              fullWidth
-              startIcon={<HistoryOutlinedIcon />}
-              sx={{ height: 40 }}
-              onClick={() => setIsHistoricalView(true)}
+            <Paper
+              sx={{
+                p: 1,
+                backdropFilter: "blur(8px)",
+                bgcolor: "background.paper",
+                border: "1px solid",
+                borderColor: "divider",
+              }}
             >
-              Histórico
-            </Button>
+              <Grid container spacing={2} alignItems="center">
+                <SelectManufacturingPlantsOwn
+                  value={filters.manufacturingPlantId}
+                  onChange={handlePlantChange}
+                  isFilter={true}
+                />
+
+                <Grid
+                  size={{
+                    xs: 12,
+                    sm: 6,
+                    md: 2,
+                  }}
+                >
+                  <Paper>
+                    <LocalizationProvider
+                      dateAdapter={AdapterDayjs}
+                      adapterLocale="es"
+                      localeText={
+                        esES.components.MuiLocalizationProvider.defaultProps
+                          .localeText
+                      }
+                    >
+                      <DatePicker
+                        label="Fecha inicio"
+                        format="DD/MM/YYYY"
+                        value={parseDate(filters.startDate)}
+                        maxDate={
+                          parseDate(filters.endDate) || dayjs().endOf("month")
+                        }
+                        onChange={(newValue: Dayjs | null) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            startDate: newValue
+                              ? newValue.format("DD/MM/YYYY")
+                              : "",
+                          }))
+                        }
+                        slotProps={{
+                          field: {
+                            clearable: true,
+                            onClear: () =>
+                              setFilters((prev) => ({
+                                ...prev,
+                                startDate: "",
+                              })),
+                          },
+                          textField: {
+                            fullWidth: true,
+                          },
+                        }}
+                      />
+                    </LocalizationProvider>
+                  </Paper>
+                </Grid>
+
+                <Grid
+                  size={{
+                    xs: 12,
+                    sm: 6,
+                    md: 2,
+                  }}
+                >
+                  <Paper>
+                    <LocalizationProvider
+                      dateAdapter={AdapterDayjs}
+                      adapterLocale="es"
+                      localeText={
+                        esES.components.MuiLocalizationProvider.defaultProps
+                          .localeText
+                      }
+                    >
+                      <DatePicker
+                        label="Fecha fin"
+                        format="DD/MM/YYYY"
+                        value={parseDate(filters.endDate)}
+                        minDate={parseDate(filters.startDate) || undefined}
+                        maxDate={dayjs().endOf("month")}
+                        onChange={(newValue: Dayjs | null) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            endDate: newValue
+                              ? newValue.format("DD/MM/YYYY")
+                              : "",
+                          }))
+                        }
+                        slotProps={{
+                          field: {
+                            clearable: true,
+                            onClear: () =>
+                              setFilters((prev) => ({
+                                ...prev,
+                                endDate: "",
+                              })),
+                          },
+                          textField: {
+                            fullWidth: true,
+                          },
+                        }}
+                      />
+                    </LocalizationProvider>
+                  </Paper>
+                </Grid>
+
+                <Grid
+                  size={{
+                    xs: 12,
+                    sm: 6,
+                    md: 2,
+                  }}
+                >
+                  <SelectDefault
+                    data={areas}
+                    label="Zonas"
+                    isFilter={true}
+                    value={filters.areaId}
+                    onChange={(_, newValue) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        areaId: newValue ? String(newValue.id) : "",
+                        areaName: newValue?.name || "",
+                        responsibleId: "",
+                        responsibleName: "",
+                      }))
+                    }
+                    helperText={
+                      !filters.manufacturingPlantId
+                        ? "Seleccione una planta"
+                        : ""
+                    }
+                  />
+                </Grid>
+
+                <Grid
+                  size={{
+                    xs: 12,
+                    sm: 6,
+                    md: 2,
+                  }}
+                >
+                  <SelectDefault
+                    data={responsibles}
+                    label="Responsable"
+                    isFilter={true}
+                    value={filters.responsibleId}
+                    onChange={(_, newValue) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        responsibleId: newValue ? String(newValue.id) : "",
+                        responsibleName: newValue?.name || "",
+                      }))
+                    }
+                    helperText={
+                      !filters.manufacturingPlantId
+                        ? "Seleccione una planta"
+                        : ""
+                    }
+                  />
+                </Grid>
+
+                <Grid
+                  size={{
+                    xs: 12,
+                    sm: 6,
+                    md: 1,
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    startIcon={<HistoryOutlinedIcon />}
+                    sx={{ height: 40 }}
+                    onClick={() => setIsHistoricalView(true)}
+                  >
+                    Histórico
+                  </Button>
+                </Grid>
+              </Grid>
+            </Paper>
           </Grid>
 
           <Grid
@@ -360,6 +430,30 @@ const DashboardPage = () => {
             size={{
               xs: 12,
               sm: 12,
+              md: 6,
+            }}
+          >
+            <Paper sx={{ minHeight: 560, p: 2 }}>
+              <PackedBubbleChart filters={filters} />
+            </Paper>
+          </Grid>
+
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 6,
+            }}
+          >
+            <Paper sx={{ minHeight: 560, p: 2 }}>
+              <SankeyDiagramChart filters={filters} />
+            </Paper>
+          </Grid>
+
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
               md: 12,
             }}
           >
@@ -369,6 +463,23 @@ const DashboardPage = () => {
           </Grid>
         </>
       )}
+
+      <Zoom in={true}>
+        <Fab
+          color="primary"
+          size="medium"
+          aria-label="Volver arriba"
+          onClick={handleScrollTop}
+          sx={{
+            position: "fixed",
+            right: { xs: 16, sm: 24 },
+            bottom: { xs: 16, sm: 24 },
+            zIndex: (theme) => theme.zIndex.modal + 1,
+          }}
+        >
+          <KeyboardArrowUpIcon />
+        </Fab>
+      </Zoom>
     </Grid>
   );
 };

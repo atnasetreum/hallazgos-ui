@@ -103,7 +103,7 @@ const AssignedResponsibleChart = ({ filters }: Props) => {
           },
           title: {
             text: (() => {
-              const titleParts = ["Hallazgos responsable"];
+              const titleParts = ["Hallazgos por responsable"];
 
               if (filters.areaName) {
                 titleParts.push(filters.areaName);

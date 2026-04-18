@@ -49,6 +49,35 @@ export interface ResponseDashboardHistoricalByMonth {
   }[];
 }
 
+export interface ResponseDashboardSankeyByFilters {
+  total: number;
+  startDate: string;
+  endDate: string;
+  nodes: {
+    id: string;
+    name: string;
+    column: number;
+  }[];
+  links: {
+    from: string;
+    to: string;
+    weight: number;
+  }[];
+}
+
+export interface ResponseDashboardPackedBubbleByFilters {
+  total: number;
+  startDate: string;
+  endDate: string;
+  series: {
+    name: string;
+    data: {
+      name: string;
+      value: number;
+    }[];
+  }[];
+}
+
 interface StatusDatum {
   name: string;
   y: number;

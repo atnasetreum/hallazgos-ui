@@ -23,6 +23,8 @@ import {
   ResponseDashboardMainTypes,
   ResponseDashboardAssignedResponsiblesByFilters,
   ResponseDashboardHistoricalByMonth,
+  ResponseDashboardPackedBubbleByFilters,
+  ResponseDashboardSankeyByFilters,
   ResponseDashboardMultiNivel,
   ResponseDashboardStatusByFilters,
   ResponseOpenVsClosed,
@@ -149,6 +151,62 @@ const findAssignedResponsiblesByFilters = async ({
 const findHistoricalByMonth = async () => {
   const { data } = await api.get<ResponseDashboardHistoricalByMonth>(
     "/historical-by-month",
+  );
+  return data;
+};
+
+const findSankeyByFilters = async ({
+  manufacturingPlantId,
+  startDate,
+  endDate,
+  areaId,
+  responsibleId,
+}: {
+  manufacturingPlantId: string;
+  startDate: string;
+  endDate: string;
+  areaId?: string;
+  responsibleId?: string;
+}) => {
+  const { data } = await api.get<ResponseDashboardSankeyByFilters>(
+    "/sankey-by-filters",
+    {
+      params: {
+        manufacturingPlantId,
+        startDate,
+        endDate,
+        ...(areaId && { areaId }),
+        ...(responsibleId && { responsibleId }),
+      },
+    },
+  );
+  return data;
+};
+
+const findPackedBubbleByFilters = async ({
+  manufacturingPlantId,
+  startDate,
+  endDate,
+  areaId,
+  responsibleId,
+}: {
+  manufacturingPlantId: string;
+  startDate: string;
+  endDate: string;
+  areaId?: string;
+  responsibleId?: string;
+}) => {
+  const { data } = await api.get<ResponseDashboardPackedBubbleByFilters>(
+    "/packed-bubble-by-filters",
+    {
+      params: {
+        manufacturingPlantId,
+        startDate,
+        endDate,
+        ...(areaId && { areaId }),
+        ...(responsibleId && { responsibleId }),
+      },
+    },
   );
   return data;
 };
@@ -492,6 +550,8 @@ const findBusinessIntelligenceEpp = async ({
 
 export const DashboardService = {
   findHistoricalByMonth,
+  findSankeyByFilters,
+  findPackedBubbleByFilters,
   findAssignedResponsiblesByFilters,
   findAreasByFilters,
   findResponsiblesByFilters,

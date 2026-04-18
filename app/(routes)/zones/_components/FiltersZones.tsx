@@ -115,7 +115,7 @@ const FiltersZones = ({ filters, setFilters, count }: Props) => {
       >
         <SelectDefault
           data={areas}
-          label="Área"
+          label="Zona"
           value={filters.areaId}
           onChange={(e) =>
             setFilters({

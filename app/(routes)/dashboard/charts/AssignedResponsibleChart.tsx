@@ -18,10 +18,10 @@ interface Props {
     manufacturingPlantName: string;
     startDate: string;
     endDate: string;
-    areaId: string;
-    areaName: string;
-    responsibleId: string;
-    responsibleName: string;
+    areaIds: string[];
+    areaNames: string[];
+    responsibleIds: string[];
+    responsibleNames: string[];
   };
 }
 
@@ -43,16 +43,18 @@ const AssignedResponsibleChart = ({ filters }: Props) => {
       manufacturingPlantId: filters.manufacturingPlantId,
       startDate: filters.startDate,
       endDate: filters.endDate,
-      ...(filters.areaId && { areaId: filters.areaId }),
-      ...(filters.responsibleId && { responsibleId: filters.responsibleId }),
+      ...(filters.areaIds.length > 0 && { areaIds: filters.areaIds }),
+      ...(filters.responsibleIds.length > 0 && {
+        responsibleIds: filters.responsibleIds,
+      }),
     }).then(setChartData);
   }, [
     hasCompleteFilters,
     filters.manufacturingPlantId,
     filters.startDate,
     filters.endDate,
-    filters.areaId,
-    filters.responsibleId,
+    filters.areaIds,
+    filters.responsibleIds,
   ]);
 
   const isDarkMode = theme.palette.mode === "dark";
@@ -104,12 +106,12 @@ const AssignedResponsibleChart = ({ filters }: Props) => {
             text: (() => {
               const titleParts = ["Hallazgos por responsable"];
 
-              if (filters.areaName) {
-                titleParts.push(filters.areaName);
+              if (filters.areaNames.length > 0) {
+                titleParts.push(filters.areaNames.join(", "));
               }
 
-              if (filters.responsibleName) {
-                titleParts.push(filters.responsibleName);
+              if (filters.responsibleNames.length > 0) {
+                titleParts.push(filters.responsibleNames.join(", "));
               }
 
               return titleParts.join(" - ");

@@ -47,14 +47,14 @@ const findStatusByFilters = async ({
   manufacturingPlantId,
   startDate,
   endDate,
-  areaId,
-  responsibleId,
+  areaIds,
+  responsibleIds,
 }: {
   manufacturingPlantId: string;
   startDate: string;
   endDate: string;
-  areaId?: string;
-  responsibleId?: string;
+  areaIds?: string[];
+  responsibleIds?: string[];
 }) => {
   const { data } = await api.get<ResponseDashboardStatusByFilters>(
     "/status-by-filters",
@@ -63,8 +63,11 @@ const findStatusByFilters = async ({
         manufacturingPlantId,
         startDate,
         endDate,
-        ...(areaId && { areaId }),
-        ...(responsibleId && { responsibleId }),
+        ...(areaIds && areaIds.length > 0 && { areaIds: areaIds.join(",") }),
+        ...(responsibleIds &&
+          responsibleIds.length > 0 && {
+            responsibleIds: responsibleIds.join(","),
+          }),
       },
     },
   );
@@ -75,14 +78,14 @@ const findAreasByFilters = async ({
   manufacturingPlantId,
   startDate,
   endDate,
-  areaId,
-  responsibleId,
+  areaIds,
+  responsibleIds,
 }: {
   manufacturingPlantId: string;
   startDate: string;
   endDate: string;
-  areaId?: string;
-  responsibleId?: string;
+  areaIds?: string[];
+  responsibleIds?: string[];
 }) => {
   const { data } = await api.get<ResponseDashboardStatusByFilters>(
     "/areas-by-filters",
@@ -91,8 +94,11 @@ const findAreasByFilters = async ({
         manufacturingPlantId,
         startDate,
         endDate,
-        ...(areaId && { areaId }),
-        ...(responsibleId && { responsibleId }),
+        ...(areaIds && areaIds.length > 0 && { areaIds: areaIds.join(",") }),
+        ...(responsibleIds &&
+          responsibleIds.length > 0 && {
+            responsibleIds: responsibleIds.join(","),
+          }),
       },
     },
   );
@@ -103,19 +109,19 @@ const findResponsiblesByFilters = async ({
   manufacturingPlantId,
   startDate,
   endDate,
-  areaId,
+  areaIds,
 }: {
   manufacturingPlantId: string;
   startDate: string;
   endDate: string;
-  areaId: string;
+  areaIds: string[];
 }) => {
   const { data } = await api.get<User[]>("/responsibles-by-filters", {
     params: {
       manufacturingPlantId,
       startDate,
       endDate,
-      areaId,
+      areaIds: areaIds.join(","),
     },
   });
   return data;
@@ -125,14 +131,14 @@ const findAssignedResponsiblesByFilters = async ({
   manufacturingPlantId,
   startDate,
   endDate,
-  areaId,
-  responsibleId,
+  areaIds,
+  responsibleIds,
 }: {
   manufacturingPlantId: string;
   startDate: string;
   endDate: string;
-  areaId?: string;
-  responsibleId?: string;
+  areaIds?: string[];
+  responsibleIds?: string[];
 }) => {
   const { data } =
     await api.get<ResponseDashboardAssignedResponsiblesByFilters>(
@@ -142,8 +148,14 @@ const findAssignedResponsiblesByFilters = async ({
           manufacturingPlantId,
           startDate,
           endDate,
-          ...(areaId && { areaId }),
-          ...(responsibleId && { responsibleId }),
+          ...(areaIds &&
+            areaIds.length > 0 && {
+              areaIds: areaIds.join(","),
+            }),
+          ...(responsibleIds &&
+            responsibleIds.length > 0 && {
+              responsibleIds: responsibleIds.join(","),
+            }),
         },
       },
     );
@@ -161,14 +173,14 @@ const findSankeyByFilters = async ({
   manufacturingPlantId,
   startDate,
   endDate,
-  areaId,
-  responsibleId,
+  areaIds,
+  responsibleIds,
 }: {
   manufacturingPlantId: string;
   startDate: string;
   endDate: string;
-  areaId?: string;
-  responsibleId?: string;
+  areaIds?: string[];
+  responsibleIds?: string[];
 }) => {
   const { data } = await api.get<ResponseDashboardSankeyByFilters>(
     "/sankey-by-filters",
@@ -177,8 +189,11 @@ const findSankeyByFilters = async ({
         manufacturingPlantId,
         startDate,
         endDate,
-        ...(areaId && { areaId }),
-        ...(responsibleId && { responsibleId }),
+        ...(areaIds && areaIds.length > 0 && { areaIds: areaIds.join(",") }),
+        ...(responsibleIds &&
+          responsibleIds.length > 0 && {
+            responsibleIds: responsibleIds.join(","),
+          }),
       },
     },
   );
@@ -189,14 +204,14 @@ const findPackedBubbleByFilters = async ({
   manufacturingPlantId,
   startDate,
   endDate,
-  areaId,
-  responsibleId,
+  areaIds,
+  responsibleIds,
 }: {
   manufacturingPlantId: string;
   startDate: string;
   endDate: string;
-  areaId?: string;
-  responsibleId?: string;
+  areaIds?: string[];
+  responsibleIds?: string[];
 }) => {
   const { data } = await api.get<ResponseDashboardPackedBubbleByFilters>(
     "/packed-bubble-by-filters",
@@ -205,8 +220,11 @@ const findPackedBubbleByFilters = async ({
         manufacturingPlantId,
         startDate,
         endDate,
-        ...(areaId && { areaId }),
-        ...(responsibleId && { responsibleId }),
+        ...(areaIds && areaIds.length > 0 && { areaIds: areaIds.join(",") }),
+        ...(responsibleIds &&
+          responsibleIds.length > 0 && {
+            responsibleIds: responsibleIds.join(","),
+          }),
       },
     },
   );
@@ -217,14 +235,14 @@ const findSolidGaugeKpiByFilters = async ({
   manufacturingPlantId,
   startDate,
   endDate,
-  areaId,
-  responsibleId,
+  areaIds,
+  responsibleIds,
 }: {
   manufacturingPlantId: string;
   startDate: string;
   endDate: string;
-  areaId?: string;
-  responsibleId?: string;
+  areaIds?: string[];
+  responsibleIds?: string[];
 }) => {
   const { data } = await api.get<ResponseDashboardSolidGaugeKpiByFilters>(
     "/solid-gauge-kpi-by-filters",
@@ -233,8 +251,11 @@ const findSolidGaugeKpiByFilters = async ({
         manufacturingPlantId,
         startDate,
         endDate,
-        ...(areaId && { areaId }),
-        ...(responsibleId && { responsibleId }),
+        ...(areaIds && areaIds.length > 0 && { areaIds: areaIds.join(",") }),
+        ...(responsibleIds &&
+          responsibleIds.length > 0 && {
+            responsibleIds: responsibleIds.join(","),
+          }),
       },
     },
   );
@@ -245,14 +266,14 @@ const findAreaRangeLineByFilters = async ({
   manufacturingPlantId,
   startDate,
   endDate,
-  areaId,
-  responsibleId,
+  areaIds,
+  responsibleIds,
 }: {
   manufacturingPlantId: string;
   startDate: string;
   endDate: string;
-  areaId?: string;
-  responsibleId?: string;
+  areaIds?: string[];
+  responsibleIds?: string[];
 }) => {
   const { data } = await api.get<ResponseDashboardAreaRangeLineByFilters>(
     "/area-range-line-by-filters",
@@ -261,8 +282,11 @@ const findAreaRangeLineByFilters = async ({
         manufacturingPlantId,
         startDate,
         endDate,
-        ...(areaId && { areaId }),
-        ...(responsibleId && { responsibleId }),
+        ...(areaIds && areaIds.length > 0 && { areaIds: areaIds.join(",") }),
+        ...(responsibleIds &&
+          responsibleIds.length > 0 && {
+            responsibleIds: responsibleIds.join(","),
+          }),
       },
     },
   );

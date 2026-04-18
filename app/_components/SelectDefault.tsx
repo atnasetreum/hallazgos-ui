@@ -1,13 +1,20 @@
 import { Paper } from "@mui/material";
 import { Autocomplete } from "@mui/material";
+import { Checkbox } from "@mui/material";
 import { TextField } from "@mui/material";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 //import { FormHelperText } from "@mui/material";
 
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
 interface Props {
-  value: string;
+  value: string | string[];
   onChange: (event: any, newValue: any) => void;
   data: any[];
   label: string;
+  multiple?: boolean;
   isFilter?: boolean;
   helperText?: string;
   attention?: string;
@@ -21,6 +28,7 @@ export default function SelectDefault({
   onChange,
   data,
   label,
+  multiple = false,
   isFilter = false,
   helperText,
   attention,
@@ -28,32 +36,88 @@ export default function SelectDefault({
   disabled = false,
   name = "",
 }: Props) {
-  const selectedOption = data.find((item) => String(item.id) === value) || null;
+  const selectedOption = multiple
+    ? data.filter((item) =>
+        Array.isArray(value) ? value.includes(String(item.id)) : false,
+      )
+    : data.find((item) => String(item.id) === value) || null;
 
   return (
     <Paper>
       <Autocomplete
         fullWidth
+        multiple={multiple}
         value={selectedOption}
         onChange={(_, newValue) => {
           // Crear un objeto similar a SelectChangeEvent para mantener compatibilidad
           const syntheticEvent = {
             target: {
-              value: newValue ? String(newValue.id) : "",
+              value: multiple
+                ? Array.isArray(newValue)
+                  ? newValue.map((item) => String(item.id))
+                  : []
+                : newValue
+                  ? String(newValue.id)
+                  : "",
               name: name,
             },
           };
           onChange(syntheticEvent as any, newValue);
         }}
         options={data}
+        disableCloseOnSelect={multiple}
         getOptionLabel={(option) => option.name || ""}
         isOptionEqualToValue={(option, value) => option.id === value?.id}
+        renderOption={(props, option, { selected }) => {
+          const { key, ...optionProps } = props;
+
+          return (
+            <li key={key} {...optionProps}>
+              {multiple && (
+                <Checkbox
+                  icon={icon}
+                  checkedIcon={checkedIcon}
+                  checked={selected}
+                  sx={{ mr: 1 }}
+                />
+              )}
+              {option.name || ""}
+            </li>
+          );
+        }}
+        renderTags={(tagValue) => {
+          if (!multiple) {
+            return null;
+          }
+
+          const text = tagValue.map((item) => item.name).join(", ");
+
+          return (
+            <span
+              style={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                display: "block",
+                maxWidth: "100%",
+              }}
+            >
+              {text}
+            </span>
+          );
+        }}
         disabled={!!helperText || disabled}
         renderInput={(params) => (
           <TextField
             {...params}
             label={label}
-            error={!validationEmpty ? false : value === "" ? true : false}
+            error={
+              !validationEmpty
+                ? false
+                : Array.isArray(value)
+                  ? value.length === 0
+                  : value === ""
+            }
             helperText={helperText || attention}
             name={name}
           />

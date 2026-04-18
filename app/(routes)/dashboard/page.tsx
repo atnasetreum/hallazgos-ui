@@ -39,10 +39,10 @@ interface DashboardFilters {
   manufacturingPlantName: string;
   startDate: string;
   endDate: string;
-  areaId: string;
-  areaName: string;
-  responsibleId: string;
-  responsibleName: string;
+  areaIds: string[];
+  areaNames: string[];
+  responsibleIds: string[];
+  responsibleNames: string[];
 }
 
 const DashboardPage = () => {
@@ -58,14 +58,16 @@ const DashboardPage = () => {
     manufacturingPlantName: "",
     startDate: currentMonthStart,
     endDate: currentMonthEnd,
-    areaId: "",
-    areaName: "",
-    responsibleId: "",
-    responsibleName: "",
+    areaIds: [],
+    areaNames: [],
+    responsibleIds: [],
+    responsibleNames: [],
   });
   const [areas, setAreas] = useState<Area[]>([]);
   const [responsibles, setResponsibles] = useState<User[]>([]);
   const [isHistoricalView, setIsHistoricalView] = useState(false);
+  const shouldHideProjectionCharts =
+    filters.areaIds.length > 1 || filters.responsibleIds.length > 1;
 
   const parseDate = (value: string): Dayjs | null => {
     if (!value) return null;
@@ -87,10 +89,10 @@ const DashboardPage = () => {
       ...prev,
       manufacturingPlantId: event.target.value,
       manufacturingPlantName: selectedPlant?.name || "",
-      areaId: "",
-      areaName: "",
-      responsibleId: "",
-      responsibleName: "",
+      areaIds: [],
+      areaNames: [],
+      responsibleIds: [],
+      responsibleNames: [],
     }));
   };
 
@@ -106,10 +108,10 @@ const DashboardPage = () => {
 
     setFilters((prev) => ({
       ...prev,
-      areaId: "",
-      areaName: "",
-      responsibleId: "",
-      responsibleName: "",
+      areaIds: [],
+      areaNames: [],
+      responsibleIds: [],
+      responsibleNames: [],
     }));
   }, [filters.manufacturingPlantId]);
 
@@ -120,14 +122,14 @@ const DashboardPage = () => {
     }
 
     const shouldLoadByArea =
-      !!filters.areaId && !!filters.startDate && !!filters.endDate;
+      filters.areaIds.length > 0 && !!filters.startDate && !!filters.endDate;
 
     if (shouldLoadByArea) {
       DashboardService.findResponsiblesByFilters({
         manufacturingPlantId: filters.manufacturingPlantId,
         startDate: filters.startDate,
         endDate: filters.endDate,
-        areaId: filters.areaId,
+        areaIds: filters.areaIds,
       }).then(setResponsibles);
       return;
     }
@@ -137,8 +139,8 @@ const DashboardPage = () => {
     }).then(setResponsibles);
   }, [
     filters.manufacturingPlantId,
-    filters.areaId,
-    filters.responsibleId,
+    filters.areaIds,
+    filters.responsibleIds,
     filters.startDate,
     filters.endDate,
   ]);
@@ -337,15 +339,20 @@ const DashboardPage = () => {
                   <SelectDefault
                     data={areas}
                     label="Zonas"
+                    multiple={true}
                     isFilter={true}
-                    value={filters.areaId}
+                    value={filters.areaIds}
                     onChange={(_, newValue) =>
                       setFilters((prev) => ({
                         ...prev,
-                        areaId: newValue ? String(newValue.id) : "",
-                        areaName: newValue?.name || "",
-                        responsibleId: "",
-                        responsibleName: "",
+                        areaIds: Array.isArray(newValue)
+                          ? newValue.map((item) => String(item.id))
+                          : [],
+                        areaNames: Array.isArray(newValue)
+                          ? newValue.map((item) => item.name)
+                          : [],
+                        responsibleIds: [],
+                        responsibleNames: [],
                       }))
                     }
                     helperText={
@@ -366,13 +373,18 @@ const DashboardPage = () => {
                   <SelectDefault
                     data={responsibles}
                     label="Responsable"
+                    multiple={true}
                     isFilter={true}
-                    value={filters.responsibleId}
+                    value={filters.responsibleIds}
                     onChange={(_, newValue) =>
                       setFilters((prev) => ({
                         ...prev,
-                        responsibleId: newValue ? String(newValue.id) : "",
-                        responsibleName: newValue?.name || "",
+                        responsibleIds: Array.isArray(newValue)
+                          ? newValue.map((item) => String(item.id))
+                          : [],
+                        responsibleNames: Array.isArray(newValue)
+                          ? newValue.map((item) => item.name)
+                          : [],
                       }))
                     }
                     helperText={
@@ -428,29 +440,33 @@ const DashboardPage = () => {
             </Paper>
           </Grid>
 
-          <Grid
-            size={{
-              xs: 12,
-              sm: 12,
-              md: 12,
-            }}
-          >
-            <Paper sx={{ minHeight: 470, p: 2 }}>
-              <SolidGaugeMultiKpiChart filters={filters} />
-            </Paper>
-          </Grid>
+          {!shouldHideProjectionCharts && (
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 12,
+              }}
+            >
+              <Paper sx={{ minHeight: 470, p: 2 }}>
+                <SolidGaugeMultiKpiChart filters={filters} />
+              </Paper>
+            </Grid>
+          )}
 
-          <Grid
-            size={{
-              xs: 12,
-              sm: 12,
-              md: 12,
-            }}
-          >
-            <Paper sx={{ minHeight: 470, p: 2 }}>
-              <AreaRangeLineChart filters={filters} />
-            </Paper>
-          </Grid>
+          {!shouldHideProjectionCharts && (
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 12,
+              }}
+            >
+              <Paper sx={{ minHeight: 470, p: 2 }}>
+                <AreaRangeLineChart filters={filters} />
+              </Paper>
+            </Grid>
+          )}
 
           <Grid
             size={{

@@ -24,6 +24,7 @@ import {
   ResponseDashboardAssignedResponsiblesByFilters,
   ResponseDashboardHistoricalByMonth,
   ResponseDashboardPackedBubbleByFilters,
+  ResponseDashboardAreaRangeLineByFilters,
   ResponseDashboardSankeyByFilters,
   ResponseDashboardSolidGaugeKpiByFilters,
   ResponseDashboardMultiNivel,
@@ -227,6 +228,34 @@ const findSolidGaugeKpiByFilters = async ({
 }) => {
   const { data } = await api.get<ResponseDashboardSolidGaugeKpiByFilters>(
     "/solid-gauge-kpi-by-filters",
+    {
+      params: {
+        manufacturingPlantId,
+        startDate,
+        endDate,
+        ...(areaId && { areaId }),
+        ...(responsibleId && { responsibleId }),
+      },
+    },
+  );
+  return data;
+};
+
+const findAreaRangeLineByFilters = async ({
+  manufacturingPlantId,
+  startDate,
+  endDate,
+  areaId,
+  responsibleId,
+}: {
+  manufacturingPlantId: string;
+  startDate: string;
+  endDate: string;
+  areaId?: string;
+  responsibleId?: string;
+}) => {
+  const { data } = await api.get<ResponseDashboardAreaRangeLineByFilters>(
+    "/area-range-line-by-filters",
     {
       params: {
         manufacturingPlantId,
@@ -582,6 +611,7 @@ export const DashboardService = {
   findSankeyByFilters,
   findPackedBubbleByFilters,
   findSolidGaugeKpiByFilters,
+  findAreaRangeLineByFilters,
   findAssignedResponsiblesByFilters,
   findAreasByFilters,
   findResponsiblesByFilters,

@@ -87,6 +87,16 @@ export interface ResponseDashboardSolidGaugeKpiByFilters {
   backlogActive: number;
 }
 
+export interface ResponseDashboardAreaRangeLineByFilters {
+  startDate: string;
+  endDate: string;
+  categories: string[];
+  actualSeries: Array<number | null>;
+  forecastSeries: Array<number | null>;
+  rangeSeries: Array<[number, number] | null>;
+  forecastHorizonMonths: number;
+}
+
 interface StatusDatum {
   name: string;
   y: number;

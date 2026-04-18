@@ -32,6 +32,7 @@ import HistoricalChart from "./charts/HistoricalChart";
 import SankeyDiagramChart from "./charts/SankeyDiagramChart";
 import PackedBubbleChart from "./charts/PackedBubbleChart";
 import SolidGaugeMultiKpiChart from "./charts/SolidGaugeMultiKpiChart";
+import AreaRangeLineChart from "./charts/AreaRangeLineChart";
 
 interface DashboardFilters {
   manufacturingPlantId: string;
@@ -436,6 +437,18 @@ const DashboardPage = () => {
           >
             <Paper sx={{ minHeight: 470, p: 2 }}>
               <SolidGaugeMultiKpiChart filters={filters} />
+            </Paper>
+          </Grid>
+
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 12,
+            }}
+          >
+            <Paper sx={{ minHeight: 470, p: 2 }}>
+              <AreaRangeLineChart filters={filters} />
             </Paper>
           </Grid>
 

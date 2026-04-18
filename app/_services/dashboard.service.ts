@@ -25,6 +25,7 @@ import {
   ResponseDashboardHistoricalByMonth,
   ResponseDashboardPackedBubbleByFilters,
   ResponseDashboardSankeyByFilters,
+  ResponseDashboardSolidGaugeKpiByFilters,
   ResponseDashboardMultiNivel,
   ResponseDashboardStatusByFilters,
   ResponseOpenVsClosed,
@@ -198,6 +199,34 @@ const findPackedBubbleByFilters = async ({
 }) => {
   const { data } = await api.get<ResponseDashboardPackedBubbleByFilters>(
     "/packed-bubble-by-filters",
+    {
+      params: {
+        manufacturingPlantId,
+        startDate,
+        endDate,
+        ...(areaId && { areaId }),
+        ...(responsibleId && { responsibleId }),
+      },
+    },
+  );
+  return data;
+};
+
+const findSolidGaugeKpiByFilters = async ({
+  manufacturingPlantId,
+  startDate,
+  endDate,
+  areaId,
+  responsibleId,
+}: {
+  manufacturingPlantId: string;
+  startDate: string;
+  endDate: string;
+  areaId?: string;
+  responsibleId?: string;
+}) => {
+  const { data } = await api.get<ResponseDashboardSolidGaugeKpiByFilters>(
+    "/solid-gauge-kpi-by-filters",
     {
       params: {
         manufacturingPlantId,
@@ -552,6 +581,7 @@ export const DashboardService = {
   findHistoricalByMonth,
   findSankeyByFilters,
   findPackedBubbleByFilters,
+  findSolidGaugeKpiByFilters,
   findAssignedResponsiblesByFilters,
   findAreasByFilters,
   findResponsiblesByFilters,

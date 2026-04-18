@@ -8,7 +8,6 @@ import { Chart } from "@highcharts/react";
 
 import "highcharts/esm/modules/accessibility.src.js";
 import "highcharts/esm/modules/sankey.src.js";
-import "highcharts/esm/themes/adaptive.js";
 
 import { ResponseDashboardSankeyByFilters } from "@interfaces";
 import { DashboardService } from "@services";

@@ -78,6 +78,15 @@ export interface ResponseDashboardPackedBubbleByFilters {
   }[];
 }
 
+export interface ResponseDashboardSolidGaugeKpiByFilters {
+  total: number;
+  startDate: string;
+  endDate: string;
+  closurePercentage: number;
+  avgResolutionDays: number;
+  backlogActive: number;
+}
+
 interface StatusDatum {
   name: string;
   y: number;

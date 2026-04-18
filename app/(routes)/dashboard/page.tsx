@@ -31,6 +31,7 @@ import AssignedResponsibleChart from "./charts/AssignedResponsibleChart";
 import HistoricalChart from "./charts/HistoricalChart";
 import SankeyDiagramChart from "./charts/SankeyDiagramChart";
 import PackedBubbleChart from "./charts/PackedBubbleChart";
+import SolidGaugeMultiKpiChart from "./charts/SolidGaugeMultiKpiChart";
 
 interface DashboardFilters {
   manufacturingPlantId: string;
@@ -423,6 +424,18 @@ const DashboardPage = () => {
           >
             <Paper sx={{ p: 2 }}>
               <AreasChart filters={filters} />
+            </Paper>
+          </Grid>
+
+          <Grid
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 12,
+            }}
+          >
+            <Paper sx={{ minHeight: 470, p: 2 }}>
+              <SolidGaugeMultiKpiChart filters={filters} />
             </Paper>
           </Grid>
 

@@ -7,7 +7,6 @@ import Highcharts from "highcharts/esm/highcharts.src.js";
 import { Chart } from "@highcharts/react";
 
 import "highcharts/esm/modules/accessibility.src.js";
-import "highcharts/esm/themes/adaptive.js";
 
 import { ResponseDashboardAssignedResponsiblesByFilters } from "@interfaces";
 import { DashboardService } from "@services";

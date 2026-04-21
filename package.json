@@ -37,6 +37,7 @@
     "react-html5-camera-photo": "^1.5.11",
     "react-is": "^19.0.0",
     "react-signature-canvas": "1.0.6",
+    "react-zoom-pan-pinch": "^4.0.3",
     "regression": "^2.0.1",
     "sonner": "^2.0.0",
     "use-debounce": "^10.0.4",

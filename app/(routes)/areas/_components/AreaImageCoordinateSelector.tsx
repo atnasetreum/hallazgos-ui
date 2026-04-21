@@ -247,6 +247,48 @@ const AreaImageCoordinateSelector = ({
     const openPoints = (heatmapData?.points || []).filter(
       (point) => point.statusCounts.Abierto > 0,
     );
+    const heatToneByKey: Record<string, "red" | "yellow" | "green"> = {};
+    const pointKey = (point: { areaId: number; x: number; y: number }) =>
+      `${point.areaId}-${point.x}-${point.y}`;
+
+    const openValues = openPoints.map((point) => point.statusCounts.Abierto);
+    const minOpenValue = openValues.length > 0 ? Math.min(...openValues) : 0;
+    const maxOpenValue = openValues.length > 0 ? Math.max(...openValues) : 1;
+    const dynamicRange = Math.max(maxOpenValue - minOpenValue, 1);
+
+    const pointsByRelativeIntensity = [...openPoints]
+      .map((point) => ({
+        point,
+        relativeIntensity:
+          (point.statusCounts.Abierto - minOpenValue) / dynamicRange,
+      }))
+      .sort((a, b) => b.relativeIntensity - a.relativeIntensity);
+
+    if (pointsByRelativeIntensity.length === 1) {
+      heatToneByKey[pointKey(pointsByRelativeIntensity[0].point)] = "red";
+    } else if (pointsByRelativeIntensity.length === 2) {
+      heatToneByKey[pointKey(pointsByRelativeIntensity[0].point)] = "red";
+      heatToneByKey[pointKey(pointsByRelativeIntensity[1].point)] = "yellow";
+    } else if (pointsByRelativeIntensity.length >= 3) {
+      const total = pointsByRelativeIntensity.length;
+      const redLimit = Math.max(1, Math.ceil(total / 3));
+      const yellowLimit = Math.max(redLimit + 1, Math.ceil((2 * total) / 3));
+
+      pointsByRelativeIntensity.forEach(({ point }, index) => {
+        if (index < redLimit) {
+          heatToneByKey[pointKey(point)] = "red";
+          return;
+        }
+
+        if (index < yellowLimit) {
+          heatToneByKey[pointKey(point)] = "yellow";
+          return;
+        }
+
+        heatToneByKey[pointKey(point)] = "green";
+      });
+    }
+
     const totalOpenFindings = openPoints.reduce(
       (sum, point) => sum + point.statusCounts.Abierto,
       0,
@@ -290,6 +332,39 @@ const AreaImageCoordinateSelector = ({
         Math.min(220, diameter / Math.max(heatmapScale, 0.0001)),
       );
 
+      const toneTier = heatToneByKey[pointKey(point)] || "red";
+
+      const heatTone =
+        toneTier === "red"
+          ? {
+              core: "rgba(220, 38, 38, 0.62)",
+              mid: "rgba(248, 113, 113, 0.42)",
+              edge: "rgba(254, 202, 202, 0.18)",
+              glow: "rgba(220, 38, 38, 0.6)",
+              badgeBg: "rgba(239, 68, 68, 0.2)",
+              badgeBorder: "rgba(239, 68, 68, 0.45)",
+              badgeText: "#fecaca",
+            }
+          : toneTier === "yellow"
+            ? {
+                core: "rgba(245, 158, 11, 0.62)",
+                mid: "rgba(251, 191, 36, 0.42)",
+                edge: "rgba(254, 240, 138, 0.18)",
+                glow: "rgba(245, 158, 11, 0.58)",
+                badgeBg: "rgba(251, 191, 36, 0.2)",
+                badgeBorder: "rgba(251, 191, 36, 0.45)",
+                badgeText: "#fde68a",
+              }
+            : {
+                core: "rgba(22, 163, 74, 0.62)",
+                mid: "rgba(74, 222, 128, 0.42)",
+                edge: "rgba(187, 247, 208, 0.18)",
+                glow: "rgba(22, 163, 74, 0.58)",
+                badgeBg: "rgba(34, 197, 94, 0.2)",
+                badgeBorder: "rgba(34, 197, 94, 0.45)",
+                badgeText: "#bbf7d0",
+              };
+
       return {
         ...point,
         xAdjusted: projectedX,
@@ -308,6 +383,7 @@ const AreaImageCoordinateSelector = ({
           : 0,
         openCount: point.statusCounts.Abierto,
         diameter: zoomAwareDiameter,
+        heatTone,
       };
     });
 
@@ -333,7 +409,7 @@ const AreaImageCoordinateSelector = ({
           <Box sx={{ width: { xs: "100%", md: "33%" }, textAlign: "right" }}>
             <Typography variant="body2" color="text.secondary">
               {heatmapData
-                ? `Áreas con hallazgos abiertos: ${openPoints.length} | Hallazgos abiertos georreferenciados: ${totalOpenFindings} de ${heatmapData.totalOpenEvidences ?? totalOpenFindings}`
+                ? `Zonas con hallazgos abiertos: ${openPoints.length} | Hallazgos abiertos georreferenciados: ${totalOpenFindings} de ${heatmapData.totalOpenEvidences ?? totalOpenFindings}`
                 : "Sin información"}
             </Typography>
           </Box>
@@ -514,14 +590,14 @@ const AreaImageCoordinateSelector = ({
                                     px: 1,
                                     py: 0.35,
                                     borderRadius: 99,
-                                    bgcolor: "rgba(239, 68, 68, 0.2)",
-                                    border: "1px solid rgba(239, 68, 68, 0.45)",
+                                    bgcolor: point.heatTone.badgeBg,
+                                    border: `1px solid ${point.heatTone.badgeBorder}`,
                                   }}
                                 >
                                   <Typography
                                     variant="caption"
                                     sx={{
-                                      color: "#fecaca",
+                                      color: point.heatTone.badgeText,
                                       fontWeight: 700,
                                       letterSpacing: 0.2,
                                     }}
@@ -554,9 +630,8 @@ const AreaImageCoordinateSelector = ({
                               borderRadius: "50%",
                               pointerEvents: "auto",
                               zIndex: 2,
-                              background:
-                                "radial-gradient(circle, rgba(213, 0, 0, 0.55) 0%, rgba(255, 82, 82, 0.38) 38%, rgba(255, 82, 82, 0.16) 62%, rgba(255, 82, 82, 0) 100%)",
-                              boxShadow: "0 0 24px rgba(213, 0, 0, 0.55)",
+                              background: `radial-gradient(circle, ${point.heatTone.core} 0%, ${point.heatTone.mid} 38%, ${point.heatTone.edge} 62%, rgba(255, 255, 255, 0) 100%)`,
+                              boxShadow: `0 0 24px ${point.heatTone.glow}`,
                             }}
                           />
                         </Tooltip>

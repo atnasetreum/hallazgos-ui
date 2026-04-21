@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import HistoryOutlinedIcon from "@mui/icons-material/HistoryOutlined";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import WhatshotOutlinedIcon from "@mui/icons-material/WhatshotOutlined";
@@ -246,6 +247,12 @@ const DashboardPage = () => {
     });
   };
 
+  const handleBackToInitialCharts = () => {
+    setIsHeatmapView(false);
+    setHeatmapData(null);
+    setIsHeatmapLoading(false);
+  };
+
   return (
     <Grid container spacing={2}>
       {isHistoricalView ? (
@@ -429,15 +436,27 @@ const DashboardPage = () => {
                       </IconButton>
                     </Tooltip>
 
-                    <Tooltip title="Mapa de calor" arrow>
-                      <IconButton
-                        color={isHeatmapView ? "secondary" : "primary"}
-                        aria-label="Mapa de calor"
-                        onClick={handleToggleHeatmapView}
-                      >
-                        <WhatshotOutlinedIcon />
-                      </IconButton>
-                    </Tooltip>
+                    {!isHeatmapView ? (
+                      <Tooltip title="Mapa de calor" arrow>
+                        <IconButton
+                          color="primary"
+                          aria-label="Mapa de calor"
+                          onClick={handleToggleHeatmapView}
+                        >
+                          <WhatshotOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title="Gráficas" arrow>
+                        <IconButton
+                          color="primary"
+                          aria-label="Gráficas"
+                          onClick={handleBackToInitialCharts}
+                        >
+                          <BarChartOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    )}
                   </Stack>
                 </Grid>
 

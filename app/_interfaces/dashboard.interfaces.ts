@@ -97,6 +97,35 @@ export interface ResponseDashboardAreaRangeLineByFilters {
   forecastHorizonMonths: number;
 }
 
+export interface ResponseDashboardHeatmapByFilters {
+  startDate: string;
+  endDate: string;
+  totalAreas: number;
+  totalEvidences: number;
+  totalOpenEvidences: number;
+  totalOpenEvidencesWithCoordinates: number;
+  maxX: number;
+  maxY: number;
+  maxValue: number;
+  points: ResponseDashboardHeatmapPoint[];
+}
+
+export interface ResponseDashboardHeatmapPoint {
+  areaId: number;
+  areaName: string;
+  x: number;
+  y: number;
+  zoomLevel: number | null;
+  value: number;
+  dominantStatus: string;
+  statusCounts: {
+    Abierto: number;
+    "En progreso": number;
+    Cerrado: number;
+    Cancelado: number;
+  };
+}
+
 interface StatusDatum {
   name: string;
   y: number;

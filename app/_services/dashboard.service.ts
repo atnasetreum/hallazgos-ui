@@ -25,6 +25,7 @@ import {
   ResponseDashboardHistoricalByMonth,
   ResponseDashboardPackedBubbleByFilters,
   ResponseDashboardAreaRangeLineByFilters,
+  ResponseDashboardHeatmapByFilters,
   ResponseDashboardSankeyByFilters,
   ResponseDashboardSolidGaugeKpiByFilters,
   ResponseDashboardMultiNivel,
@@ -277,6 +278,37 @@ const findAreaRangeLineByFilters = async ({
 }) => {
   const { data } = await api.get<ResponseDashboardAreaRangeLineByFilters>(
     "/area-range-line-by-filters",
+    {
+      params: {
+        manufacturingPlantId,
+        startDate,
+        endDate,
+        ...(areaIds && areaIds.length > 0 && { areaIds: areaIds.join(",") }),
+        ...(responsibleIds &&
+          responsibleIds.length > 0 && {
+            responsibleIds: responsibleIds.join(","),
+          }),
+      },
+    },
+  );
+  return data;
+};
+
+const findHeatmapByFilters = async ({
+  manufacturingPlantId,
+  startDate,
+  endDate,
+  areaIds,
+  responsibleIds,
+}: {
+  manufacturingPlantId: string;
+  startDate: string;
+  endDate: string;
+  areaIds?: string[];
+  responsibleIds?: string[];
+}) => {
+  const { data } = await api.get<ResponseDashboardHeatmapByFilters>(
+    "/heatmap-by-filters",
     {
       params: {
         manufacturingPlantId,
@@ -636,6 +668,7 @@ export const DashboardService = {
   findPackedBubbleByFilters,
   findSolidGaugeKpiByFilters,
   findAreaRangeLineByFilters,
+  findHeatmapByFilters,
   findAssignedResponsiblesByFilters,
   findAreasByFilters,
   findResponsiblesByFilters,

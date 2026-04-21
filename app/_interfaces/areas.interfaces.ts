@@ -2,6 +2,9 @@ export interface Area {
   id: number;
   name: string;
   isActive: boolean;
+  coordinateX?: number | null;
+  coordinateY?: number | null;
+  zoomLevel?: number | null;
   manufacturingPlant: {
     id: number;
     name: string;

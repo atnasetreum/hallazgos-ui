@@ -4,6 +4,9 @@ import { Area } from "@interfaces";
 interface Payload {
   name: string;
   manufacturingPlantId: number;
+  coordinateX?: number;
+  coordinateY?: number;
+  zoomLevel?: number;
 }
 
 const api = axiosWrapper({

@@ -6,12 +6,16 @@ import dayjs, { Dayjs } from "dayjs";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import HistoryOutlinedIcon from "@mui/icons-material/HistoryOutlined";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import WhatshotOutlinedIcon from "@mui/icons-material/WhatshotOutlined";
 import {
   Button,
   Fab,
   Grid,
+  IconButton,
   Paper,
   SelectChangeEvent,
+  Stack,
+  Tooltip,
   Zoom,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -22,9 +26,10 @@ import "dayjs/locale/es";
 
 import SelectManufacturingPlantsOwn from "@components/SelectManufacturingPlantsOwn";
 import SelectDefault from "@components/SelectDefault";
-import { Area, User } from "@interfaces";
+import { Area, ResponseDashboardHeatmapByFilters, User } from "@interfaces";
 import { AreasService, DashboardService, UsersService } from "@services";
 import { useUserSessionStore } from "@store";
+import AreaImageCoordinateSelector from "../areas/_components/AreaImageCoordinateSelector";
 import AreasChart from "./charts/AreasChart";
 import StatusChart from "./charts/StatusChart";
 import AssignedResponsibleChart from "./charts/AssignedResponsibleChart";
@@ -66,6 +71,10 @@ const DashboardPage = () => {
   const [areas, setAreas] = useState<Area[]>([]);
   const [responsibles, setResponsibles] = useState<User[]>([]);
   const [isHistoricalView, setIsHistoricalView] = useState(false);
+  const [isHeatmapView, setIsHeatmapView] = useState(false);
+  const [isHeatmapLoading, setIsHeatmapLoading] = useState(false);
+  const [heatmapData, setHeatmapData] =
+    useState<ResponseDashboardHeatmapByFilters | null>(null);
   const shouldHideProjectionCharts =
     filters.areaIds.length > 1 || filters.responsibleIds.length > 1;
 
@@ -145,6 +154,39 @@ const DashboardPage = () => {
     filters.endDate,
   ]);
 
+  useEffect(() => {
+    if (!isHeatmapView) {
+      return;
+    }
+
+    if (
+      !filters.manufacturingPlantId ||
+      !filters.startDate ||
+      !filters.endDate
+    ) {
+      setHeatmapData(null);
+      return;
+    }
+
+    setIsHeatmapLoading(true);
+    DashboardService.findHeatmapByFilters({
+      manufacturingPlantId: filters.manufacturingPlantId,
+      startDate: filters.startDate,
+      endDate: filters.endDate,
+      areaIds: filters.areaIds,
+      responsibleIds: filters.responsibleIds,
+    })
+      .then(setHeatmapData)
+      .finally(() => setIsHeatmapLoading(false));
+  }, [
+    isHeatmapView,
+    filters.manufacturingPlantId,
+    filters.startDate,
+    filters.endDate,
+    filters.areaIds,
+    filters.responsibleIds,
+  ]);
+
   const handleScrollTop = () => {
     const scrollableElements = Array.from(
       document.querySelectorAll<HTMLElement>("*"),
@@ -165,6 +207,43 @@ const DashboardPage = () => {
     document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
     document.body.scrollTo({ top: 0, behavior: "smooth" });
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const areAllAreasSelected =
+    filters.areaIds.length === 0 ||
+    (areas.length > 0 && filters.areaIds.length === areas.length);
+  const areAllResponsiblesSelected =
+    filters.responsibleIds.length === 0 ||
+    (responsibles.length > 0 &&
+      filters.responsibleIds.length === responsibles.length);
+
+  const heatmapFiltersTitle = [
+    filters.manufacturingPlantName
+      ? `Planta: ${filters.manufacturingPlantName}`
+      : "Planta: todas",
+    filters.startDate && filters.endDate
+      ? `Periodo: ${filters.startDate} - ${filters.endDate}`
+      : "Periodo: sin rango",
+    !areAllAreasSelected && filters.areaNames.length
+      ? `Zonas: ${filters.areaNames.join(", ")}`
+      : "",
+    !areAllResponsiblesSelected && filters.responsibleNames.length
+      ? `Responsables: ${filters.responsibleNames.join(", ")}`
+      : "",
+  ]
+    .filter(Boolean)
+    .join(" | ");
+
+  const handleToggleHeatmapView = () => {
+    setIsHistoricalView(false);
+    setIsHeatmapView((prev) => {
+      const next = !prev;
+      if (!next) {
+        setHeatmapData(null);
+        setIsHeatmapLoading(false);
+      }
+      return next;
+    });
   };
 
   return (
@@ -221,8 +300,8 @@ const DashboardPage = () => {
                 p: 1,
                 backdropFilter: "blur(8px)",
                 bgcolor: "background.paper",
-                border: "1px solid",
-                borderColor: "divider",
+                border: "2px solid",
+                borderColor: "primary.main",
               }}
             >
               <Grid container spacing={2} alignItems="center">
@@ -333,114 +412,159 @@ const DashboardPage = () => {
                   size={{
                     xs: 12,
                     sm: 6,
-                    md: 2,
-                  }}
-                >
-                  <SelectDefault
-                    data={areas}
-                    label="Zonas"
-                    multiple={true}
-                    isFilter={true}
-                    value={filters.areaIds}
-                    onChange={(_, newValue) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        areaIds: Array.isArray(newValue)
-                          ? newValue.map((item) => String(item.id))
-                          : [],
-                        areaNames: Array.isArray(newValue)
-                          ? newValue.map((item) => item.name)
-                          : [],
-                        responsibleIds: [],
-                        responsibleNames: [],
-                      }))
-                    }
-                    helperText={
-                      !filters.manufacturingPlantId
-                        ? "Seleccione una planta"
-                        : ""
-                    }
-                  />
-                </Grid>
-
-                <Grid
-                  size={{
-                    xs: 12,
-                    sm: 6,
-                    md: 2,
-                  }}
-                >
-                  <SelectDefault
-                    data={responsibles}
-                    label="Responsable"
-                    multiple={true}
-                    isFilter={true}
-                    value={filters.responsibleIds}
-                    onChange={(_, newValue) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        responsibleIds: Array.isArray(newValue)
-                          ? newValue.map((item) => String(item.id))
-                          : [],
-                        responsibleNames: Array.isArray(newValue)
-                          ? newValue.map((item) => item.name)
-                          : [],
-                      }))
-                    }
-                    helperText={
-                      !filters.manufacturingPlantId
-                        ? "Seleccione una planta"
-                        : ""
-                    }
-                  />
-                </Grid>
-
-                <Grid
-                  size={{
-                    xs: 12,
-                    sm: 6,
                     md: 1,
                   }}
                 >
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    startIcon={<HistoryOutlinedIcon />}
-                    sx={{ height: 40 }}
-                    onClick={() => setIsHistoricalView(true)}
-                  >
-                    Histórico
-                  </Button>
+                  <Stack direction="row" spacing={1} justifyContent="center">
+                    <Tooltip title="Histórico" arrow>
+                      <IconButton
+                        color="primary"
+                        aria-label="Histórico"
+                        onClick={() => {
+                          setIsHeatmapView(false);
+                          setIsHistoricalView(true);
+                        }}
+                      >
+                        <HistoryOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Mapa de calor" arrow>
+                      <IconButton
+                        color={isHeatmapView ? "secondary" : "primary"}
+                        aria-label="Mapa de calor"
+                        onClick={handleToggleHeatmapView}
+                      >
+                        <WhatshotOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Stack>
+                </Grid>
+
+                <Grid
+                  size={{
+                    xs: 12,
+                  }}
+                >
+                  <Grid container spacing={2}>
+                    <Grid
+                      size={{
+                        xs: 12,
+                        sm: 6,
+                        md: 6,
+                      }}
+                    >
+                      <SelectDefault
+                        data={areas}
+                        label="Zonas"
+                        multiple={true}
+                        isFilter={true}
+                        value={filters.areaIds}
+                        onChange={(_, newValue) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            areaIds: Array.isArray(newValue)
+                              ? newValue.map((item) => String(item.id))
+                              : [],
+                            areaNames: Array.isArray(newValue)
+                              ? newValue.map((item) => item.name)
+                              : [],
+                            responsibleIds: [],
+                            responsibleNames: [],
+                          }))
+                        }
+                        helperText={
+                          !filters.manufacturingPlantId
+                            ? "Seleccione una planta"
+                            : ""
+                        }
+                      />
+                    </Grid>
+
+                    <Grid
+                      size={{
+                        xs: 12,
+                        sm: 6,
+                        md: 6,
+                      }}
+                    >
+                      <SelectDefault
+                        data={responsibles}
+                        label="Responsables"
+                        multiple={true}
+                        isFilter={true}
+                        value={filters.responsibleIds}
+                        onChange={(_, newValue) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            responsibleIds: Array.isArray(newValue)
+                              ? newValue.map((item) => String(item.id))
+                              : [],
+                            responsibleNames: Array.isArray(newValue)
+                              ? newValue.map((item) => item.name)
+                              : [],
+                          }))
+                        }
+                        helperText={
+                          !filters.manufacturingPlantId
+                            ? "Seleccione una planta"
+                            : ""
+                        }
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </Paper>
           </Grid>
 
-          <Grid
-            size={{
-              xs: 12,
-              sm: 12,
-              md: 6,
-            }}
-          >
-            <Paper sx={{ p: 2 }}>
-              <StatusChart filters={filters} />
-            </Paper>
-          </Grid>
+          {isHeatmapView && (
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 12,
+              }}
+            >
+              <AreaImageCoordinateSelector
+                imageSrc="/images/planos.png"
+                mode="heatmap"
+                heatmapHeaderTitle={heatmapFiltersTitle}
+                heatmapData={heatmapData}
+                loading={isHeatmapLoading}
+              />
+            </Grid>
+          )}
 
-          <Grid
-            size={{
-              xs: 12,
-              sm: 12,
-              md: 6,
-            }}
-          >
-            <Paper sx={{ p: 2 }}>
-              <AreasChart filters={filters} />
-            </Paper>
-          </Grid>
+          {!isHeatmapView && (
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 6,
+              }}
+            >
+              <Paper sx={{ p: 2 }}>
+                <StatusChart filters={filters} />
+              </Paper>
+            </Grid>
+          )}
 
-          {!shouldHideProjectionCharts && (
+          {!isHeatmapView && (
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 6,
+              }}
+            >
+              <Paper sx={{ p: 2 }}>
+                <AreasChart filters={filters} />
+              </Paper>
+            </Grid>
+          )}
+
+          {!isHeatmapView && !shouldHideProjectionCharts && (
             <Grid
               size={{
                 xs: 12,
@@ -454,7 +578,7 @@ const DashboardPage = () => {
             </Grid>
           )}
 
-          {!shouldHideProjectionCharts && (
+          {!isHeatmapView && !shouldHideProjectionCharts && (
             <Grid
               size={{
                 xs: 12,
@@ -468,41 +592,47 @@ const DashboardPage = () => {
             </Grid>
           )}
 
-          <Grid
-            size={{
-              xs: 12,
-              sm: 12,
-              md: 6,
-            }}
-          >
-            <Paper sx={{ minHeight: 560, p: 2 }}>
-              <PackedBubbleChart filters={filters} />
-            </Paper>
-          </Grid>
+          {!isHeatmapView && (
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 6,
+              }}
+            >
+              <Paper sx={{ minHeight: 560, p: 2 }}>
+                <PackedBubbleChart filters={filters} />
+              </Paper>
+            </Grid>
+          )}
 
-          <Grid
-            size={{
-              xs: 12,
-              sm: 12,
-              md: 6,
-            }}
-          >
-            <Paper sx={{ minHeight: 560, p: 2 }}>
-              <SankeyDiagramChart filters={filters} />
-            </Paper>
-          </Grid>
+          {!isHeatmapView && (
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 6,
+              }}
+            >
+              <Paper sx={{ minHeight: 560, p: 2 }}>
+                <SankeyDiagramChart filters={filters} />
+              </Paper>
+            </Grid>
+          )}
 
-          <Grid
-            size={{
-              xs: 12,
-              sm: 12,
-              md: 12,
-            }}
-          >
-            <Paper sx={{ minHeight: 400, p: 2 }}>
-              <AssignedResponsibleChart filters={filters} />
-            </Paper>
-          </Grid>
+          {!isHeatmapView && (
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 12,
+              }}
+            >
+              <Paper sx={{ minHeight: 400, p: 2 }}>
+                <AssignedResponsibleChart filters={filters} />
+              </Paper>
+            </Grid>
+          )}
         </>
       )}
 

@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { PointerEvent, ReactNode } from "react";
-
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
@@ -387,33 +386,196 @@ const AreaImageCoordinateSelector = ({
       };
     });
 
+    const legendRed = "#ef4444";
+    const legendYellow = "#fbbf24";
+    const legendGreen = "#22c55e";
+
+    const legendScale =
+      openPoints.length <= 1
+        ? {
+            segments: [legendRed],
+            ticks: [
+              {
+                label: String(maxOpenValue),
+                align: "center" as const,
+              },
+            ],
+          }
+        : openPoints.length === 2
+          ? {
+              segments: [legendYellow, legendRed],
+              ticks: [
+                {
+                  label: String(minOpenValue),
+                  align: "left" as const,
+                },
+                {
+                  label: String(maxOpenValue),
+                  align: "right" as const,
+                },
+              ],
+            }
+          : {
+              segments: [legendGreen, legendYellow, legendRed],
+              ticks: [
+                {
+                  label: String(minOpenValue),
+                  align: "left" as const,
+                },
+                {
+                  label: String(Math.round(minOpenValue + dynamicRange / 2)),
+                  align: "center" as const,
+                },
+                {
+                  label: String(maxOpenValue),
+                  align: "right" as const,
+                },
+              ],
+            };
+
+    const totalOpenGlobal =
+      heatmapData?.totalOpenEvidences ?? totalOpenFindings;
+
     return (
       <Paper sx={sharedPaperSx}>
-        <Stack direction={{ xs: "column", md: "row" }} alignItems="center">
+        <Stack
+          direction={{ xs: "column", md: "row" }}
+          alignItems={{ xs: "flex-start", md: "stretch" }}
+          spacing={1}
+          sx={{
+            p: 1,
+            borderRadius: 1.5,
+            border: (theme) => `1px solid ${theme.palette.divider}`,
+            bgcolor: "rgba(2, 6, 23, 0.04)",
+          }}
+        >
           <Box sx={{ width: { xs: "100%", md: "33%" } }}>
-            <Typography variant="h6">Mapa de calor por coordenadas</Typography>
+            <Typography variant="caption" color="text.secondary">
+              Vista
+            </Typography>
+            <Typography variant="h6" sx={{ lineHeight: 1.2 }}>
+              Mapa de calor por coordenadas
+            </Typography>
           </Box>
 
           <Box
             sx={{
               width: { xs: "100%", md: "34%" },
-              textAlign: "center",
+              textAlign: { xs: "left", md: "center" },
               px: 1,
             }}
           >
-            <Typography variant="body2" color="text.secondary" noWrap>
+            <Typography variant="caption" color="text.secondary">
+              Filtros aplicados
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.primary",
+                fontWeight: 600,
+                lineHeight: 1.25,
+              }}
+            >
               {heatmapHeaderTitle || "Filtros: sin selección"}
             </Typography>
           </Box>
 
-          <Box sx={{ width: { xs: "100%", md: "33%" }, textAlign: "right" }}>
-            <Typography variant="body2" color="text.secondary">
-              {heatmapData
-                ? `Zonas con hallazgos abiertos: ${openPoints.length} | Hallazgos abiertos georreferenciados: ${totalOpenFindings} de ${heatmapData.totalOpenEvidences ?? totalOpenFindings}`
-                : "Sin información"}
-            </Typography>
+          <Box sx={{ width: { xs: "100%", md: "33%" } }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              justifyContent={{ xs: "flex-start", md: "flex-end" }}
+            >
+              <Box sx={{ textAlign: { xs: "left", md: "right" } }}>
+                <Typography variant="caption" color="text.secondary">
+                  Zonas
+                </Typography>
+                <Typography variant="h6" sx={{ lineHeight: 1.1 }}>
+                  {openPoints.length}
+                </Typography>
+              </Box>
+
+              <Box sx={{ textAlign: { xs: "left", md: "right" } }}>
+                <Typography variant="caption" color="text.secondary">
+                  Georreferenciados
+                </Typography>
+                <Typography variant="h6" sx={{ lineHeight: 1.1 }}>
+                  {`${totalOpenFindings} / ${totalOpenGlobal}`}
+                </Typography>
+              </Box>
+            </Stack>
           </Box>
         </Stack>
+
+        <Box
+          sx={{
+            mt: 0.5,
+            mx: "auto",
+            width: "100%",
+            maxWidth: { xs: 260, sm: 320, md: 360 },
+            px: 0.75,
+            py: 0.5,
+            borderRadius: 1,
+            border: (theme) => `1px solid ${theme.palette.divider}`,
+            bgcolor: "rgba(15, 23, 42, 0.04)",
+          }}
+        >
+          <Typography
+            variant="caption"
+            sx={{
+              display: "block",
+              fontWeight: 600,
+              color: "text.secondary",
+              mb: 0.35,
+              textAlign: "center",
+              fontSize: "0.68rem",
+            }}
+          >
+            Escala de colores
+          </Typography>
+
+          <Box
+            sx={{
+              height: 8,
+              width: "100%",
+              borderRadius: 99,
+              overflow: "hidden",
+              display: "grid",
+              gridTemplateColumns: `repeat(${legendScale.segments.length}, minmax(0, 1fr))`,
+              border: "1px solid rgba(148, 163, 184, 0.35)",
+            }}
+          >
+            {legendScale.segments.map((color, index) => (
+              <Box
+                key={`${color}-${index}`}
+                sx={{
+                  bgcolor: color,
+                }}
+              />
+            ))}
+          </Box>
+
+          <Stack direction="row" sx={{ mt: 0.2 }}>
+            {legendScale.ticks.map((tick, index) => (
+              <Box
+                key={`${tick.label}-${index}`}
+                sx={{
+                  flex: 1,
+                  textAlign: tick.align,
+                  minWidth: 0,
+                }}
+              >
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ fontSize: "0.66rem", lineHeight: 1 }}
+                >
+                  {tick.label}
+                </Typography>
+              </Box>
+            ))}
+          </Stack>
+        </Box>
 
         {loading ? (
           <Typography variant="body2" color="text.secondary">

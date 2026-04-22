@@ -56,6 +56,8 @@ const DashboardPage = () => {
     (state) => state.manufacturingPlants || [],
   );
 
+  const email = useUserSessionStore((state) => state.email);
+
   const currentMonthStart = dayjs().startOf("month").format("DD/MM/YYYY");
   const currentMonthEnd = dayjs().endOf("month").format("DD/MM/YYYY");
 
@@ -252,6 +254,10 @@ const DashboardPage = () => {
     setHeatmapData(null);
     setIsHeatmapLoading(false);
   };
+
+  if (email === "cosmeticostrujillo0023@gmail.com") {
+    return window.location.replace("/hds");
+  }
 
   return (
     <Grid container spacing={2}>

@@ -4,9 +4,10 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Stack from "@mui/material/Stack";
 import dayjs from "dayjs";
+import "dayjs/locale/es";
 import { useRouter } from "next/navigation";
 
-import { stringToDate, stringToDateWithTime } from "@shared/utils";
+import { stringToDateWithTime } from "@shared/utils";
 import { ExtinguisherInspectionsService } from "@services";
 import { ExtinguisherInspection } from "@interfaces";
 import TableDefault, {
@@ -43,7 +44,11 @@ export default function ExtinguisherInspectionsTable({ rows }: Props) {
             {row.manufacturingPlant?.name || "-"}
           </StyledTableCell>
           <StyledTableCell>{row.responsible?.name || "-"}</StyledTableCell>
-          <StyledTableCell>{stringToDate(row.inspectionDate)}</StyledTableCell>
+          <StyledTableCell>
+            {dayjs(row.inspectionDate).isValid()
+              ? dayjs(row.inspectionDate).locale("es").format("DD MMMM YYYY")
+              : "-"}
+          </StyledTableCell>
           <StyledTableCell>{row.evaluations?.length || 0}</StyledTableCell>
           <StyledTableCell>
             {stringToDateWithTime(row.createdAt)}

@@ -82,7 +82,7 @@ const FormLogin = ({ setForgotPassword }: Props) => {
   };
 
   return (
-    <Box sx={{ mt: 1 }}>
+    <Box sx={{ mt: -10 }}>
       <TextField
         margin="normal"
         fullWidth

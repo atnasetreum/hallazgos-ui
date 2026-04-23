@@ -36,12 +36,7 @@ export default function SignIn() {
           alignItems: "center",
         }}
       >
-        <Image
-          src="/images/logo-superior.png"
-          alt=""
-          width={300}
-          height={200}
-        />
+        <Image src="/images/logo-new.png" alt="" width={450} height={350} />
         {token ? (
           <FormRestorePassword />
         ) : !forgotPassword ? (
@@ -50,8 +45,8 @@ export default function SignIn() {
           <FormForgotPassword setForgotPassword={setForgotPassword} />
         )}
       </Box>
-      <Image src="/images/logo-inferior.png" alt="" width={400} height={100} />
-      <Copyright sx={{ mb: 4 }} />
+      {/* <Image src="/images/logo-inferior.png" alt="" width={400} height={100} /> */}
+      <Copyright sx={{ mb: 4, mt: 10 }} />
     </Container>
   );
 }

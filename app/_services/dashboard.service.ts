@@ -23,6 +23,8 @@ import {
   ResponseDashboardMainTypes,
   ResponseDashboardAssignedResponsiblesByFilters,
   ResponseDashboardHistoricalByMonth,
+  ResponseDashboardPriorityInterventionByFilters,
+  ResponseDashboardRiskLevelByFilters,
   ResponseDashboardPackedBubbleByFilters,
   ResponseDashboardAreaRangeLineByFilters,
   ResponseDashboardHeatmapByFilters,
@@ -59,6 +61,69 @@ const findStatusByFilters = async ({
 }) => {
   const { data } = await api.get<ResponseDashboardStatusByFilters>(
     "/status-by-filters",
+    {
+      params: {
+        manufacturingPlantId,
+        startDate,
+        endDate,
+        ...(areaIds && areaIds.length > 0 && { areaIds: areaIds.join(",") }),
+        ...(responsibleIds &&
+          responsibleIds.length > 0 && {
+            responsibleIds: responsibleIds.join(","),
+          }),
+      },
+    },
+  );
+  return data;
+};
+
+const findPriorityInterventionByFilters = async ({
+  manufacturingPlantId,
+  startDate,
+  endDate,
+  areaIds,
+  responsibleIds,
+}: {
+  manufacturingPlantId: string;
+  startDate: string;
+  endDate: string;
+  areaIds?: string[];
+  responsibleIds?: string[];
+}) => {
+  const { data } =
+    await api.get<ResponseDashboardPriorityInterventionByFilters>(
+      "/priority-intervention-by-filters",
+      {
+        params: {
+          manufacturingPlantId,
+          startDate,
+          endDate,
+          ...(areaIds && areaIds.length > 0 && { areaIds: areaIds.join(",") }),
+          ...(responsibleIds &&
+            responsibleIds.length > 0 && {
+              responsibleIds: responsibleIds.join(","),
+            }),
+        },
+      },
+    );
+  return data;
+};
+
+const findRiskLevelByFilters = async ({
+  manufacturingPlantId,
+  startDate,
+  endDate,
+  areaIds,
+  responsibleIds,
+}: {
+  manufacturingPlantId: string;
+  startDate: string;
+  endDate: string;
+  areaIds?: string[];
+  responsibleIds?: string[];
+}) => {
+  const { data } = await api.get<ResponseDashboardRiskLevelByFilters>(
+    "/risk-level-by-filters",
     {
       params: {
         manufacturingPlantId,
@@ -673,6 +738,8 @@ export const DashboardService = {
   findAreasByFilters,
   findResponsiblesByFilters,
   findStatusByFilters,
+  findPriorityInterventionByFilters,
+  findRiskLevelByFilters,
   findBusinessIntelligenceEpp,
   findPercentageComplianceByZone,
   findMainTypesGlobalTrendDetails,

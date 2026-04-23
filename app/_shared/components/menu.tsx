@@ -10,29 +10,32 @@ import { ListItemText } from "@mui/material";
 import { ListSubheader } from "@mui/material";
 import { List } from "@mui/material";
 import { Collapse } from "@mui/material";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import AssignmentIcon from "@mui/icons-material/Assignment";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import BusinessIcon from "@mui/icons-material/Business";
-import EngineeringIcon from "@mui/icons-material/Engineering";
-import DnsIcon from "@mui/icons-material/Dns";
-import HubIcon from "@mui/icons-material/Hub";
-import AccountTreeIcon from "@mui/icons-material/AccountTree";
+import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
+import InsightsIcon from "@mui/icons-material/Insights";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import LogoutIcon from "@mui/icons-material/Logout";
+import FactoryIcon from "@mui/icons-material/Factory";
+import RuleIcon from "@mui/icons-material/Rule";
+import CategoryIcon from "@mui/icons-material/Category";
+import PlaceIcon from "@mui/icons-material/Place";
+import SchemaIcon from "@mui/icons-material/Schema";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import { Tooltip } from "@mui/material";
-import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
-import DescriptionIcon from "@mui/icons-material/Description";
-import WarningIcon from "@mui/icons-material/Warning";
-import ContentPasteIcon from "@mui/icons-material/ContentPaste";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import ReportProblemIcon from "@mui/icons-material/ReportProblem";
+import SchoolIcon from "@mui/icons-material/School";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import FolderSharedIcon from "@mui/icons-material/FolderShared";
-import FactCheckIcon from "@mui/icons-material/FactCheck";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import BadgeIcon from "@mui/icons-material/Badge";
 import FolderIcon from "@mui/icons-material/Folder";
-import ConstructionIcon from "@mui/icons-material/Construction";
 import FireExtinguisherIcon from "@mui/icons-material/FireExtinguisher";
-import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
+import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
+import HealthAndSafetyIcon from "@mui/icons-material/HealthAndSafety";
+import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
+import MapIcon from "@mui/icons-material/Map";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 
 import { useCategoriesStore, useUserSessionStore } from "@store";
 import { ROLE_ADMINISTRADOR } from "@shared/constants";
@@ -49,32 +52,36 @@ const userEpp = ["malonso@hadainternational.com"];
 function CreateLink({
   url,
   title,
+  tooltip,
   icon,
   nested = false,
+  expanded = true,
 }: {
   url: string;
   title: string;
+  tooltip?: string;
   icon: ReactNode;
   nested?: boolean;
+  expanded?: boolean;
 }) {
   const router = useRouter();
   const pathname = usePathname();
 
   return (
-    <Tooltip title={title} placement="right">
+    <Tooltip title={tooltip || title} placement="right">
       <ListItemButton
         onClick={() => router.push(url)}
         selected={pathname.startsWith(url)}
-        sx={nested ? { pl: 4 } : undefined}
+        sx={nested ? { pl: expanded ? 4 : 2 } : undefined}
       >
         <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText primary={title} />
+        {expanded && <ListItemText primary={title} />}
       </ListItemButton>
     </Tooltip>
   );
 }
 
-export const MainListItems = () => {
+export const MainListItems = ({ expanded = true }: { expanded?: boolean }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [openConfig, setOpenConfig] = useState(false);
   const [openMedicinaLaboral, setOpenMedicinaLaboral] = useState(false);
@@ -109,23 +116,43 @@ export const MainListItems = () => {
   }, [role, isAdmin]);
 
   if (email === "cosmeticostrujillo0023@gmail.com")
-    return <CreateLink url="/hds" title="HDS" icon={<FolderIcon />} />;
+    return (
+      <CreateLink
+        url="/hds"
+        title="HDS"
+        icon={<FolderIcon />}
+        expanded={expanded}
+      />
+    );
 
   return (
     <>
-      <CreateLink url="/dashboard" title="Dashboard" icon={<DashboardIcon />} />
+      <CreateLink
+        url="/dashboard"
+        title="Dashboard"
+        icon={<SpaceDashboardIcon />}
+        expanded={expanded}
+      />
       <CreateLink
         url="/hallazgos"
         title="Hallazgos"
-        icon={<AssignmentIcon />}
+        icon={<AddPhotoAlternateIcon />}
+        expanded={expanded}
       />
       {(isAdmin || userEpp.includes(email)) && (
         <>
-          <CreateLink url="/epp" title="EPP" icon={<DescriptionIcon />} />
+          <CreateLink
+            url="/epp"
+            title="EPP"
+            tooltip="Equipos de protección personal"
+            icon={<HealthAndSafetyIcon />}
+            expanded={expanded}
+          />
           <CreateLink
             url="/extinguisher-inspection"
             title="Inspección de extintores"
             icon={<FireExtinguisherIcon />}
+            expanded={expanded}
           />
         </>
       )}
@@ -133,10 +160,17 @@ export const MainListItems = () => {
         <>
           <CreateLink
             url="/training-guide"
-            title="G. Entr."
-            icon={<ContentPasteIcon />}
+            title="Guías de entrenamiento"
+            icon={<SchoolIcon />}
+            expanded={expanded}
           />
-          <CreateLink url="/hds" title="HDS" icon={<FolderIcon />} />
+          <CreateLink
+            url="/hds"
+            title="HDS"
+            tooltip="Hojas de datos de seguridad"
+            icon={<FolderIcon />}
+            expanded={expanded}
+          />
         </>
       )}
       {isAdmin && (
@@ -146,10 +180,27 @@ export const MainListItems = () => {
               onClick={() => setOpenMedicinaLaboral((prev) => !prev)}
             >
               <ListItemIcon>
-                <LocalHospitalIcon />
+                <MedicalServicesIcon />
               </ListItemIcon>
-              <ListItemText primary="Medicina laboral" />
-              {openMedicinaLaboral ? <ExpandLess /> : <ExpandMore />}
+              {expanded && <ListItemText primary="Medicina laboral" />}
+              {expanded ? (
+                openMedicinaLaboral ? (
+                  <ExpandLess />
+                ) : (
+                  <ExpandMore />
+                )
+              ) : (
+                <ChevronRightIcon
+                  sx={{
+                    fontSize: 18,
+                    color: "text.secondary",
+                    transform: openMedicinaLaboral
+                      ? "rotate(90deg)"
+                      : "rotate(0deg)",
+                    transition: "transform 0.2s ease",
+                  }}
+                />
+              )}
             </ListItemButton>
           </Tooltip>
           <Collapse in={openMedicinaLaboral} timeout="auto" unmountOnExit>
@@ -158,13 +209,17 @@ export const MainListItems = () => {
                 nested
                 url="/ics"
                 title="ICS"
-                icon={<FactCheckIcon />}
+                tooltip="Índice de comportamiento seguro"
+                icon={<QueryStatsIcon />}
+                expanded={expanded}
               />
               <CreateLink
                 nested
                 url="/ciael"
                 title="CIAEL"
-                icon={<WarningIcon />}
+                tooltip="Caracterización de incidentes, accidentes y enfermedades laborales"
+                icon={<ReportProblemIcon />}
+                expanded={expanded}
               />
             </List>
           </Collapse>
@@ -174,8 +229,23 @@ export const MainListItems = () => {
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
-              <ListItemText primary="Configuraciones" />
-              {openConfig ? <ExpandLess /> : <ExpandMore />}
+              {expanded && <ListItemText primary="Configuraciones" />}
+              {expanded ? (
+                openConfig ? (
+                  <ExpandLess />
+                ) : (
+                  <ExpandMore />
+                )
+              ) : (
+                <ChevronRightIcon
+                  sx={{
+                    fontSize: 18,
+                    color: "text.secondary",
+                    transform: openConfig ? "rotate(90deg)" : "rotate(0deg)",
+                    transition: "transform 0.2s ease",
+                  }}
+                />
+              )}
             </ListItemButton>
           </Tooltip>
           <Collapse in={openConfig} timeout="auto" unmountOnExit>
@@ -184,73 +254,87 @@ export const MainListItems = () => {
                 nested
                 url="/users"
                 title="Usuarios"
-                icon={<SupervisedUserCircleIcon />}
+                icon={<ManageAccountsIcon />}
+                expanded={expanded}
               />
               <CreateLink
                 nested
                 url="/employees"
                 title="Colaboradores"
-                icon={<FolderSharedIcon />}
+                icon={<BadgeIcon />}
+                expanded={expanded}
               />
               <CreateLink
                 nested
                 url="/manufacturing-plants"
                 title="Plantas"
-                icon={<BusinessIcon />}
+                icon={<FactoryIcon />}
+                expanded={expanded}
               />
               <CreateLink
                 nested
                 url="/main-types"
                 title="Criterios"
-                icon={<EngineeringIcon />}
+                icon={<RuleIcon />}
+                expanded={expanded}
               />
               <CreateLink
                 nested
                 url="/secondary-types"
                 title="Tipos de criterios"
-                icon={<DnsIcon />}
+                icon={<CategoryIcon />}
+                expanded={expanded}
               />
               <CreateLink
                 nested
                 url="/zones"
                 title="Lugares"
-                icon={<HubIcon />}
+                icon={<PlaceIcon />}
+                expanded={expanded}
               />
               <CreateLink
                 nested
                 url="/areas"
                 title="Zonas"
-                icon={<HubIcon />}
+                icon={<MapIcon />}
+                expanded={expanded}
               />
               <CreateLink
                 nested
                 url="/processes"
                 title="Procesos"
-                icon={<AccountTreeIcon />}
+                icon={<SchemaIcon />}
+                expanded={expanded}
               />
               <CreateLink
                 nested
                 url="/topics-tg"
                 title="Temas - G. Entr."
-                icon={<ContentPasteIcon />}
+                tooltip="Temas - Guías de entrenamiento"
+                icon={<MenuBookIcon />}
+                expanded={expanded}
               />
               <CreateLink
                 nested
                 url="/config-tg"
                 title="Config - G. Entr."
-                icon={<ContentPasteIcon />}
+                tooltip="Configuraciones - Guías de entrenamiento"
+                icon={<SettingsSuggestIcon />}
+                expanded={expanded}
               />
               <CreateLink
                 nested
                 url="/equipments"
                 title="Equipo de protección"
-                icon={<ConstructionIcon />}
+                icon={<HealthAndSafetyIcon />}
+                expanded={expanded}
               />
               <CreateLink
                 nested
                 url="/emergency-teams"
                 title="Equipos de emergencia"
                 icon={<FireExtinguisherIcon />}
+                expanded={expanded}
               />
             </List>
           </Collapse>
@@ -260,19 +344,27 @@ export const MainListItems = () => {
   );
 };
 
-export const SecondaryListItems = () => {
+export const SecondaryListItems = ({
+  expanded = true,
+}: {
+  expanded?: boolean;
+}) => {
   const router = useRouter();
   const { resetSession } = useUserSessionStore();
 
   return (
     <>
-      <ListSubheader component="div" inset>
-        BI
-      </ListSubheader>
+      {expanded && (
+        <ListSubheader component="div" inset>
+          Análisis de datos
+        </ListSubheader>
+      )}
       <CreateLink
         url="/business-intelligence/epp"
         title="Epp"
-        icon={<BarChartIcon />}
+        tooltip="Equipos de protección personal"
+        icon={<InsightsIcon />}
+        expanded={expanded}
       />
       <ListItemButton
         onClick={() => {
@@ -286,9 +378,9 @@ export const SecondaryListItems = () => {
         }}
       >
         <ListItemIcon>
-          <ExitToAppIcon />
+          <LogoutIcon />
         </ListItemIcon>
-        <ListItemText primary="Salir" />
+        {expanded && <ListItemText primary="Salir" />}
       </ListItemButton>
     </>
   );

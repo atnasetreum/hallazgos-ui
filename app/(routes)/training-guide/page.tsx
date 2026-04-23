@@ -33,7 +33,7 @@ import { Toolbar } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { ButtonGroup } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { TextField, TextFieldProps } from "@mui/material";
+import { TextField } from "@mui/material";
 import { Dialog } from "@mui/material";
 import { ListItemText } from "@mui/material";
 import { ListItemButton } from "@mui/material";
@@ -694,7 +694,7 @@ function ScreenEdition({
                         slotProps={{
                           textField: {
                             fullWidth: true,
-                          } as TextFieldProps,
+                          } as any,
                         }}
                       />
                     </LocalizationProvider>
@@ -963,7 +963,7 @@ function ScreenEdition({
                                 slotProps={{
                                   textField: {
                                     fullWidth: true,
-                                  } as TextFieldProps,
+                                  } as any,
                                 }}
                               />
                             </LocalizationProvider>
@@ -984,12 +984,14 @@ function ScreenEdition({
                               <Stack
                                 direction="row"
                                 spacing={1}
-                                alignItems="center"
+                                sx={{ alignItems: "center" }}
                               >
                                 <Typography>No</Typography>
                                 <AntSwitch
                                   disabled={!emailsEditors.includes(email)}
-                                  inputProps={{ "aria-label": "ant design" }}
+                                  slotProps={{
+                                    input: { "aria-label": "ant design" },
+                                  }}
                                   checked={
                                     evaluations[idx].evaluation === "true"
                                   }

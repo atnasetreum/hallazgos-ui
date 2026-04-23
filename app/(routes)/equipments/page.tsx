@@ -230,7 +230,7 @@ const ScreenForm = ({
                 fullWidth
                 autoComplete="off"
                 type="number"
-                inputProps={{ min: 1, step: 0 }}
+                slotProps={{ htmlInput: { min: 1, step: 0 } }}
                 onKeyDown={(evt) => {
                   const forbidden = ["e", "E", "-", "+", "."];
                   if (forbidden.includes(evt.key)) evt.preventDefault();
@@ -263,7 +263,7 @@ const ScreenForm = ({
                 fullWidth
                 autoComplete="off"
                 type="number"
-                inputProps={{ min: 1, step: 0.01 }}
+                slotProps={{ htmlInput: { min: 1, step: 0.01 } }}
                 onKeyDown={(evt) => {
                   const forbidden = ["e", "E", "-", "+"];
                   if (forbidden.includes(evt.key)) evt.preventDefault();

@@ -39,6 +39,8 @@ import SankeyDiagramChart from "./charts/SankeyDiagramChart";
 import PackedBubbleChart from "./charts/PackedBubbleChart";
 import SolidGaugeMultiKpiChart from "./charts/SolidGaugeMultiKpiChart";
 import AreaRangeLineChart from "./charts/AreaRangeLineChart";
+import PriorityInterventionChart from "./charts/PriorityInterventionChart";
+import RiskLevelChart from "./charts/RiskLevelChart";
 
 interface DashboardFilters {
   manufacturingPlantId: string;
@@ -317,7 +319,7 @@ const DashboardPage = () => {
                 borderColor: "primary.main",
               }}
             >
-              <Grid container spacing={2} alignItems="center">
+              <Grid container spacing={2} sx={{ alignItems: "center" }}>
                 <SelectManufacturingPlantsOwn
                   value={filters.manufacturingPlantId}
                   onChange={handlePlantChange}
@@ -427,8 +429,17 @@ const DashboardPage = () => {
                     sm: 6,
                     md: 1,
                   }}
+                  sx={{
+                    ml: { md: "auto" },
+                    display: "flex",
+                    justifyContent: { xs: "flex-end", md: "flex-end" },
+                  }}
                 >
-                  <Stack direction="row" spacing={1} justifyContent="center">
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    sx={{ justifyContent: "flex-end" }}
+                  >
                     <Tooltip title="Histórico" arrow>
                       <IconButton
                         color="primary"
@@ -558,6 +569,30 @@ const DashboardPage = () => {
                 heatmapData={heatmapData}
                 loading={isHeatmapLoading}
               />
+            </Grid>
+          )}
+
+          {!isHeatmapView && (
+            <Grid
+              size={{
+                xs: 12,
+                sm: 6,
+                md: 6,
+              }}
+            >
+              <PriorityInterventionChart filters={filters} />
+            </Grid>
+          )}
+
+          {!isHeatmapView && (
+            <Grid
+              size={{
+                xs: 12,
+                sm: 6,
+                md: 6,
+              }}
+            >
+              <RiskLevelChart filters={filters} />
             </Grid>
           )}
 

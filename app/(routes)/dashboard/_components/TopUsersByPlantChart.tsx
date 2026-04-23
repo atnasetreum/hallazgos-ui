@@ -47,10 +47,14 @@ export const TopUsersByPlantChart = () => {
         <ListItemText
           sx={{ my: 0 }}
           primary={`Usuarios con más hallazgos`}
-          primaryTypographyProps={{
-            fontSize: 20,
-            fontWeight: "medium",
-            letterSpacing: 0,
+          slotProps={{
+            primary: {
+              sx: {
+                fontSize: 20,
+                fontWeight: "medium",
+                letterSpacing: 0,
+              },
+            },
           }}
         />
       </ListItemButton>

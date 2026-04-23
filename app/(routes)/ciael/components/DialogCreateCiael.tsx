@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { TextField, TextFieldProps } from "@mui/material";
+import { TextField } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { esES } from "@mui/x-date-pickers/locales";
@@ -520,7 +520,7 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
                 slotProps={{
                   textField: {
                     fullWidth: true,
-                  } as TextFieldProps,
+                  } as any,
                 }}
               />
             </LocalizationProvider>
@@ -559,9 +559,11 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
               value={form.daysOfDisability}
               name="daysOfDisability"
               onChange={handleChange}
-              inputProps={{
-                inputMode: "numeric",
-                pattern: "[0-9]*",
+              slotProps={{
+                htmlInput: {
+                  inputMode: "numeric",
+                  pattern: "[0-9]*",
+                },
               }}
             />
           </Paper>
@@ -689,9 +691,11 @@ export default function DialogCreateCiael({ open, setOpen, getData }: Props) {
               value={form.timeWorked}
               name="timeWorked"
               onChange={handleChange}
-              inputProps={{
-                inputMode: "numeric",
-                pattern: "[0-9]*",
+              slotProps={{
+                htmlInput: {
+                  inputMode: "numeric",
+                  pattern: "[0-9]*",
+                },
               }}
             />
           </Paper>

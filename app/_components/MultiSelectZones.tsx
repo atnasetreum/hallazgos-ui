@@ -112,7 +112,7 @@ export default function MultiSelectZones({
               ))}
             </Box>
           )}
-          MenuProps={MenuProps}
+          MenuProps={MenuProps as any}
         >
           <MenuItem value="none-all">{labelSelectAll}</MenuItem>
           {names

@@ -85,26 +85,28 @@ export default function SelectDefault({
             </li>
           );
         }}
-        renderTags={(tagValue) => {
-          if (!multiple) {
-            return null;
+        renderValue={(selected) => {
+          if (multiple) {
+            const text = (selected as Array<{ name?: string }>)
+              .map((item) => item.name || "")
+              .join(", ");
+
+            return (
+              <span
+                style={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  display: "block",
+                  maxWidth: "100%",
+                }}
+              >
+                {text}
+              </span>
+            );
           }
 
-          const text = tagValue.map((item) => item.name).join(", ");
-
-          return (
-            <span
-              style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                display: "block",
-                maxWidth: "100%",
-              }}
-            >
-              {text}
-            </span>
-          );
+          return (selected as { name?: string } | null)?.name || "";
         }}
         disabled={!!helperText || disabled}
         renderInput={(params) => (

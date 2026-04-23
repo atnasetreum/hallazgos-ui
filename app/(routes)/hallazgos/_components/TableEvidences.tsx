@@ -6,9 +6,9 @@ import InfoIcon from "@mui/icons-material/Info";
 import { Stack } from "@mui/material";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import DeleteIcon from "@mui/icons-material/Delete";
-import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutlineOutlined";
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 
@@ -310,7 +310,11 @@ export default function TableEvidences({
               {row.solutionDate && stringToDateWithTime(row.solutionDate)}
             </StyledTableCell>
             <StyledTableCell>
-              <Stack direction="column" spacing={1} alignItems="flex-start">
+              <Stack
+                direction="column"
+                spacing={1}
+                sx={{ alignItems: "flex-start" }}
+              >
                 <Chip
                   icon={<InfoIcon />}
                   label={`Detalles ${durantionToTime(row)}`}

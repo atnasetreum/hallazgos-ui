@@ -41,7 +41,10 @@ const SelectManufacturingPlants = ({
       >
         {isFilter && <MenuItem value="">Ninguna</MenuItem>}
         {manufacturingPlants.map((manufacturingPlant) => (
-          <MenuItem key={manufacturingPlant.id} value={manufacturingPlant.id}>
+          <MenuItem
+            key={manufacturingPlant.id}
+            value={String(manufacturingPlant.id)}
+          >
             {manufacturingPlant.name}
           </MenuItem>
         ))}

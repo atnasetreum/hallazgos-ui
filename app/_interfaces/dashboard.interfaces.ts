@@ -28,6 +28,33 @@ export interface ResponseDashboardStatusByFilters {
   }[];
 }
 
+export interface ResponseDashboardPriorityInterventionByFilters {
+  total: number;
+  totalWithPriority: number;
+  totalWithoutPriority: number;
+  startDate: string;
+  endDate: string;
+  seriesData: {
+    name: string;
+    days: number;
+    y: number;
+    color: string;
+  }[];
+}
+
+export interface ResponseDashboardRiskLevelByFilters {
+  total: number;
+  totalWithPriority: number;
+  totalWithoutPriority: number;
+  startDate: string;
+  endDate: string;
+  seriesData: {
+    name: string;
+    y: number;
+    color: string;
+  }[];
+}
+
 export interface ResponseDashboardAssignedResponsiblesByFilters {
   total: number;
   startDate: string;

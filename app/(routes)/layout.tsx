@@ -37,7 +37,7 @@ import Copyright from "@shared/components/Copyright";
 import { useUserSessionStore } from "@store";
 import { UsersService } from "@services";
 
-const drawerWidth: number = 300;
+const drawerWidth: number = 260;
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -296,9 +296,9 @@ export default function MainLayout({ children }: { children: ReactNode }) {
             </Toolbar>
             <Divider />
             <List component="nav">
-              <MainListItems />
+              <MainListItems expanded={open} />
               <Divider sx={{ my: 1 }} />
-              <SecondaryListItems />
+              <SecondaryListItems expanded={open} />
             </List>
           </Drawer>
           <Box

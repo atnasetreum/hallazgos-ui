@@ -345,9 +345,11 @@ const MainTypesGlobalTrendAdmin = ({ manufacturingPlantId }: Props) => {
         <Stack spacing={2}>
           <Stack
             direction={{ xs: "column", sm: "row" }}
-            justifyContent="space-between"
-            alignItems={{ xs: "flex-start", sm: "center" }}
             spacing={1}
+            sx={{
+              justifyContent: "space-between",
+              alignItems: { xs: "flex-start", sm: "center" },
+            }}
           >
             <Stack spacing={0.5}>
               <Typography variant="h6">
@@ -407,9 +409,11 @@ const MainTypesGlobalTrendAdmin = ({ manufacturingPlantId }: Props) => {
               <Stack spacing={2}>
                 <Stack
                   direction={{ xs: "column", sm: "row" }}
-                  justifyContent="space-between"
-                  alignItems={{ xs: "flex-start", sm: "center" }}
                   spacing={1}
+                  sx={{
+                    justifyContent: "space-between",
+                    alignItems: { xs: "flex-start", sm: "center" },
+                  }}
                 >
                   <Typography variant="h6">Cumplimiento por zona </Typography>
                   {!!sortedZoneCards.length && (
@@ -858,9 +862,11 @@ const MainTypesGlobalTrendAdmin = ({ manufacturingPlantId }: Props) => {
       <Stack spacing={2}>
         <Stack
           direction={{ xs: "column", sm: "row" }}
-          justifyContent="space-between"
-          alignItems={{ xs: "flex-start", sm: "center" }}
           spacing={1}
+          sx={{
+            justifyContent: "space-between",
+            alignItems: { xs: "flex-start", sm: "center" },
+          }}
         >
           <Typography variant="h6">
             Tendencia global por tipo principal

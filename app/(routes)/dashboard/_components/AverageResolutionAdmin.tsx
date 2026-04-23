@@ -138,9 +138,11 @@ const AverageResolutionAdmin = ({ manufacturingPlantId }: Props) => {
       <Stack spacing={2}>
         <Stack
           direction={{ xs: "column", sm: "row" }}
-          justifyContent="space-between"
-          alignItems={{ xs: "flex-start", sm: "center" }}
           spacing={1}
+          sx={{
+            justifyContent: "space-between",
+            alignItems: { xs: "flex-start", sm: "center" },
+          }}
         >
           <Typography variant="h6">
             Tiempo promedio de resolución{" "}

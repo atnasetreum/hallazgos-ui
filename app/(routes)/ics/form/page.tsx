@@ -318,7 +318,7 @@ const IcsFormPage = () => {
               value={form.totalPeople}
               autoComplete="off"
               type="number"
-              inputProps={{ min: 1, step: 1 }}
+              slotProps={{ htmlInput: { min: 1, step: 1 } }}
               onKeyDown={(evt) => {
                 const forbidden = ["e", "E", "-", "+"];
                 if (forbidden.includes(evt.key)) evt.preventDefault();
@@ -432,9 +432,7 @@ const IcsFormPage = () => {
       <Grid
         container
         spacing={2}
-        alignContent={"center"}
-        justifyContent={"center"}
-        sx={{ marginTop: 2 }}
+        sx={{ marginTop: 2, alignContent: "center", justifyContent: "center" }}
       >
         <Grid
           size={{

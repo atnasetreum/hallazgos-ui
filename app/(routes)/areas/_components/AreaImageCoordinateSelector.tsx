@@ -440,10 +440,10 @@ const AreaImageCoordinateSelector = ({
       <Paper sx={sharedPaperSx}>
         <Stack
           direction={{ xs: "column", md: "row" }}
-          alignItems={{ xs: "flex-start", md: "stretch" }}
           spacing={1}
           sx={{
             p: 1,
+            alignItems: { xs: "flex-start", md: "stretch" },
             borderRadius: 1.5,
             border: (theme) => `1px solid ${theme.palette.divider}`,
             bgcolor: "rgba(2, 6, 23, 0.04)",
@@ -484,7 +484,7 @@ const AreaImageCoordinateSelector = ({
             <Stack
               direction="row"
               spacing={1}
-              justifyContent={{ xs: "flex-start", md: "flex-end" }}
+              sx={{ justifyContent: { xs: "flex-start", md: "flex-end" } }}
             >
               <Box sx={{ textAlign: { xs: "left", md: "right" } }}>
                 <Typography variant="caption" color="text.secondary">
@@ -744,8 +744,8 @@ const AreaImageCoordinateSelector = ({
                               />
                               <Stack
                                 direction="row"
-                                alignItems="center"
                                 spacing={1}
+                                sx={{ alignItems: "center" }}
                               >
                                 <Box
                                   sx={{
@@ -830,9 +830,11 @@ const AreaImageCoordinateSelector = ({
             <>
               <Stack
                 direction={{ xs: "column", sm: "row" }}
-                alignItems={{ xs: "stretch", sm: "center" }}
-                justifyContent="space-between"
-                gap={1}
+                sx={{
+                  alignItems: { xs: "stretch", sm: "center" },
+                  justifyContent: "space-between",
+                  gap: 1,
+                }}
               >
                 <Stack direction="row" spacing={1}>
                   <Button

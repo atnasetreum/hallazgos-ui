@@ -71,10 +71,12 @@ const ImageORCamera = ({
       <Grid
         container
         spacing={2}
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        sx={{ mt: 2 }}
+        sx={{
+          mt: 2,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
         {!type && (
           <Grid
@@ -139,10 +141,12 @@ const ImageORCamera = ({
       <Grid
         container
         spacing={2}
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        sx={{ mt: 1 }}
+        sx={{
+          mt: 1,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
         {image && (
           <Grid

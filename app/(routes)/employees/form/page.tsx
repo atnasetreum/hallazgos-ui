@@ -15,7 +15,7 @@ import { Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "sonner";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { TextField, TextFieldProps } from "@mui/material";
+import { TextField } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { esES } from "@mui/x-date-pickers/locales";
@@ -265,7 +265,7 @@ const EmployeesFormPage = () => {
                 slotProps={{
                   textField: {
                     fullWidth: true,
-                  } as TextFieldProps,
+                  } as any,
                 }}
               />
             </LocalizationProvider>
@@ -297,7 +297,7 @@ const EmployeesFormPage = () => {
                 slotProps={{
                   textField: {
                     fullWidth: true,
-                  } as TextFieldProps,
+                  } as any,
                 }}
               />
             </LocalizationProvider>
@@ -371,9 +371,7 @@ const EmployeesFormPage = () => {
       <Grid
         container
         spacing={2}
-        alignContent={"center"}
-        justifyContent={"center"}
-        sx={{ marginTop: 2 }}
+        sx={{ marginTop: 2, alignContent: "center", justifyContent: "center" }}
       >
         <Grid
           size={{

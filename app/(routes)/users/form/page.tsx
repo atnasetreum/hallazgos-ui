@@ -125,7 +125,7 @@ const UsersFormPage = () => {
       (!idCurrent && !form.password?.trim()) ||
       !form.rule?.trim() ||
       !form.manufacturingPlantNames?.length,
-    [form, idCurrent]
+    [form, idCurrent],
   );
 
   useEffect(() => {
@@ -137,7 +137,7 @@ const UsersFormPage = () => {
       const zoneNames =
         data.role === "Supervisor"
           ? data.zones.map(
-              (zone) => `${zone.manufacturingPlant.name} - ${zone.name}`
+              (zone) => `${zone.manufacturingPlant.name} - ${zone.name}`,
             )
           : [];
 
@@ -145,7 +145,7 @@ const UsersFormPage = () => {
         data.role === "Supervisor"
           ? data.processes.map(
               (process) =>
-                `${process.manufacturingPlant.name} - ${process.name}`
+                `${process.manufacturingPlant.name} - ${process.name}`,
             )
           : [];
 
@@ -155,7 +155,7 @@ const UsersFormPage = () => {
         password: "",
         rule: data.role,
         manufacturingPlantNames: data.manufacturingPlants.map(
-          (plant) => plant.name
+          (plant) => plant.name,
         ),
         zoneNames,
         processNames,
@@ -170,8 +170,9 @@ const UsersFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <Paper>
             <TextField
               label="Nombre"
@@ -192,8 +193,9 @@ const UsersFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <Paper>
             <TextField
               label="Correo electrónico"
@@ -214,8 +216,9 @@ const UsersFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <Paper>
             <TextField
               label="Contraseña"
@@ -236,8 +239,9 @@ const UsersFormPage = () => {
           size={{
             xs: 12,
             sm: 6,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <Paper>
             <FormControl fullWidth>
               <InputLabel id="rule-select-label">Rol</InputLabel>
@@ -266,8 +270,9 @@ const UsersFormPage = () => {
             size={{
               xs: 12,
               sm: 6,
-              md: 4
-            }}>
+              md: 4,
+            }}
+          >
             <Paper>
               <MultiSelectManufacturingPlants
                 values={form.manufacturingPlantNames}
@@ -289,8 +294,9 @@ const UsersFormPage = () => {
                 size={{
                   xs: 12,
                   sm: 6,
-                  md: 4
-                }}>
+                  md: 4,
+                }}
+              >
                 <Paper>
                   <MultiSelectZones
                     values={form.zoneNames}
@@ -308,8 +314,9 @@ const UsersFormPage = () => {
                 size={{
                   xs: 12,
                   sm: 6,
-                  md: 4
-                }}>
+                  md: 4,
+                }}
+              >
                 <Paper>
                   <MultiSelectProcesses
                     values={form.processNames}
@@ -329,16 +336,15 @@ const UsersFormPage = () => {
       <Grid
         container
         spacing={2}
-        alignContent={"center"}
-        justifyContent={"center"}
-        sx={{ marginTop: 2 }}
+        sx={{ marginTop: 2, alignContent: "center", justifyContent: "center" }}
       >
         <Grid
           size={{
             xs: 12,
             sm: 3,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <Button
             variant="contained"
             color="error"
@@ -353,8 +359,9 @@ const UsersFormPage = () => {
           size={{
             xs: 12,
             sm: 3,
-            md: 3
-          }}>
+            md: 3,
+          }}
+        >
           <LoadingButton
             loading={isLoading}
             loadingPosition="start"

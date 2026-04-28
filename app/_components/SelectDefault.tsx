@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { Paper } from "@mui/material";
 import { Autocomplete } from "@mui/material";
 import { Checkbox } from "@mui/material";
@@ -36,6 +37,7 @@ export default function SelectDefault({
   disabled = false,
   name = "",
 }: Props) {
+  const autocompleteId = useId();
   const selectedOption = multiple
     ? data.filter((item) =>
         Array.isArray(value) ? value.includes(String(item.id)) : false,
@@ -45,6 +47,7 @@ export default function SelectDefault({
   return (
     <Paper>
       <Autocomplete
+        id={autocompleteId}
         fullWidth
         multiple={multiple}
         value={selectedOption}

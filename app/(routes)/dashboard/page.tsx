@@ -29,9 +29,10 @@ import SelectManufacturingPlantsOwn from "@components/SelectManufacturingPlantsO
 import SelectDefault from "@components/SelectDefault";
 import { Area, ResponseDashboardHeatmapByFilters, User } from "@interfaces";
 import { AreasService, DashboardService, UsersService } from "@services";
-import { useUserSessionStore } from "@store";
+import { useCategoriesStore, useUserSessionStore } from "@store";
 import AreaImageCoordinateSelector from "../areas/_components/AreaImageCoordinateSelector";
 import AreasChart from "./charts/AreasChart";
+import MainTypesChart from "./charts/MainTypesChart";
 import StatusChart from "./charts/StatusChart";
 import AssignedResponsibleChart from "./charts/AssignedResponsibleChart";
 import HistoricalChart from "./charts/HistoricalChart";
@@ -51,6 +52,8 @@ interface DashboardFilters {
   areaNames: string[];
   responsibleIds: string[];
   responsibleNames: string[];
+  mainTypeIds: string[];
+  mainTypeNames: string[];
 }
 
 const DashboardPage = () => {
@@ -72,6 +75,8 @@ const DashboardPage = () => {
     areaNames: [],
     responsibleIds: [],
     responsibleNames: [],
+    mainTypeIds: [],
+    mainTypeNames: [],
   });
   const [areas, setAreas] = useState<Area[]>([]);
   const [responsibles, setResponsibles] = useState<User[]>([]);
@@ -82,6 +87,8 @@ const DashboardPage = () => {
     useState<ResponseDashboardHeatmapByFilters | null>(null);
   const shouldHideProjectionCharts =
     filters.areaIds.length > 1 || filters.responsibleIds.length > 1;
+
+  const { mainTypes } = useCategoriesStore();
 
   const parseDate = (value: string): Dayjs | null => {
     if (!value) return null;
@@ -144,6 +151,9 @@ const DashboardPage = () => {
         startDate: filters.startDate,
         endDate: filters.endDate,
         areaIds: filters.areaIds,
+        ...(filters.mainTypeIds.length > 0 && {
+          mainTypeIds: filters.mainTypeIds,
+        }),
       }).then(setResponsibles);
       return;
     }
@@ -180,6 +190,9 @@ const DashboardPage = () => {
       endDate: filters.endDate,
       areaIds: filters.areaIds,
       responsibleIds: filters.responsibleIds,
+      ...(filters.mainTypeIds.length > 0 && {
+        mainTypeIds: filters.mainTypeIds,
+      }),
     })
       .then(setHeatmapData)
       .finally(() => setIsHeatmapLoading(false));
@@ -229,6 +242,9 @@ const DashboardPage = () => {
     filters.startDate && filters.endDate
       ? `Periodo: ${filters.startDate} - ${filters.endDate}`
       : "Periodo: sin rango",
+    filters.mainTypeNames.length > 0
+      ? `Clasificación: ${filters.mainTypeNames.join(", ")}`
+      : "",
     !areAllAreasSelected && filters.areaNames.length
       ? `Zonas: ${filters.areaNames.join(", ")}`
       : "",
@@ -487,7 +503,7 @@ const DashboardPage = () => {
                       size={{
                         xs: 12,
                         sm: 6,
-                        md: 6,
+                        md: 4,
                       }}
                     >
                       <SelectDefault
@@ -521,7 +537,7 @@ const DashboardPage = () => {
                       size={{
                         xs: 12,
                         sm: 6,
-                        md: 6,
+                        md: 4,
                       }}
                     >
                       <SelectDefault
@@ -545,6 +561,33 @@ const DashboardPage = () => {
                           !filters.manufacturingPlantId
                             ? "Seleccione una planta"
                             : ""
+                        }
+                      />
+                    </Grid>
+
+                    <Grid
+                      size={{
+                        xs: 12,
+                        sm: 6,
+                        md: 4,
+                      }}
+                    >
+                      <SelectDefault
+                        data={mainTypes}
+                        label="Clasificación"
+                        multiple={true}
+                        isFilter={true}
+                        value={filters.mainTypeIds}
+                        onChange={(_, newValue) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            mainTypeIds: Array.isArray(newValue)
+                              ? newValue.map((item) => String(item.id))
+                              : [],
+                            mainTypeNames: Array.isArray(newValue)
+                              ? newValue.map((item) => item.name)
+                              : [],
+                          }))
                         }
                       />
                     </Grid>
@@ -576,30 +619,6 @@ const DashboardPage = () => {
             <Grid
               size={{
                 xs: 12,
-                sm: 6,
-                md: 6,
-              }}
-            >
-              <PriorityInterventionChart filters={filters} />
-            </Grid>
-          )}
-
-          {!isHeatmapView && (
-            <Grid
-              size={{
-                xs: 12,
-                sm: 6,
-                md: 6,
-              }}
-            >
-              <RiskLevelChart filters={filters} />
-            </Grid>
-          )}
-
-          {!isHeatmapView && (
-            <Grid
-              size={{
-                xs: 12,
                 sm: 12,
                 md: 6,
               }}
@@ -624,17 +643,55 @@ const DashboardPage = () => {
             </Grid>
           )}
 
+          {!isHeatmapView && (
+            <Grid
+              size={{
+                xs: 12,
+                sm: 12,
+                md: 4,
+              }}
+            >
+              <Paper sx={{ minHeight: 470, p: 2 }}>
+                <MainTypesChart filters={filters} />
+              </Paper>
+            </Grid>
+          )}
+
           {!isHeatmapView && !shouldHideProjectionCharts && (
             <Grid
               size={{
                 xs: 12,
                 sm: 12,
-                md: 12,
+                md: 8,
               }}
             >
               <Paper sx={{ minHeight: 470, p: 2 }}>
                 <SolidGaugeMultiKpiChart filters={filters} />
               </Paper>
+            </Grid>
+          )}
+
+          {!isHeatmapView && (
+            <Grid
+              size={{
+                xs: 12,
+                sm: 6,
+                md: 6,
+              }}
+            >
+              <PriorityInterventionChart filters={filters} />
+            </Grid>
+          )}
+
+          {!isHeatmapView && (
+            <Grid
+              size={{
+                xs: 12,
+                sm: 6,
+                md: 6,
+              }}
+            >
+              <RiskLevelChart filters={filters} />
             </Grid>
           )}
 

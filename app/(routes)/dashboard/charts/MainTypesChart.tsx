@@ -31,11 +31,9 @@ interface Props {
   };
 }
 
-const statusOrder = ["Abierto", "En progreso", "Cerrado", "Cancelado"];
-
-const StatusChart = ({ filters }: Props) => {
+const MainTypesChart = ({ filters }: Props) => {
   const theme = useTheme();
-  const [statusData, setStatusData] =
+  const [mainTypesData, setMainTypesData] =
     useState<ResponseDashboardStatusByFilters | null>(null);
 
   const hasCompleteFilters =
@@ -43,11 +41,11 @@ const StatusChart = ({ filters }: Props) => {
 
   useEffect(() => {
     if (!hasCompleteFilters) {
-      setStatusData(null);
+      setMainTypesData(null);
       return;
     }
 
-    DashboardService.findStatusByFilters({
+    DashboardService.findMainTypesByFilters({
       manufacturingPlantId: filters.manufacturingPlantId,
       startDate: filters.startDate,
       endDate: filters.endDate,
@@ -58,34 +56,27 @@ const StatusChart = ({ filters }: Props) => {
       ...(filters.mainTypeIds.length > 0 && {
         mainTypeIds: filters.mainTypeIds,
       }),
-    }).then(setStatusData);
+    }).then(setMainTypesData);
   }, [
     hasCompleteFilters,
-    filters.areaIds,
-    filters.responsibleIds,
-    filters.mainTypeIds,
     filters.manufacturingPlantId,
     filters.startDate,
     filters.endDate,
+    filters.areaIds,
+    filters.responsibleIds,
+    filters.mainTypeIds,
   ]);
 
   const seriesData = useMemo(() => {
-    const dataMap = new Map(
-      (statusData?.seriesData || []).map((item) => [item.name, item.y]),
-    );
-
-    return statusOrder.map((name) => ({
-      name,
-      y: dataMap.get(name) || 0,
-    }));
-  }, [statusData]);
+    return mainTypesData?.seriesData || [];
+  }, [mainTypesData]);
 
   const chartSeriesData = useMemo(
     () => seriesData.filter((item) => item.y > 0),
     [seriesData],
   );
 
-  const total = statusData?.total || 0;
+  const total = mainTypesData?.total || 0;
   const isDarkMode = theme.palette.mode === "dark";
   const chartTextColor = isDarkMode ? "#f1f5f9" : "#111827";
   const chartSubtleTextColor = isDarkMode ? "#cbd5e1" : "#374151";
@@ -110,7 +101,7 @@ const StatusChart = ({ filters }: Props) => {
                 if (!series) return;
 
                 let customLabel = chart.customLabel;
-                const centerLabelHtml = `<div style="text-align:center; color:${chartTextColor};"><span style="display:block;">Total</span><strong style="display:block;">${total.toLocaleString("es-MX")}</strong></div>`;
+                const centerLabelHtml = `<div style="text-align:center; color:${chartTextColor};"><span style=\"display:block;\">Total</span><strong style=\"display:block;\">${total.toLocaleString("es-MX")}</strong></div>`;
 
                 if (!customLabel) {
                   customLabel = chart.customLabel = chart.renderer
@@ -137,7 +128,6 @@ const StatusChart = ({ filters }: Props) => {
                   text: centerLabelHtml,
                 });
 
-                // Set font size based on chart diameter
                 customLabel.css({
                   fontSize: `${series.center[2] / 12}px`,
                 });
@@ -162,7 +152,7 @@ const StatusChart = ({ filters }: Props) => {
           },
           title: {
             text: (() => {
-              const titleParts = ["Hallazgos por estatus"];
+              const titleParts = ["Hallazgos por Clasificacion"];
 
               if (filters.areaNames.length > 0) {
                 titleParts.push(filters.areaNames.join(", "));
@@ -231,7 +221,7 @@ const StatusChart = ({ filters }: Props) => {
           },
           series: [
             {
-              name: "Estatus",
+              name: "Clasificaciones",
               colorByPoint: true,
               innerSize: "75%",
               data: chartSeriesData,
@@ -243,4 +233,4 @@ const StatusChart = ({ filters }: Props) => {
   );
 };
 
-export default StatusChart;
+export default MainTypesChart;

@@ -24,6 +24,8 @@ interface Props {
     areaNames: string[];
     responsibleIds: string[];
     responsibleNames: string[];
+    mainTypeIds: string[];
+    mainTypeNames: string[];
   };
 }
 
@@ -49,6 +51,9 @@ const SolidGaugeMultiKpiChart = ({ filters }: Props) => {
       ...(filters.responsibleIds.length > 0 && {
         responsibleIds: filters.responsibleIds,
       }),
+      ...(filters.mainTypeIds.length > 0 && {
+        mainTypeIds: filters.mainTypeIds,
+      }),
     }).then(setKpiData);
   }, [
     hasCompleteFilters,
@@ -57,6 +62,7 @@ const SolidGaugeMultiKpiChart = ({ filters }: Props) => {
     filters.endDate,
     filters.areaIds,
     filters.responsibleIds,
+    filters.mainTypeIds,
   ]);
 
   const isDarkMode = theme.palette.mode === "dark";
@@ -101,6 +107,10 @@ const SolidGaugeMultiKpiChart = ({ filters }: Props) => {
 
               if (filters.responsibleNames.length > 0) {
                 titleParts.push(filters.responsibleNames.join(", "));
+              }
+
+              if (filters.mainTypeNames.length > 0) {
+                titleParts.push(filters.mainTypeNames.join(", "));
               }
 
               return titleParts.join(" - ");

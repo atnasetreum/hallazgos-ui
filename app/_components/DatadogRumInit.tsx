@@ -12,7 +12,7 @@ const DatadogRumInit = () => {
 
     datadogRum.init({
       applicationId: "3b824bc8-5c93-46b9-8812-c45b388f9be9",
-      clientToken: "pub60adb2cb6c832057f6393ba230c09ddb",
+      clientToken: "pub60adb2cb0c83205176393ba230c09ddb",
       site: "us5.datadoghq.com",
       service: process.env.NEXT_PUBLIC_DD_SERVICE || "hallazgos-ui",
       env: process.env.NEXT_PUBLIC_DD_ENV || "production",

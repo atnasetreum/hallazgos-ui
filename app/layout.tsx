@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { Toaster } from "sonner";
 import ThemeRegistry from "ThemeRegistry";
+import DatadogRumInit from "@components/DatadogRumInit";
 
 export const metadata: Metadata = {
   title: "HADA",
@@ -32,6 +33,7 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning>
         <main>
+          <DatadogRumInit />
           <ThemeRegistry options={{ key: "mui" }}>
             <ApolloWrapper>{children}</ApolloWrapper>
           </ThemeRegistry>

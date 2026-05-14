@@ -89,6 +89,13 @@ const DashboardPage = () => {
     filters.areaIds.length > 1 || filters.responsibleIds.length > 1;
 
   const { mainTypes } = useCategoriesStore();
+  const excludedMainTypeNames = [
+    "Comportamiento inseguro",
+    "Condición insegura",
+  ];
+  const availableMainTypes = mainTypes.filter(
+    (item) => !excludedMainTypeNames.includes(item.name),
+  );
 
   const parseDate = (value: string): Dayjs | null => {
     if (!value) return null;
@@ -167,6 +174,7 @@ const DashboardPage = () => {
     filters.responsibleIds,
     filters.startDate,
     filters.endDate,
+    filters.mainTypeIds,
   ]);
 
   useEffect(() => {
@@ -203,6 +211,7 @@ const DashboardPage = () => {
     filters.endDate,
     filters.areaIds,
     filters.responsibleIds,
+    filters.mainTypeIds,
   ]);
 
   const handleScrollTop = () => {
@@ -573,7 +582,7 @@ const DashboardPage = () => {
                       }}
                     >
                       <SelectDefault
-                        data={mainTypes}
+                        data={availableMainTypes}
                         label="Clasificación"
                         multiple={true}
                         isFilter={true}

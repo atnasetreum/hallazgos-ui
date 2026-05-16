@@ -56,6 +56,8 @@ interface DashboardFilters {
   mainTypeNames: string[];
 }
 
+const restrictedDashboardEmail = "glora@hadainternational.com";
+
 const DashboardPage = () => {
   const manufacturingPlants = useUserSessionStore(
     (state) => state.manufacturingPlants || [],
@@ -93,8 +95,10 @@ const DashboardPage = () => {
     "Comportamiento inseguro",
     "Condición insegura",
   ];
-  const availableMainTypes = mainTypes.filter(
-    (item) => !excludedMainTypeNames.includes(item.name),
+  const availableMainTypes = mainTypes.filter((item) =>
+    restrictedDashboardEmail === email
+      ? !excludedMainTypeNames.includes(item.name)
+      : true,
   );
 
   const parseDate = (value: string): Dayjs | null => {

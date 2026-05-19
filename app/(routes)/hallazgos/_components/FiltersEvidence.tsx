@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { Dayjs } from "dayjs";
 
 import FilterListIcon from "@mui/icons-material/FilterList";
+import { Box } from "@mui/material";
+import { Chip } from "@mui/material";
 import { Typography } from "@mui/material";
 import { Grid } from "@mui/material";
 import { Paper } from "@mui/material";
@@ -32,6 +34,13 @@ interface Props {
   setFilters: (filters: FiltersEvidences) => void;
   count: number;
 }
+
+const STATUS_OPTIONS = [
+  { id: "Abierto", name: "Abierto" },
+  { id: "En progreso", name: "En progreso" },
+  { id: "Cerrado", name: "Cerrado" },
+  { id: "Cancelado", name: "Cancelado" },
+];
 
 const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
   const [secondaryTypes, setSecondaryTypes] = useState<SecondaryType[]>([]);
@@ -96,6 +105,92 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
     }
   }, [filters, secondaryTypes, setFilters]);
 
+  const selectedFilterChips = useMemo(() => {
+    const getNamesByIds = (
+      ids: string[],
+      options: Array<{ id: number | string; name: string }>,
+    ) => {
+      const idSet = new Set(ids);
+      return options
+        .filter((option) => idSet.has(String(option.id)))
+        .map((option) => option.name);
+    };
+
+    const formatValues = (values: string[]) => {
+      if (values.length <= 2) return values.join(", ");
+      return `${values.slice(0, 2).join(", ")} +${values.length - 2}`;
+    };
+
+    const chips: Array<{ key: string; label: string }> = [];
+
+    if (filters.manufacturingPlantId) {
+      const plant = manufacturingPlants.find(
+        (item) => String(item.id) === filters.manufacturingPlantId,
+      );
+
+      if (plant) {
+        chips.push({ key: "plant", label: `Planta: ${plant.name}` });
+      }
+    }
+
+    const mainTypeNames = getNamesByIds(filters.mainTypeIds, mainTypes);
+    if (mainTypeNames.length) {
+      chips.push({
+        key: "mainTypes",
+        label: `Clasificación: ${formatValues(mainTypeNames)}`,
+      });
+    }
+
+    const secondaryTypeNames = getNamesByIds(
+      filters.secondaryTypeIds,
+      secondaryTypes,
+    );
+    if (secondaryTypeNames.length) {
+      chips.push({
+        key: "secondaryTypes",
+        label: `Tipo: ${formatValues(secondaryTypeNames)}`,
+      });
+    }
+
+    const zoneNames = getNamesByIds(filters.zoneIds, zones);
+    if (zoneNames.length) {
+      chips.push({ key: "zones", label: `Lugar: ${formatValues(zoneNames)}` });
+    }
+
+    const processNames = getNamesByIds(filters.processIds, processes);
+    if (processNames.length) {
+      chips.push({
+        key: "processes",
+        label: `Administrador: ${formatValues(processNames)}`,
+      });
+    }
+
+    const stateNames = getNamesByIds(filters.states, STATUS_OPTIONS);
+    if (stateNames.length) {
+      chips.push({
+        key: "states",
+        label: `Estatus: ${formatValues(stateNames)}`,
+      });
+    }
+
+    if (filters.startDate) {
+      chips.push({ key: "startDate", label: `Desde: ${filters.startDate}` });
+    }
+
+    if (filters.endDate) {
+      chips.push({ key: "endDate", label: `Hasta: ${filters.endDate}` });
+    }
+
+    return chips;
+  }, [
+    filters,
+    mainTypes,
+    manufacturingPlants,
+    processes,
+    secondaryTypes,
+    zones,
+  ]);
+
   return (
     <Grid container spacing={2} sx={{ mb: 2 }}>
       <Grid
@@ -105,9 +200,43 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
           md: 12,
         }}
       >
-        <Typography variant="subtitle1" gutterBottom color="primary.main">
+        <Typography
+          variant="subtitle1"
+          gutterBottom
+          sx={(theme) => ({
+            color:
+              theme.palette.mode === "dark"
+                ? theme.palette.primary.light
+                : theme.palette.primary.dark,
+          })}
+        >
           <FilterListIcon sx={{ pt: 1 }} /> Filtros ({count})
         </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 1,
+          }}
+        >
+          {selectedFilterChips.length > 0 ? (
+            selectedFilterChips.map((chip) => (
+              <Chip
+                key={chip.key}
+                label={chip.label}
+                size="small"
+                variant="filled"
+                color="primary"
+              />
+            ))
+          ) : (
+            <Chip
+              label="Sin filtros seleccionados"
+              size="small"
+              variant="filled"
+            />
+          )}
+        </Box>
       </Grid>
       <Grid
         size={{
@@ -241,12 +370,7 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
         }}
       >
         <SelectDefault
-          data={[
-            { id: "Abierto", name: "Abierto" },
-            { id: "En progreso", name: "En progreso" },
-            { id: "Cerrado", name: "Cerrado" },
-            { id: "Cancelado", name: "Cancelado" },
-          ]}
+          data={STATUS_OPTIONS}
           label="Estatus"
           multiple={true}
           isFilter={true}

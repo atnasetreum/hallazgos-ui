@@ -30,11 +30,11 @@ export default function HallazgosPage() {
 
   const [filters, setFilters] = useState<FiltersEvidences>({
     manufacturingPlantId: "",
-    mainTypeId: "",
-    secondaryType: "",
-    zone: "",
-    process: "",
-    state: "",
+    mainTypeIds: [],
+    secondaryTypeIds: [],
+    zoneIds: [],
+    processIds: [],
+    states: [],
     startDate: "",
     endDate: "",
   });

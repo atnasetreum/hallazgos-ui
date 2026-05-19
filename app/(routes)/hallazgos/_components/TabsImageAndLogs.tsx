@@ -3,6 +3,7 @@ import { ReactNode, SyntheticEvent, useEffect, useState } from "react";
 import Image from "next/image";
 
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
+import CloseIcon from "@mui/icons-material/Close";
 import { Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { TextField } from "@mui/material";
@@ -12,6 +13,8 @@ import { Grid } from "@mui/material";
 import { Tabs } from "@mui/material";
 import { Tab } from "@mui/material";
 import { Box } from "@mui/material";
+import { Dialog } from "@mui/material";
+import { IconButton } from "@mui/material";
 
 import { CommentEvidenceGraphql, EvidenceGraphql } from "@hooks";
 import { baseUrlImage, notify } from "@shared/utils";
@@ -65,6 +68,15 @@ export default function TabsImageAndLogs({
   const [comments, setComments] = useState<CommentEvidenceGraphql[]>(
     evidenceCurrent.comments,
   );
+  const [imageDialog, setImageDialog] = useState<{
+    open: boolean;
+    src: string;
+    title: string;
+  }>({
+    open: false,
+    src: "",
+    title: "",
+  });
 
   const imageContainerSx = {
     width: "100%",
@@ -100,6 +112,22 @@ export default function TabsImageAndLogs({
 
   const handleChange = (_: SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+
+  const openImageDialog = (src: string, title: string) => {
+    setImageDialog({
+      open: true,
+      src,
+      title,
+    });
+  };
+
+  const closeImageDialog = () => {
+    setImageDialog({
+      open: false,
+      src: "",
+      title: "",
+    });
   };
 
   useEffect(() => {
@@ -146,9 +174,17 @@ export default function TabsImageAndLogs({
                 }}
               >
                 <Typography variant="h6" gutterBottom>
-                  Hallazgo
+                  Imagen del hallazgo
                 </Typography>
-                <Box sx={imageContainerSx}>
+                <Box
+                  sx={{ ...imageContainerSx, cursor: "zoom-in" }}
+                  onClick={() =>
+                    openImageDialog(
+                      baseUrlImage(evidenceCurrent.imgEvidence || ""),
+                      "Imagen del hallazgo",
+                    )
+                  }
+                >
                   <Image
                     src={baseUrlImage(evidenceCurrent.imgEvidence || "")}
                     alt="Hallazgo imagen"
@@ -170,9 +206,17 @@ export default function TabsImageAndLogs({
                 }}
               >
                 <Typography variant="h6" gutterBottom>
-                  En progreso
+                  Imagen del progreso
                 </Typography>
-                <Box sx={imageContainerSx}>
+                <Box
+                  sx={{ ...imageContainerSx, cursor: "zoom-in" }}
+                  onClick={() =>
+                    openImageDialog(
+                      baseUrlImage(evidenceCurrent?.imgProcess || ""),
+                      "Imagen del progreso",
+                    )
+                  }
+                >
                   <Image
                     src={baseUrlImage(evidenceCurrent?.imgProcess || "")}
                     alt="Imagen en progreso"
@@ -194,9 +238,17 @@ export default function TabsImageAndLogs({
                 }}
               >
                 <Typography variant="h6" gutterBottom>
-                  Solución
+                  Imagen de la solución
                 </Typography>
-                <Box sx={imageContainerSx}>
+                <Box
+                  sx={{ ...imageContainerSx, cursor: "zoom-in" }}
+                  onClick={() =>
+                    openImageDialog(
+                      baseUrlImage(evidenceCurrent?.imgSolution || ""),
+                      "Imagen de la solución",
+                    )
+                  }
+                >
                   <Image
                     src={baseUrlImage(evidenceCurrent?.imgSolution || "")}
                     alt="Imagen Solución"
@@ -240,6 +292,65 @@ export default function TabsImageAndLogs({
           </Box>
         </TabPanel>
       )}
+
+      <Dialog fullScreen open={imageDialog.open} onClose={closeImageDialog}>
+        <Box
+          sx={{
+            position: "relative",
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "black",
+          }}
+        >
+          <IconButton
+            onClick={closeImageDialog}
+            sx={{
+              position: "absolute",
+              top: 12,
+              right: 12,
+              zIndex: 2,
+              color: "common.white",
+              backgroundColor: "rgba(0, 0, 0, 0.45)",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.65)",
+              },
+            }}
+            aria-label="Cerrar imagen"
+          >
+            <CloseIcon />
+          </IconButton>
+
+          {!!imageDialog.title && (
+            <Typography
+              variant="subtitle1"
+              sx={{
+                position: "absolute",
+                top: 18,
+                left: 18,
+                zIndex: 2,
+                color: "common.white",
+                backgroundColor: "rgba(0, 0, 0, 0.45)",
+                px: 1.5,
+                py: 0.5,
+                borderRadius: 1,
+              }}
+            >
+              {imageDialog.title}
+            </Typography>
+          )}
+
+          {!!imageDialog.src && (
+            <Image
+              src={imageDialog.src}
+              alt={imageDialog.title || "Imagen"}
+              fill
+              sizes="100vw"
+              style={{ objectFit: "contain" }}
+              priority
+            />
+          )}
+        </Box>
+      </Dialog>
     </Box>
   );
 }

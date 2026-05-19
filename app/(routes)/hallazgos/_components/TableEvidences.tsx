@@ -3,6 +3,7 @@ import { toast } from "sonner";
 
 import { Chip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { Stack } from "@mui/material";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -41,7 +42,7 @@ const columns = [
   "ID",
   "Planta",
   "Grupo",
-  "Tipo de hallazgo",
+  "Tipo",
   "Lugar",
   "Processo",
   "Creado por",
@@ -270,6 +271,10 @@ export default function TableEvidences({
             </StyledTableCell>
             <StyledTableCell>
               {(() => {
+                if (row.status === STATUS_CLOSED) {
+                  return "";
+                }
+
                 const remainingDays = getRemainingDays(
                   row.createdAt,
                   row.priorityDays,
@@ -316,8 +321,18 @@ export default function TableEvidences({
                 sx={{ alignItems: "flex-start" }}
               >
                 <Chip
-                  icon={<InfoIcon />}
-                  label={`Detalles ${durantionToTime(row)}`}
+                  icon={
+                    row.status === STATUS_CLOSED ? (
+                      <AccessTimeIcon />
+                    ) : (
+                      <InfoIcon />
+                    )
+                  }
+                  label={
+                    row.status === STATUS_CLOSED
+                      ? `${durantionToTime(row)}`
+                      : "Ver detalles"
+                  }
                   color="secondary"
                   onClick={() => setEvidenceCurrent(row)}
                 />

@@ -44,10 +44,14 @@ export const baseUrlImage = (image: string, path?: string) => {
     path = "/static/images/evidences/";
   }
 
+  console.log({ image });
+
   const apiBaseUrl = process.env.NEXT_PUBLIC_URL_API_RAW;
   const url = `${apiBaseUrl}${path}${image}`;
 
-  console.log({ url });
+  if (image.startsWith("seed")) {
+    return "/images/sin-imagen.jpg";
+  }
 
   return url;
 };
@@ -65,28 +69,24 @@ export const durantionToTime = (row: EvidenceGraphql) => {
 
   if (!solutionDate || status !== STATUS_CLOSED) return "";
 
-  const duration = moment.duration(
-    moment(solutionDate).diff(moment(createdAt)),
+  const totalSeconds = Math.max(
+    0,
+    moment(solutionDate).diff(moment(createdAt), "seconds"),
   );
 
-  const hours = duration.hours();
-  const minutes = duration.minutes();
-  const seconds = duration.seconds();
+  const days = Math.floor(totalSeconds / (24 * 60 * 60));
+  const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+  const seconds = totalSeconds % 60;
 
-  if (Number(row.id) === 3) {
-    console.log({
-      id: row.id,
-      hours,
-      minutes,
-      seconds,
-      createdAt: moment(createdAt).format("DD/MM/YYYY h:mm a"),
-      solutionDate: moment(solutionDate).format("DD/MM/YYYY h:mm a"),
-    });
-  }
+  const parts = [
+    days ? `${days}d` : "",
+    hours ? `${hours}h` : "",
+    minutes ? `${minutes}m` : "",
+    seconds ? `${seconds}s` : "",
+  ].filter(Boolean);
 
-  return `${hours ? hours + "h" : ""} ${minutes ? minutes + "m" : ""} ${
-    seconds ? seconds + "s" : ""
-  }`;
+  return parts.length > 0 ? parts.join(" ") : "0s";
 };
 
 export const stringYYYYMMDDToDDMMYYYY = (dateString: string) => {

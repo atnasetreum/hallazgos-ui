@@ -15,10 +15,21 @@ const paramsFilter = (params: FiltersEvidences) => {
     ...(params.manufacturingPlantId && {
       manufacturingPlantId: params.manufacturingPlantId,
     }),
-    ...(params.mainTypeId && { mainTypeId: params.mainTypeId }),
-    ...(params.secondaryType && { secondaryType: params.secondaryType }),
-    ...(params.zone && { zone: params.zone }),
-    ...(params.state && { status: params.state }),
+    ...(params.mainTypeIds.length > 0 && {
+      mainTypeIds: params.mainTypeIds.join(","),
+    }),
+    ...(params.secondaryTypeIds.length > 0 && {
+      secondaryTypeIds: params.secondaryTypeIds.join(","),
+    }),
+    ...(params.processIds.length > 0 && {
+      processIds: params.processIds.join(","),
+    }),
+    ...(params.zoneIds.length > 0 && {
+      zoneIds: params.zoneIds.join(","),
+    }),
+    ...(params.states.length > 0 && {
+      statuses: params.states.join(","),
+    }),
     ...(params.startDate && { startDate: params.startDate }),
     ...(params.endDate && { endDate: params.endDate }),
   };

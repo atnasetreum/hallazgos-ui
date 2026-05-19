@@ -115,18 +115,23 @@ export default function DetailsTabs({
             </ListItemButton>
           </ListItem>
           <Divider />
-          <ListItem>
-            <ListItemButton>
-              <ListItemText
-                primary={getRemainingDays(
-                  evidenceCurrent.createdAt,
-                  evidenceCurrent.priorityDays,
-                )}
-                secondary="Tiempo restante (dias)"
-              />
-            </ListItemButton>
-          </ListItem>
-          <Divider />
+          {evidenceCurrent.status !== STATUS_CLOSED && (
+            <>
+              <ListItem>
+                <ListItemButton>
+                  <ListItemText
+                    primary={getRemainingDays(
+                      evidenceCurrent.createdAt,
+                      evidenceCurrent.priorityDays,
+                    )}
+                    secondary="Tiempo restante (dias)"
+                  />
+                </ListItemButton>
+              </ListItem>
+              <Divider />
+            </>
+          )}
+
           <ListItem>
             <ListItemButton>
               <ListItemText

@@ -10,11 +10,11 @@ const query = gql`
     $page: Int!
     $limit: Int!
     $manufacturingPlantId: Float
-    $mainTypeId: Float
-    $secondaryTypeId: Float
-    $zoneId: Float
-    $processId: Float
-    $status: String
+    $mainTypeIds: [Int!]
+    $secondaryTypeIds: [Int!]
+    $zoneIds: [Int!]
+    $processIds: [Int!]
+    $statuses: [String!]
     $startDate: String
     $endDate: String
   ) {
@@ -22,11 +22,11 @@ const query = gql`
       page: $page
       limit: $limit
       manufacturingPlantId: $manufacturingPlantId
-      mainTypeId: $mainTypeId
-      secondaryTypeId: $secondaryTypeId
-      zoneId: $zoneId
-      processId: $processId
-      status: $status
+      mainTypeIds: $mainTypeIds
+      secondaryTypeIds: $secondaryTypeIds
+      zoneIds: $zoneIds
+      processIds: $processIds
+      statuses: $statuses
       startDate: $startDate
       endDate: $endDate
     ) {
@@ -144,13 +144,21 @@ export const useEvidences = () => {
       ...(filters.manufacturingPlantId && {
         manufacturingPlantId: Number(filters.manufacturingPlantId),
       }),
-      ...(filters.mainTypeId && { mainTypeId: Number(filters.mainTypeId) }),
-      ...(filters.secondaryType && {
-        secondaryTypeId: Number(filters.secondaryType),
+      ...(filters.mainTypeIds.length > 0 && {
+        mainTypeIds: filters.mainTypeIds.map((id) => Number(id)),
       }),
-      ...(filters.zone && { zoneId: Number(filters.zone) }),
-      ...(filters.process && { processId: Number(filters.process) }),
-      ...(filters.state && { status: filters.state }),
+      ...(filters.secondaryTypeIds.length > 0 && {
+        secondaryTypeIds: filters.secondaryTypeIds.map((id) => Number(id)),
+      }),
+      ...(filters.zoneIds.length > 0 && {
+        zoneIds: filters.zoneIds.map((id) => Number(id)),
+      }),
+      ...(filters.processIds.length > 0 && {
+        processIds: filters.processIds.map((id) => Number(id)),
+      }),
+      ...(filters.states.length > 0 && {
+        statuses: filters.states,
+      }),
       ...(filters.startDate && { startDate: filters.startDate }),
       ...(filters.endDate && { endDate: filters.endDate }),
     };

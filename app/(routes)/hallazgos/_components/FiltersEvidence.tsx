@@ -18,11 +18,11 @@ import { SecondaryType } from "@interfaces";
 
 export interface FiltersEvidences {
   manufacturingPlantId: string;
-  mainTypeId: string;
-  secondaryType: string;
-  zone: string;
-  process: string;
-  state: string;
+  mainTypeIds: string[];
+  secondaryTypeIds: string[];
+  zoneIds: string[];
+  processIds: string[];
+  states: string[];
   startDate: string;
   endDate: string;
 }
@@ -54,13 +54,47 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
   const { mainTypes, zones, processes } = useCategoriesStore();
 
   useEffect(() => {
-    if (filters.mainTypeId) {
-      setSecondaryTypes(
-        mainTypes.find((data) => data.id === Number(filters.mainTypeId))
-          ?.secondaryTypes || [],
-      );
+    if (!filters.mainTypeIds.length) {
+      setSecondaryTypes([]);
+      return;
     }
-  }, [filters.mainTypeId, mainTypes]);
+
+    const selectedMainTypeIds = new Set(filters.mainTypeIds.map(Number));
+    const mergedSecondaryTypes = mainTypes
+      .filter((data) => selectedMainTypeIds.has(Number(data.id)))
+      .flatMap((data) => data.secondaryTypes || []);
+
+    const uniqueSecondaryTypes = Array.from(
+      new Map(
+        mergedSecondaryTypes.map((secondaryType) => [
+          String(secondaryType.id),
+          secondaryType,
+        ]),
+      ).values(),
+    );
+
+    setSecondaryTypes(uniqueSecondaryTypes);
+  }, [filters.mainTypeIds, mainTypes]);
+
+  useEffect(() => {
+    if (!filters.secondaryTypeIds.length) {
+      return;
+    }
+
+    const allowedSecondaryTypeIds = new Set(
+      secondaryTypes.map((secondaryType) => String(secondaryType.id)),
+    );
+    const scopedSecondaryTypeIds = filters.secondaryTypeIds.filter((id) =>
+      allowedSecondaryTypeIds.has(id),
+    );
+
+    if (scopedSecondaryTypeIds.length !== filters.secondaryTypeIds.length) {
+      setFilters({
+        ...filters,
+        secondaryTypeIds: scopedSecondaryTypeIds,
+      });
+    }
+  }, [filters, secondaryTypes, setFilters]);
 
   return (
     <Grid container spacing={2} sx={{ mb: 2 }}>
@@ -91,6 +125,7 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
             setFilters({
               ...filters,
               manufacturingPlantId: e.target.value,
+              zoneIds: [],
             });
           }}
         />
@@ -104,14 +139,17 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
       >
         <SelectDefault
           data={mainTypes}
-          label="Hallazgo"
+          label="Clasificación"
+          multiple={true}
           isFilter={true}
-          value={filters.mainTypeId}
-          onChange={(e) => {
+          value={filters.mainTypeIds}
+          onChange={(_, newValue) => {
             setFilters({
               ...filters,
-              secondaryType: "",
-              mainTypeId: e.target.value,
+              secondaryTypeIds: [],
+              mainTypeIds: Array.isArray(newValue)
+                ? newValue.map((item) => String(item.id))
+                : [],
             });
           }}
         />
@@ -126,15 +164,20 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
         <SelectDefault
           data={secondaryTypes}
           label="Tipo"
+          multiple={true}
           isFilter={true}
-          value={filters.secondaryType}
-          onChange={(e) =>
+          value={filters.secondaryTypeIds}
+          onChange={(_, newValue) =>
             setFilters({
               ...filters,
-              secondaryType: e.target.value,
+              secondaryTypeIds: Array.isArray(newValue)
+                ? newValue.map((item) => String(item.id))
+                : [],
             })
           }
-          helperText={!filters.mainTypeId ? "Seleccione un hallazgo" : ""}
+          helperText={
+            !filters.mainTypeIds.length ? "Seleccione una clasificación" : ""
+          }
         />
       </Grid>
       <Grid
@@ -151,12 +194,15 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
               Number(filters.manufacturingPlantId),
           )}
           label="Lugar"
+          multiple={true}
           isFilter={true}
-          value={filters.zone}
-          onChange={(e) =>
+          value={filters.zoneIds}
+          onChange={(_, newValue) =>
             setFilters({
               ...filters,
-              zone: e.target.value,
+              zoneIds: Array.isArray(newValue)
+                ? newValue.map((item) => String(item.id))
+                : [],
             })
           }
           helperText={
@@ -174,12 +220,15 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
         <SelectDefault
           data={processes}
           label="Administrador"
+          multiple={true}
           isFilter={true}
-          value={filters.process}
-          onChange={(e) =>
+          value={filters.processIds}
+          onChange={(_, newValue) =>
             setFilters({
               ...filters,
-              process: e.target.value,
+              processIds: Array.isArray(newValue)
+                ? newValue.map((item) => String(item.id))
+                : [],
             })
           }
         />
@@ -199,12 +248,15 @@ const FiltersEvidence = ({ filters, setFilters, count }: Props) => {
             { id: "Cancelado", name: "Cancelado" },
           ]}
           label="Estatus"
+          multiple={true}
           isFilter={true}
-          value={filters.state}
-          onChange={(e) =>
+          value={filters.states}
+          onChange={(_, newValue) =>
             setFilters({
               ...filters,
-              state: e.target.value,
+              states: Array.isArray(newValue)
+                ? newValue.map((item) => String(item.id))
+                : [],
             })
           }
         />
